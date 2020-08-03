@@ -19,7 +19,7 @@ public interface UserinfoDao {
 
     public User selectByIsEmail(String email);
 
-    public User selectByNickname(String nickname);
+    public int checkAccount(String nickname) throws SQLException;
 
     public int checkAccount(String email, String nickname) throws SQLException;
 

@@ -19,6 +19,19 @@ public class UserinfoServiceImpl implements UserinfoService {
     public User login(String email, String password) {
         return uDao.login(email, password);
     }
+    
+    /**
+     * 닉네임 중복 여부 체크
+     * 
+     * @param nickname
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public boolean checkAccount(String nickname) throws SQLException {
+        int check = uDao.checkAccount(nickname);
+        return check == 0 ? true : false;
+    }
 
     /**
      * 이메일, 닉네임의 중복 여부를 체크한다.
@@ -31,14 +44,6 @@ public class UserinfoServiceImpl implements UserinfoService {
     public boolean checkAccount(String email, String nickname) throws SQLException {
         int check = uDao.checkAccount(email, nickname);
         return check == 0 ? true : false;
-    }
-
-    @Override
-    public boolean compareAccount(String email, String nickname) throws SQLException {
-        // eamil 계정이랑 nickname 계정이랑 비교
-        User email2user = uDao.selectByIsEmail(email);
-        User nickname2user = uDao.selectByNickname(nickname);
-        return false;
     }
 
     /**

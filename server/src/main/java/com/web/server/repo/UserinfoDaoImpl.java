@@ -27,6 +27,18 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
     /**
+     * 닉네임 중복 검사
+     *
+     * @param nickname
+     * @return
+     * @throws SQLException
+     */
+    @Override
+    public int checkAccount(String nickname) throws SQLException {
+        return template.selectOne(ns + "selectbynickname", nickname);
+    }
+
+    /**
      * 계정의 중복 여부 확인
      *
      * @param email
@@ -40,6 +52,7 @@ public class UserinfoDaoImpl implements UserinfoDao {
         map.put("nickname", nickname);
         return template.selectOne(ns + "selectbyemailandnickname", map);
     }
+
 
     @Override
     public int insertUser(User user) {
@@ -63,12 +76,6 @@ public class UserinfoDaoImpl implements UserinfoDao {
     public User selectByIsEmail(String email) {
         return template.selectOne(ns + "selectbyemail", email);
     }
-
-    @Override
-    public User selectByNickname(String nickname) {
-        return null;
-    }
-
 
     @Override
     public List<User> search(String by, String keyword) {

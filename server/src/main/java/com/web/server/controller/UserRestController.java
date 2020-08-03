@@ -159,7 +159,7 @@ public class UserRestController {
      * @param res
      * @return
      */
-    @ApiOperation(value = "개인 정보 정보 조회")
+    @ApiOperation(value = "개인 정보 조회")
     @GetMapping("/users/info")
     public ResponseEntity<Map<String, Object>> getUserInfo(final HttpServletRequest req,
                                                            HttpServletResponse res) {
@@ -196,7 +196,7 @@ public class UserRestController {
      * @param user
      * @return
      */
-    @ApiOperation(value = "개인 정보 정보 수정")
+    @ApiOperation(value = "개인 정보 수정")
     @PutMapping("/users/info")
     public ResponseEntity<Map<String, Object>> setUserInfo(final HttpServletRequest req,
                                                            @RequestBody final User user) {
@@ -207,12 +207,16 @@ public class UserRestController {
             String email = jwtService.getEamil(token);
             // 서비스 실행
             user.setEmail(email);
-            userService.modify(user);
-            status = HttpStatus.ACCEPTED;
-            // body json add
-            resultMap.put("success", true);
-            // log
-            logger.info("개인 정보 조회 수정 성공");
+            int result = userService.modify(user);
+            if(result == 1) {
+                status = HttpStatus.ACCEPTED; // status code : 202
+                // body json add
+                resultMap.put("success", true);
+                // log
+                logger.info("개인 정보 조회 수정 성공");
+            } else {
+                throw new RuntimeException();
+            }
         } catch (RuntimeException e) {
             logger.info("개인 정보 조회 수정 실패");
             status = HttpStatus.BAD_REQUEST; // status code : 400
@@ -223,7 +227,35 @@ public class UserRestController {
     }
 
 
-    public ResponseEntity<Map<String, Object>> getUserInfoBy
+    /**
+     * 닉네임 중복 검사
+     *
+     * @param nickname
+     * @return
+     */
+    @ApiOperation(value = "닉네임 중복 검사")
+    @GetMapping("/users/info/nickname")
+    public ResponseEntity<Map<String, Object>> getUserInfoByNickname(@RequestBody final String nickname) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("success", false);
+        HttpStatus status = null;
+        try {
+            // 서비스 실행
+            if(userService.checkAccount(nickname)) {
+                // nickname 중복 X
+                status = HttpStatus.OK; // status code : 200
+                // body json add
+                resultMap.put("success", true);
+            } else {
+                // nickname 중복 O
+                status = HttpStatus.CONFLICT; // status code : 409
+            }
+        } catch (RuntimeException | SQLException e) {
+            logger.info("ERROR.getUserInfoByNickname (닉네임 중복 검사) : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST; // status code : 400
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 
 
 

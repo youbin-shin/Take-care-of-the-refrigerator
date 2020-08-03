@@ -20,9 +20,9 @@ public interface UserinfoService {
 
     public Collection<User> search(String by, String keyword);
 
-    public boolean checkAccount(String email, String nickname) throws SQLException;
+    public boolean checkAccount(String nickname) throws SQLException;
 
-    public boolean compareAccount(String email, String nickname) throws SQLException;
+    public boolean checkAccount(String email, String nickname) throws SQLException;
 
     // u
     public int modify(User user);

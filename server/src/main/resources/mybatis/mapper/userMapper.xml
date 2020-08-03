@@ -8,7 +8,12 @@
 
     <!-- 로그인. 이메일, 패스워드로 계정 확인   -->
     <select id="login" parameterType="hashMap" resultType="user">
-        select * from users where email=#{email} and password = #{password} <!-- 그냥 값 하나면 이름 상관 없어요.. -->
+        select * from users where email=#{email} and password = #{password}
+    </select>
+
+    <!-- 닉네임 중복 확인   -->
+    <select id="selectbynickname" parameterType="string" resultType="int">
+        select sum(exists (select user_id from users where nickname = #{nickname})) from users
     </select>
 
     <!-- 이메일, 닉네임 중복 확인   -->
@@ -16,16 +21,12 @@
         select sum(exists (select user_id from users where email = #{email} or nickname = #{nickname})) from users
     </select>
 
-    <select id="selectbyid" resultType="user">
-		select * from users where uid=#{id}
+    <select id="selectbyid" parameterType="int" resultType="user">
+		select * from users where user_id=#{userId}
 	</select>
 
-    <select id="selectbyemail" resultType="user">
+    <select id="selectbyemail" parameterType="string" resultType="user">
 		select * from users where email=#{email}
-	</select>
-
-    <select id="selectbynickname" resultType="user">
-		select * from users where nickname=#{nickname}
 	</select>
 
     <select id="search" parameterType="hashMap" resultType="user">
@@ -53,12 +54,6 @@
             </if>
         </set>
         where email=#{email}
-	</update>
-
-    <update id="update2" parameterType="user">
-		update users set
-		password=#{password}, email=#{email} where
-		uid=#{uid}
 	</update>
 
     <delete id="delete" parameterType="string">

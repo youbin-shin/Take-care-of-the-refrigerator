@@ -37,4 +37,7 @@ export default new Router({
       component: DetailPost,
     },
   ],
+  scrollBehavior() {
+    return { x: 0, y: 0 };
+  },
 });

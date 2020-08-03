@@ -47,7 +47,7 @@
 		update users
 		<set>
             <if test="nickname!=null">
-                nickanme=#{nickname}
+                nickname=#{nickname}
             </if>
             <if test="password!=null">
                 password=#{password}

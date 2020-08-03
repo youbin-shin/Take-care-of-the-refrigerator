@@ -230,12 +230,13 @@ public class UserRestController {
     /**
      * 닉네임 중복 검사
      *
-     * @param nickname
+     * @param user
      * @return
      */
     @ApiOperation(value = "닉네임 중복 검사")
     @GetMapping("/users/info/nickname")
-    public ResponseEntity<Map<String, Object>> getUserInfoByNickname(@RequestBody final String nickname) {
+    public ResponseEntity<Map<String, Object>> getUserInfoByNickname(@RequestBody final User user) {
+        String nickname = user.getNickname();
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", false);
         HttpStatus status = null;

@@ -31,39 +31,35 @@
       <h2 class="m-5 0 4">인기순 레시피</h2>
       <div class="row row-cols-3">
         <ul v-for="backData in backDatas" :key="backData.title">
-          <div class="col postcard" @click="goDetail(backData.boardId)">
-            <b-card
-              v-bind:img-src="backData.thumbnailImage"
-              img-width="100%"
-              img-height="200px"
-              img-alt="Image"
-              img-top
-              tag="article"
-              style="max-width: 20rem;"
-              class="mb-2"
-            >
-              <div class="contents">
-                <h3>{{ backData.title }}</h3>
-                <!-- <p class="content">{{ backData.content }}</p> -->
+          <v-card max-width="344" class="mx-auto" @click="goDetail(backData.boardId)">
+            <v-list-item>
+              <v-list-item-avatar color="grey"></v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title class="headline">{{ backData.title }}</v-list-item-title>
+                <v-list-item-subtitle style="text-align:right;">작성자 : {{ backData.nickname }}</v-list-item-subtitle>
+                <small style="text-align:right;">{{ backData.createAt }}</small>
+              </v-list-item-content>
+            </v-list-item>
 
-                <span class="date">{{ backData.date }}</span>
-                <br />
-                <a>작성자 : {{ backData.nickname }}</a>
-                <br />
-                <a>작성 시간 : {{ backData.createAt }}</a>
-                <br />
+            <v-img :src="backData.thumbnailImage" height="194"></v-img>
 
-                <span class="comment">소요시간 : {{ backData.cookingTime }}시간</span>
-              </div>
-              <div class="writer-wrap">
-                <hr />
-                <div>
-                  난이도
-                  <v-rating v-model="backData.grade "></v-rating>
-                </div>
-              </div>
-            </b-card>
-          </div>
+            <v-card-text>
+              소요시간 : {{ backData.cookingTime }}시간
+              난이도
+              <v-rating v-model="backData.grade "></v-rating>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn text color="deep-purple accent-4">자세히 보기</v-btn>
+              <v-btn text color="deep-purple accent-4">관심레시피</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn icon>
+                <v-icon>mdi-heart</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon>mdi-share-variant</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
         </ul>
       </div>
 

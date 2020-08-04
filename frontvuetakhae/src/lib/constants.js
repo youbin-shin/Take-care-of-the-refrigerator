@@ -16,6 +16,7 @@ export default {
     POST: {
       MAIN: "main",
       CREATEPOST: "createpost",
+      Notice: "notice",
     },
   },
 };

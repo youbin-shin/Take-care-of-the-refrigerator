@@ -11,7 +11,6 @@
     >
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
-
     <v-stepper v-model="e6" vertical>
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
@@ -35,13 +34,20 @@
                       class="mr-1 mb-1"
                       v-for="tag in postData.content.ingredients"
                       :key="tag"
+                      close
+                      @click:close="closeChip(tag)"
                     >{{ tag }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
               <b-col>
                 <v-row class="m-2">
-                  <v-text-field label="직접 추가하기" v-model="addText" hide-details="auto"></v-text-field>
+                  <v-text-field
+                    label="직접 추가하기"
+                    v-model="addText"
+                    hide-details="auto"
+                    v-on:keyup.enter="plusFood"
+                  ></v-text-field>
                   <v-icon large @click="plusFood">mdi-plus</v-icon>
                 </v-row>
                 <div class="bg-my-box">
@@ -54,7 +60,7 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="mr-1 mb-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -62,6 +68,7 @@
             </b-row>
           </b-container>
         </v-card>
+        <div>데이터 잘들어오는 지 확인용 {{postData.content.ingredients }}</div>
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
 
@@ -207,11 +214,26 @@ export default {
       this.postData.content.steps.splice(idx, 1);
     },
     plusFood() {
+      // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
         return;
       }
+      // 중복되는 데이터일 경우 추가 안되도록 한다.
+      for (var i = 0; i < this.postData.content.ingredients.length; i++) {
+        if (this.addText === this.postData.content.ingredients[i]) {
+          this.addText = "";
+          return;
+        }
+      }
+      // 위의 경우가 아니라면 추가한다.
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
+    },
+    closeChip(tag) {
+      this.postData.content.ingredients.splice(
+        this.postData.content.ingredients.indexOf(tag),
+        1
+      );
     },
     plusStep() {
       if (this.postData.content.process === "") {

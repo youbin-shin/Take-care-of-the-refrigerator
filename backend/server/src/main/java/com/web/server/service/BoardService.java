@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BoardService {
+    }
+
     public List<BoardSimpleDto> searchAll() throws SQLException;
 
     public Board searchByBoardId(int boardId) throws SQLException;
@@ -16,4 +18,8 @@ public interface BoardService {
     public boolean write(String email, Board board) throws SQLException;
 
     public void writeComment(CommentDto comment) throws SQLException;
+
+    public void updateComment(CommentDto comment) throws SQLException;
+
+    public void deleteComment(Integer commentId) throws SQLException;
 }

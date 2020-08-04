@@ -12,7 +12,10 @@ public interface CommentDao {
 
     public List<CommentDto> selectByBoardId(int boardId) throws SQLException;
 
-    public void createCommentByBoardId(CommentDto comment) throws SQLException;
+    void createCommentByBoardId(CommentDto comment) throws SQLException;
 
+    void updateCommentByBoardId(CommentDto comment) throws SQLException;
+
+    void deleteCommentByBoardId(Integer commentId) throws SQLException;
 }
 

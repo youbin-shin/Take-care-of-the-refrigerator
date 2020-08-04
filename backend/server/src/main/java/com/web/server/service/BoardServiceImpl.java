@@ -58,6 +58,16 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void writeComment(CommentDto comment) throws  SQLException{
-        return commentDao.createCommentByBoardId(comment);
+        commentDao.createCommentByBoardId(comment);
+    }
+
+    @Override
+    public  void updateComment(CommentDto comment) throws SQLException{
+        commentDao.updateCommentByBoardId(comment);
+    }
+
+    @Override
+    public  void deleteComment(CommentDto commentId) throws SQLException{
+        commentDao.deleteCommentByBoardId(commentId);
     }
 }

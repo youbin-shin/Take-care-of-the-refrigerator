@@ -6,13 +6,15 @@
         <b-badge class="mr-2" variant="success">난이도 3</b-badge>
         <b-badge variant="secondary">소요시간 3시간</b-badge>
       </h1>
-      <div @click="changeHeart" class="heart mr-4">
-        좋아요 수 {{ likenum }}
-        <div v-if="isHeart">
-          <b-icon-heart></b-icon-heart>
+      <div @click="changeEasy" class="icon">
+        <!-- 좋아요 수 {{ likenum }} -->
+        <div v-if="easy">
+          <b-icon icon="emoji-smile" class="mr-1" scale="2" variant="warning"></b-icon>
+          <p class="caption mb-0 mt-1">easy</p>
         </div>
         <div v-else>
-          <b-icon-heart-fill></b-icon-heart-fill>
+          <b-icon icon="emoji-frown" class="mr-1" scale="2" variant="secondary"></b-icon>
+          <p class="caption mb-0 mt-1">hard</p>
         </div>
       </div>
       <b-row>
@@ -99,6 +101,7 @@ export default {
   },
   data() {
     return {
+      easy: true,
       backData: {
         // title: "김치전",
         // content: "비오는 날 생각나는 김치전 드셔보세요!",
@@ -183,20 +186,16 @@ export default {
           ],
         },
       ],
-      likenum: 5,
-      isHeart: true,
+      // likenum: 5,
     };
   },
   computed: {}, // 미리 만들어 놓자
   methods: {
-    changeHeart() {
-      // this.isHeart != this.isHeart
-      if (this.isHeart === false) {
-        this.isHeart = true;
-        this.likenum = this.likenum - 1;
+    changeEasy() {
+      if (this.easy) {
+        this.easy = false;
       } else {
-        this.isHeart = false;
-        this.likenum = this.likenum + 1;
+        this.easy = true;
       }
     },
   },
@@ -214,7 +213,8 @@ export default {
 .detailContentItem {
   margin-bottom: 20px;
 }
-.heart {
+.icon {
   text-align: right;
+  cursor: pointer;
 }
 </style>

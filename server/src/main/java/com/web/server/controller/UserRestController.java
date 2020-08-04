@@ -238,7 +238,6 @@ public class UserRestController {
     public ResponseEntity<Map<String, Object>> getUserInfoByNickname(@RequestBody final User user) {
         String nickname = user.getNickname();
         Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("success", false);
         HttpStatus status = null;
         try {
             // 서비스 실행
@@ -254,6 +253,45 @@ public class UserRestController {
         } catch (RuntimeException | SQLException e) {
             logger.info("ERROR.getUserInfoByNickname (닉네임 중복 검사) : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST; // status code : 400
+            resultMap.put("success", false);
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
+    /**
+     * 사용자 삭제
+     * 성공 : 202
+     * 실패 : 406, 400
+     * 
+     * @param req
+     * @return
+     */
+    @ApiOperation(value = "사용자 삭제")
+    @DeleteMapping("/users")
+    public ResponseEntity<Map<String, Object>> deleteUser(final HttpServletRequest req) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            String email = jwtService.getEamil(token);
+            // 서비스 실행
+            if(userService.deleteUser(email) == 1) {
+                // 서비스 성공
+                status = HttpStatus.ACCEPTED; // status code : 202
+                // body json add
+                resultMap.put("success", true);
+                logger.info("user : {} delete success", email);
+            } else {
+                // 서비스 실패
+                status = HttpStatus.NOT_ACCEPTABLE; // status code : 406
+            }
+        }
+        catch (RuntimeException e) {
+            // 에러
+            logger.info("ERROR.deleteUser (유저 삭제) : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST; // status code : 400
+            resultMap.put("success", false);
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }

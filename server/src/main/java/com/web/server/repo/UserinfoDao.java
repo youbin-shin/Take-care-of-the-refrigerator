@@ -27,7 +27,7 @@ public interface UserinfoDao {
     // u: 회원정보 수정
 
     public int updateUser(User userinfo);
-    // d: 회원탈퇴
 
-    public int deleteUser(String uid);
+    // d: 회원탈퇴
+    public int deleteUser(String email);
 }

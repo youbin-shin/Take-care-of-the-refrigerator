@@ -93,8 +93,8 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
     @Override
-    public int deleteUser(String id) {
-        return template.delete(ns + "delete", id);
+    public int deleteUser(String email) {
+        return template.delete(ns + "delete", email);
     }
 
 }

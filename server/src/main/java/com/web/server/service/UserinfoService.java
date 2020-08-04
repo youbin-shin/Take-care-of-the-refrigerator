@@ -30,5 +30,5 @@ public interface UserinfoService {
     public int updateUser(User user);
 
     // d
-    public int deleteUser(String id);
+    public int deleteUser(String email);
 }

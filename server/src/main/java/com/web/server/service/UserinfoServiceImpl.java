@@ -47,7 +47,7 @@ public class UserinfoServiceImpl implements UserinfoService {
     }
 
     /**
-     * 사용자 인보 정보 수정
+     * 사용자 정보 수정
      *
      * @param user
      * @return
@@ -63,6 +63,17 @@ public class UserinfoServiceImpl implements UserinfoService {
     public User searchByEmail(String email) {
         User resultUser = uDao.selectByIsEmail(email);
         return resultUser;
+    }
+
+    /**
+     * 사용자 삭제
+     * 
+     * @param email
+     * @return
+     */
+    @Override
+    public int deleteUser(String email) {
+        return uDao.deleteUser(email);
     }
 
     //////////////////////////// 사용하지 않는 서비스 //////////////////////
@@ -85,11 +96,6 @@ public class UserinfoServiceImpl implements UserinfoService {
     @Override
     public int updateUser(User user) {
         return uDao.updateUser(user);
-    }
-
-    @Override
-    public int deleteUser(String id) {
-        return uDao.deleteUser(id);
     }
 
 }

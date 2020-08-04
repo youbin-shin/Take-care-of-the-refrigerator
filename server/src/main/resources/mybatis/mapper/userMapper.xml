@@ -58,7 +58,7 @@
 
     <delete id="delete" parameterType="string">
 		delete from users where
-		uid=#{uid}
+		email=#{email}
 	</delete>
 
     <insert id="insert" parameterType="user">

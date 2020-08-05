@@ -57,6 +57,9 @@
               <v-card-actions>
                 <v-btn @click="goDetail(showData.boardId)" text color="deep-purple accent-4">자세히 보기</v-btn>
                 <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-heart</v-icon>
+                </v-btn>
 
                 <v-spacer></v-spacer>
                 <v-btn icon @click="changeEasy">

@@ -298,13 +298,18 @@ public class UserRestController {
 
 
 
+
     @ApiOperation(value = "회원 마이페이지 조회", response = User.class)
     @GetMapping("/users/mypage")
-    public ResponseEntity<Map<String, Object>> getUserProfile(final HttpServletRequest req,
-                                               HttpServletResponse res) throws Exception {
+    public ResponseEntity<Map<String, Object>> getUserProfile(final HttpServletRequest req) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            userService.searchUserProfileByEmail(email);
+        } catch (RuntimeException e) {
 
+        }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 

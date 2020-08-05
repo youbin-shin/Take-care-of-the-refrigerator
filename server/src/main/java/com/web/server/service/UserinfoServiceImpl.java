@@ -1,6 +1,7 @@
 package com.web.server.service;
 
 import com.web.server.dto.User;
+import com.web.server.dto.UserProfileDto;
 import com.web.server.repo.UserinfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,14 @@ public class UserinfoServiceImpl implements UserinfoService {
         return resultUser;
     }
 
+    @Override
+    public UserProfileDto searchUserProfileByEmail(String email) {
+        // users table (nickname, introduce, box) + follow table (following count, follower count)
+        // boards table (Boards written by user)
+        // interest_boards table (user's interest boards
+        return null;
+    }
+
     /**
      * 사용자 삭제
      * 
@@ -76,21 +85,9 @@ public class UserinfoServiceImpl implements UserinfoService {
         return uDao.deleteUser(email);
     }
 
-    //////////////////////////// 사용하지 않는 서비스 //////////////////////
-
     @Override
     public int insertUser(User user) {
         return uDao.insertUser(user);
-    }
-
-    @Override
-    public User selectByIsId(String id) {
-        return uDao.selectByIsId(id);
-    }
-
-    @Override
-    public Collection<User> search(String by, String keyword) {
-        return uDao.search(by, keyword);
     }
 
     @Override

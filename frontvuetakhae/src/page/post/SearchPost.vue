@@ -245,7 +245,6 @@ export default {
         this.emptyChip = true;
       }
       this.showDatas = [];
-      console.log("check함수 작동");
       for (let j = 0; j < this.dummyData.length; j++) {
         for (let k = 0; k < this.chips.length; k++) {
           console.log(this.dummyData[j].materials, "구분", this.chips[k]);
@@ -260,7 +259,6 @@ export default {
     },
     check() {
       this.showDatas = [];
-      console.log("check함수 작동");
       for (let j = 0; j < this.dummyData.length; j++) {
         for (let k = 0; k < this.chips.length; k++) {
           console.log(this.dummyData[j].materials, "구분", this.chips[k]);

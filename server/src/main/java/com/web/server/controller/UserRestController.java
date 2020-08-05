@@ -223,7 +223,7 @@ public class UserRestController {
     }
 
 
-    public ResponseEntity<Map<String, Object>> getUserInfoBy
+//    public ResponseEntity<Map<String, Object>> getUserInfoBy
 
 
 

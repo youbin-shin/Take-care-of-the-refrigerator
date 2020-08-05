@@ -1,6 +1,7 @@
 package com.web.server.repo;
 
 import com.web.server.dto.User;
+import com.web.server.dto.UserProfileDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,6 +19,8 @@ public interface UserinfoDao {
     public User selectByIsId(String uid);
 
     public User selectByIsEmail(String email);
+    
+    public UserProfileDto selectUserProfileByEamil (String email) throws SQLException;
 
     public int checkAccount(String nickname) throws SQLException;
 
@@ -26,7 +29,7 @@ public interface UserinfoDao {
     public List<User> search(String by, String keyword);
     // u: 회원정보 수정
 
-    public int updateUser(User userinfo);
+    public int updateUser(User userinfo) throws SQLException;
 
     // d: 회원탈퇴
     public int deleteUser(String email);

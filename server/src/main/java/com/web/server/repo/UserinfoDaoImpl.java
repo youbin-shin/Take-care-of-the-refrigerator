@@ -1,14 +1,16 @@
 package com.web.server.repo;
 
-import com.web.server.dto.User;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.web.server.dto.User;
+import com.web.server.dto.UserProfileDto;
 
 @Repository
 public class UserinfoDaoImpl implements UserinfoDao {
@@ -78,6 +80,11 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
     @Override
+    public UserProfileDto selectUserProfileByEamil(String email) {
+    	return template.selectOne(ns + "selectbyuserprofilebyemail", email);
+    }
+    
+    @Override
     public List<User> search(String by, String keyword) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("by", by);
@@ -88,7 +95,7 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
     @Override
-    public int updateUser(User user) {
+    public int updateUser(User user) throws SQLException{
         return template.update(ns + "update", user);
     }
 
@@ -96,5 +103,6 @@ public class UserinfoDaoImpl implements UserinfoDao {
     public int deleteUser(String email) {
         return template.delete(ns + "delete", email);
     }
+
 
 }

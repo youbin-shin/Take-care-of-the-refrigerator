@@ -1,10 +1,13 @@
 package com.web.server.controller;
 
-import com.web.server.dto.User;
-import com.web.server.service.JwtService;
-import com.web.server.service.UserinfoService;
-import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +16,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import com.web.server.dto.User;
+import com.web.server.service.JwtService;
+import com.web.server.service.UserinfoService;
+
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api")
@@ -92,6 +102,7 @@ public class UserRestController {
             resultMap.put("status", status.value());
             resultMap.put("success", false);
             resultMap.put("message", "로그인 실패");
+            logger.info("로그인 에러: {}", e.getMessage());
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
         // return new ResponseEntity<User>(userService.login(user.getId(),
@@ -217,8 +228,11 @@ public class UserRestController {
             } else {
                 throw new RuntimeException();
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
             logger.info("개인 정보 조회 수정 실패");
+            logger.info("test email : {}", jwtService.getEamil(req.getHeader("jwt-auth-token")));
+            logger.info("test user : {}", user.toString());
+            logger.info("test getMessage : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST; // status code : 400
             // body json add
             resultMap.put("success", false);
@@ -330,10 +344,10 @@ public class UserRestController {
         logger.info("updateQnA - 호출");
         logger.info("" + user);
         // user.setUid(uid);
-        if (userService.updateUser(user) == 1) {
-            session.setAttribute("user", user.getUserId());
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        }
+//        if (userService.updateUser(user) == 1) {
+//            session.setAttribute("user", user.getUserId());
+//            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//        }
         return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
     }
 

@@ -20,6 +20,12 @@
     <select id="selectbyemailandnickname" parameterType="hashMap" resultType="int">
         select sum(exists (select user_id from users where email = #{email} or nickname = #{nickname})) from users
     </select>
+    
+    <!-- 마이페이지: 닉네임, 자기소개, 나의냉장고, 팔로잉 수, 팔로우 수 조회 -->
+    <select id="selectbyuserprofilebyemail" parameterType="string" resultMap="userprofile">
+    	select *
+    	for users
+    </select>
 
     <select id="selectbyid" parameterType="int" resultType="user">
 		select * from users where user_id=#{userId}
@@ -65,4 +71,10 @@
 		insert into users (email,password,nickname)
 		values(#{email}, #{password}, #{nickname})
 	</insert>
+	
+	<resultMap type="com.web.server.dto.UserProfileDto" id="userprofile">
+		<id column="nickname" property="nickname"/>
+		<result column="introduce" property="introduce"/>
+		<result column="box" property="box"/>
+	</resultMap>
 </mapper>

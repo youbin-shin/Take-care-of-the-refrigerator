@@ -21,12 +21,12 @@ public interface UserinfoService {
 
     public User searchByEmail(String email);
 
-    public UserProfileDto searchUserProfileByEmail(String email);
+    public UserProfileDto searchUserProfileByEmail(String email) throws SQLException;
 
     // u
-    public int modify(User user);
+    public int modify(User user) throws SQLException;
 
-    public int updateUser(User user);
+    public int updateUser(User user) throws SQLException;
 
     // d
     public int deleteUser(String email);

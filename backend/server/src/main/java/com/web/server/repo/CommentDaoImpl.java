@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public class CommentDaoImpl implements CommentDao{
     private String ns = "com.web.server.repo.CommentDao.";
-    private static String NAMESPACE="mybatis.mapper.commentMapper";
     @Autowired
     SqlSessionTemplate template;
 
@@ -30,16 +29,16 @@ public class CommentDaoImpl implements CommentDao{
 
     @Override
     public void createCommentByBoardId(CommentDto comment) throws SQLException{
-        template.insert( NAMESPACE+ "createCommentsInBoardByBoardId", comment);
+        template.insert( ns+ "createCommentsInBoardByBoardId", comment);
     }
 
     @Override
-    public void updateCommentByBoardId(CommentDto commnet) throws SQLException{
-        template.update(NAMESPACE+"updateCommentsInBoardByBoardId", comment );
+    public void updateCommentByBoardId(CommentDto comment) throws SQLException{
+        template.update(ns+"updateCommentsInBoardByBoardId", comment );
     }
 
     @Override
-    public void deleteCommentByBoardId(CommentDto comment) throws SQLException{
-        template.delete(NAMESPACE+"deleteCommentsInBoardByBoardId", commentId);
+    public int deleteCommentByBoardId(Integer commentId) throws SQLException{
+        return template.delete(ns+"deleteCommentsInBoardByBoardId", commentId);
     }
 }

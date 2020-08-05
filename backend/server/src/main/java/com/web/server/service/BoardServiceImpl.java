@@ -67,7 +67,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public  void deleteComment(CommentDto commentId) throws SQLException{
-        commentDao.deleteCommentByBoardId(commentId);
+    public  int deleteComment(Integer commentId) throws SQLException{
+       return commentDao.deleteCommentByBoardId(commentId);
     }
 }

@@ -10,12 +10,12 @@ import java.util.List;
 public interface CommentDao {
 
 
-    public List<CommentDto> selectByBoardId(int boardId) throws SQLException;
+    List<CommentDto> selectByBoardId(int boardId) throws SQLException;
 
     void createCommentByBoardId(CommentDto comment) throws SQLException;
 
     void updateCommentByBoardId(CommentDto comment) throws SQLException;
 
-    void deleteCommentByBoardId(Integer commentId) throws SQLException;
+    int deleteCommentByBoardId(Integer commentId) throws SQLException;
 }
 

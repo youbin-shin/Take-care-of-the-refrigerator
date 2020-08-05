@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BoardService {
-    }
+
 
     public List<BoardSimpleDto> searchAll() throws SQLException;
 
@@ -21,5 +21,5 @@ public interface BoardService {
 
     public void updateComment(CommentDto comment) throws SQLException;
 
-    public void deleteComment(Integer commentId) throws SQLException;
+    public int deleteComment(Integer commentId) throws SQLException;
 }

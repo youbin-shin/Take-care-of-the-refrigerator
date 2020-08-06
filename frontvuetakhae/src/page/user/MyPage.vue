@@ -1,7 +1,6 @@
 <template>
   <div class="container" style="margin-top:30px">
     <h1>{{ userData.nickname }}님의 마이 페이지</h1>
-
     <div class="header">
       <div class="box" style="background: #BDBDBD;">
         <img
@@ -10,21 +9,29 @@
         />
       </div>
       <div class="introduce">
-        <h3 style="text-align:left">팔로잉 18 명 / 팔로우 25 명</h3>
+        <h3 style="text-align:left">
+          팔로잉 {{ userData.followingCount }} 명 / 팔로우
+          {{ userData.followerCount }} 명
+        </h3>
         <h2 style="text-align:left">자기소개</h2>
-        <p class="text-intro" style="text-align:left">
-          안녕하세요~ 수지입니다. 요즘 요리에 취미를 갖고 있어서 좋은 꿀팁
-          레시피 생기면 공유할께요!!
+        <p>
+          <v-textarea
+            name="input-7-4"
+            label="간단하게 자신에 대해 소개해주세요."
+            v-model="userData.introduce"
+          ></v-textarea>
+          <v-btn depressed small @click="updateIntroduce">저장</v-btn>
         </p>
       </div>
     </div>
-
+    <!-- 나의 냉장고 코드 -->
     <div class="middle">
       <h1>나의 냉장고</h1>
+
       <div>
         <v-row class="m-2 inputBlank" variant="danger">
           <v-text-field
-            label="직접 추가하기"
+            label="냉장고 속 재료를 추가해주세요."
             v-model="addText"
             hide-details="auto"
             v-on:keyup.enter="plusFood()"
@@ -37,20 +44,25 @@
           close
           @click:close="closeChip(tag)"
           :key="tag"
-        >{{ tag }}</v-chip>
-        <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
+          >{{ tag }}</v-chip
+        >
+
+        <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
       </div>
-      <p>조기 김치 설탕 소금 간장 식용유 계란 소고기 맛술 사과 배 캐비어</p>
     </div>
     <div class="interest">
       <h1>관심 레시피</h1>
       <p>연어 킹의 연어 덮밥</p>
       <p>진주새럼의 진주비빔밥</p>
     </div>
+    <hr />
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
-      <p>김치가 필요없는 김치볶음밥</p>
-      <p>손쉽게 만드는 폭탄주먹밥</p>
+      <!-- <p>{{ userData.myBoards }}</p> -->
+      <li v-for="board in userData.myBoards" :key="board">
+        {{ board.boardId }} : {{ board.title }}
+        {{ board.createAt }}
+      </li>
     </div>
     <div class="white--text">
       <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
@@ -58,6 +70,7 @@
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
+    <!-- 개인 정보 수정하기 모달 코드 -->
     <b-modal v-model="modalShow" hide-footer hide-header>
       <h1 class="text-center">{{ userData.uid }}개인 정보 수정하기</h1>
       <div class="container ml-5">
@@ -96,24 +109,26 @@
 
 <script>
 import axios from "axios";
-
-const BACK_URL = "http://i3a305.p.ssafy.io:8399/api/";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   data() {
     return {
-      chips: [
-        // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
-        "간장",
-        "김치",
-        "돼지고기",
-        "새우",
-      ],
+      chips: [], // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
       modalShow: false,
       addText: "",
       emptyChip: false,
-
       userData: {
+        nickname: "",
+        introduce: "",
+        box: "",
+        followingCount: "",
+        followerCount: "",
+        myBoards: [],
+        interestBoards: [],
+      },
+      userupdateData: {
+        // 개인정보 수정할 때 필요한 정보
         email: "",
         password: "",
         nickname: "",
@@ -123,25 +138,69 @@ export default {
   },
   created() {
     axios
-      .get(`${BACK_URL}/users/info`, {
+      .get(`${BACK_URL}/users/mypage`, {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
         console.log(response);
-        this.userData.email = response.data.email;
-        this.userData.nickname = response.data.nickname;
+        this.userData.nickname = response.data.mypage.nickname;
+        this.userData.introduce = response.data.mypage.introduce;
+        this.userData.box = response.data.mypage.box;
+        this.userData.followingCount = response.data.mypage.followingCount;
+        this.userData.followerCount = response.data.mypage.followerCount;
+        this.userData.myBoards = response.data.mypage.myBoards;
+        this.userData.interestBoards = response.data.mypage.interestBoards;
+        this.chips = this.userData.box.split(",");
       });
   },
   methods: {
+    updateIntroduce() {
+      // 자기소개 수정 method
+      axios
+        .put(
+          `${BACK_URL}/users/mypage/introduce`,
+          {
+            introduce: this.userData.introduce,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 202) {
+            alert("자기소개가 수정되었습니다!");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    loadData() {
+      // 개인 정보 수정 모달 클릭시 저장된 user 데이터 가져오는 method
+      axios
+        .get(`${BACK_URL}/users/info`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          console.log(response);
+          this.userupdateData.email = response.data.email;
+          this.userupdateData.nickname = response.data.nickname;
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     updateData() {
+      // 개인정보 수정 모달을 통해 수정하는 method
       if (this.nicknameCheck === true) {
-        if (this.userData.password === "") {
+        if (this.userupdateData.password === "") {
           // 닉네임만 변경할 경우
           axios
             .put(
               `${BACK_URL}/users/info`,
               {
-                nickname: this.userData.nickname,
+                nickname: this.userupdateData.nickname,
               },
               {
                 headers: { "jwt-auth-token": this.$cookies.get("token") },
@@ -157,14 +216,18 @@ export default {
               } else {
                 alert("회원정보 수정이 실패했습니다");
               }
+            })
+            .catch((error) => {
+              alert(error);
             });
         } else {
+          // 닉네임과 비밀번호 모두 변경하는 경우
           axios
             .put(
               `${BACK_URL}/users/info`,
               {
-                nickname: this.userData.nickname,
-                password: this.userData.password,
+                nickname: this.userupdateData.nickname,
+                password: this.userupdateData.password,
               },
               {
                 headers: { "jwt-auth-token": this.$cookies.get("token") },
@@ -176,10 +239,14 @@ export default {
                 alert("회원정보가 수정되었습니다!");
                 this.modalShow = !this.modalShow;
                 this.$router.push("/user/mypage");
+                this.userData.nickname = this.userupdateData.nickname;
                 this.nicknameCheck = false;
               } else {
                 alert("회원정보 수정이 실패했습니다");
               }
+            })
+            .catch((error) => {
+              alert(error);
             });
         }
       } else {
@@ -188,11 +255,12 @@ export default {
       }
     },
     nameCheck() {
+      // 닉네임 중복 조회하는 메소드
       axios
         .post(
           `${BACK_URL}/users/info/nickname`,
           {
-            nickname: this.userData.nickname,
+            nickname: this.userupdateData.nickname,
           },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
@@ -205,17 +273,17 @@ export default {
             alert("사용 가능한 닉네임입니다.");
           } else {
             alert("새로운 닉네임을 입력해주세요.");
-            this.userData.nickname = "";
+            this.userupdateData.nickname = "";
           }
+        })
+        .catch((error) => {
+          alert(error);
         });
     },
     switchModal() {
       this.modalShow = !this.modalShow;
     },
-    remove(item) {
-      this.chips.splice(this.chips.indexOf(item), 1);
-      this.chips = [...this.chips];
-    },
+
     plusFood() {
       // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
@@ -232,17 +300,55 @@ export default {
       this.chips.push(this.addText);
       this.addText = "";
       this.emptyChip = false;
+      axios
+        .put(
+          `${BACK_URL}/users/mypage/box`,
+          {
+            box: this.chips.toString(),
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 202) {
+            alert("냉장고 재료가 추가되었습니다.");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     closeChip(tag) {
       // close 버튼 누를 경우 실행되는 메소드 (리스트에서 삭제)
       this.chips.splice(this.chips.indexOf(tag), 1);
+      axios
+        .put(
+          `${BACK_URL}/users/mypage/box`,
+          {
+            box: this.chips.toString(),
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 202) {
+            alert("냉장고 재료가 삭제되었습니다.");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
       if (this.chips.length === 0) {
         this.emptyChip = true;
       }
     },
     moveCreatePost() {
-      console.log("움직여");
-      // this.$router.push("/create");
+      // recipe 작성하기 페이지로 가도록 하는 method
+      this.$router.push("/create");
     },
   },
 };

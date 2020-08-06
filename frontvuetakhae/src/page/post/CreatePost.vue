@@ -109,22 +109,24 @@
                       v-for="tag in postData.content.steps"
                       :key="tag.description"
                     >
+                      <v-overflow-btn
+                        :items="dropdown_icon"
+                        label="타입 선택"
+                        segmented
+                        target="#dropdown-example"
+                      ></v-overflow-btn>
+                      <b-form-input
+                        v-model="hashtag"
+                        placeholder="해시태그 입력"
+                      ></b-form-input>
                       <i aria-hidden="true"></i>
                       {{ tag.description }}
-                      <button
-                        class="btn btn-info"
-                        style="background-color:red"
-                        @click="deleleStep(tag.description)"
+                      <v-btn small @click="deleleStep(tag.description)"
+                        >삭제</v-btn
                       >
-                        삭제
-                      </button>
-                      <button
-                        class="btn btn-info"
-                        style="background-color:red"
-                        @click="deleleStep(tag.description)"
+                      <v-btn small color="primary" class="ml-1"
+                        >내 저장소</v-btn
                       >
-                        내 저장소
-                      </button>
                     </li>
                   </transition-group>
                 </draggable>
@@ -211,6 +213,12 @@ export default {
   },
   data() {
     return {
+      hashtag: "",
+      dropdown_icon: [
+        { text: "재료 손질", callback: () => console.log("재료 손질") },
+        { text: "요리 준비", callback: () => console.log("요리 준비") },
+        { text: "플레이팅", callback: () => console.log("플레이팅") },
+      ],
       e6: 1,
       rules: [(value) => !!value || "Required."],
       postData: {
@@ -290,7 +298,7 @@ export default {
       console.log(ingreString);
       axios
         .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/create/",
+          "http://i3a305.p.ssafy.io:8399/api/boards/",
           {
             content: this.postData.review,
             cookingTime: this.postData.time,

@@ -1,8 +1,6 @@
 package com.web.server.repo;
 
-import com.web.server.dto.Board;
-import com.web.server.dto.BoardSimpleDto;
-import com.web.server.dto.StepOfBoardDto;
+import com.web.server.dto.*;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ public class BoardDaoImpl implements BoardDao{
     }
 
     @Override
-    public List<StepOfBoardDto> searchStepsInBoard(int boardId) throws SQLException {
+    public List<Steps> searchStepsInBoard(int boardId) throws SQLException {
         return template.selectList(ns + "selectStepsInBoardByBoardId", boardId);
     }
 
@@ -43,8 +41,28 @@ public class BoardDaoImpl implements BoardDao{
     }
 
     @Override
-    public int insertStep(StepOfBoardDto step) throws SQLException {
+    public int insertStep(Steps step) throws SQLException {
         return template.insert(ns + "insertStep", step);
+    }
+
+    @Override
+    public int insertTag(Tags tagName) throws SQLException {
+        return template.insert(ns + "insertTag", tagName);
+    }
+
+    @Override
+    public Tags selectTagExist(Tags tag) throws SQLException {
+        return template.selectOne(ns + "selectTagExist", tag);
+    }
+
+    @Override
+    public int insertStepTags(StepTags stepTags) throws SQLException {
+        return template.insert(ns+"insertStepTags",stepTags);
+    }
+
+    @Override
+    public List<Tags> getTagList(int selectedStepId) throws SQLException {
+        return template.selectList(ns+"getTagList",selectedStepId);
     }
 
 }

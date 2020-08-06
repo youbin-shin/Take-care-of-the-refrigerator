@@ -23,8 +23,9 @@ public class Board {
     private Double cookingTime;
     private String thumbnailImage;
 
-    private List<StepOfBoardDto> steps;
+    private List<Steps> steps;
     private List<CommentDto> comments;
+    private List<String> tags;
 
 //    private User user;
 }

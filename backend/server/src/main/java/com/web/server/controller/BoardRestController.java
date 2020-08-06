@@ -84,9 +84,9 @@ class BoardRestController {
 
             status = HttpStatus.OK;
             // body json add
-            resultMap.put("board", board);
             resultMap.put("status", status.value());
             resultMap.put("message", "성공");
+            resultMap.put("board", board);
         } catch (RuntimeException | SQLException e) {
             logger.info("게시글 디테일 정보 요청 실패 : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST;
@@ -108,7 +108,7 @@ class BoardRestController {
      * @return
      */
     @ApiOperation(value = "게시글 작성", response = String.class)
-    @PostMapping("/boards/create")
+    @PostMapping("/boards")
     public ResponseEntity<Map<String, Object>> writeBoard(HttpServletRequest req,
                                                           @RequestBody final Board board,
                                                           HttpServletResponse res) {

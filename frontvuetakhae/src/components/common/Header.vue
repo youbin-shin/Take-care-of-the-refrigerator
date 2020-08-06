@@ -13,14 +13,7 @@
           <div>
             <div class="div_item">
               <span class="item_100px">아이디</span>
-              <input
-                class="item_200px"
-                type="text"
-                id="loginEmail"
-                ref="loginEmail"
-                v-model="loginEmail"
-                placeholder="이메일을 입력해주세요"
-              />
+              <input class="item_200px" type="text" id="loginEmail" ref="loginEmail" v-model="loginEmail" placeholder="이메일을 입력해주세요" />
             </div>
 
             <div class="div_item">
@@ -47,14 +40,7 @@
           <div>
             <div class="div_item">
               <span class="item_100px">아이디</span>
-              <input
-                class="item_200px"
-                type="text"
-                id="signUpEmail"
-                ref="signUpEmail"
-                v-model="signUpEmail"
-                placeholder="이메일을 입력해주세요"
-              />
+              <input class="item_200px" type="text" id="signUpEmail" ref="signUpEmail" v-model="signUpEmail" placeholder="이메일을 입력해주세요" />
             </div>
 
             <div class="div_item">
@@ -102,7 +88,7 @@
       </div>
     </div>
 
-    <div class="lowerHeader d-flex justify-content-around align-items-center">
+    <div class="lowerHeader d-flex justify-content-around align-items-center mb-6">
       <!-- 기능 nav -->
       <div>
         <router-link class="text-white" to="/">홈</router-link>
@@ -111,14 +97,12 @@
         <router-link class="text-white" to="/search">냉장고를 Vue탁해</router-link>
       </div>
       <div>
-        <router-link
-          v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }"
-          class="login-btn text-white"
-          v-if="this.$cookies.get('token') != null"
-        >Recipe 작성하기</router-link>
+        <router-link v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }" class="login-btn text-white" v-if="this.$cookies.get('token') != null"
+          >Recipe 작성하기</router-link
+        >
       </div>
       <div>
-        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/">공지사항</router-link>
+        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/notice">공지사항</router-link>
       </div>
     </div>
   </div>
@@ -205,7 +189,7 @@ export default {
       this.$router.push("/user/mypage");
     },
   },
-  data: function () {
+  data: function() {
     return {
       constants,
       keyword: "",

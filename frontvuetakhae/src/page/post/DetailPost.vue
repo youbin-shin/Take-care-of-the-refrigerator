@@ -1,4 +1,5 @@
 <template>
+  <!-- <div> -->
   <div class="container" v-if="backData">
     <div class="detailHeader">
       <h1 class="mt-5 mb-2">
@@ -36,7 +37,9 @@
       <h2 class="detailContentItem">과정</h2>
 
       <ul v-for="step in backData.steps" :key="step">
-        <li>{{ step }}</li>
+        <li>
+          {{ step }}
+        </li>
       </ul>
       <hr />
       <b-row>
@@ -54,7 +57,9 @@
             <p>체리가 좋아</p>
           </b-col>
           <b-col cols="10">
-            <p>간단한 레시피 감사합니다. 요알못에서 벗어날 수 있을 것 같아요!</p>
+            <p>
+              간단한 레시피 감사합니다. 요알못에서 벗어날 수 있을 것 같아요!
+            </p>
             <p>{{ backData.date }}</p>
           </b-col>
         </b-row>
@@ -90,7 +95,6 @@
 <script>
 export default {
   name: "DetailPost",
-  inject: ["theme"],
   // props: { // back 연결되면 사용할 데이터
   //   backData: {
   //     type: Object,
@@ -121,11 +125,7 @@ export default {
           comment: 3,
           nickname: "연어가좋아",
           like: 3,
-          steps: [
-            "연어를 자른다",
-            "밥 위에 연어를 올린다.",
-            "양파와 와사비로 고명을 해준다.",
-          ],
+          steps: ["연어를 자른다", "밥 위에 연어를 올린다.", "양파와 와사비로 고명을 해준다."],
         },
         {
           title: "쇠고기 미역국",
@@ -136,12 +136,7 @@ export default {
           comment: 3,
           nickname: "간장게장",
           like: 3,
-          steps: [
-            "물을 끓인다",
-            "미역을 넣고 끓인다.",
-            "소고기를 넣고 간장으로 간을 맞춰준다.",
-            "참기름으로 감칠맛을 더한다.",
-          ],
+          steps: ["물을 끓인다", "미역을 넣고 끓인다.", "소고기를 넣고 간장으로 간을 맞춰준다.", "참기름으로 감칠맛을 더한다."],
         },
         {
           title: "김치볶음밥",
@@ -152,12 +147,7 @@ export default {
           comment: 3,
           nickname: "골목식당",
           like: 3,
-          steps: [
-            "김치를 식용유에 볶는다.",
-            "스팸을 넣어 볶다가 밥을 넣는다.",
-            "간장을 살짝 태워 밥에 섞는다.",
-            "계란을 넣고 마무리한다.",
-          ],
+          steps: ["김치를 식용유에 볶는다.", "스팸을 넣어 볶다가 밥을 넣는다.", "간장을 살짝 태워 밥에 섞는다.", "계란을 넣고 마무리한다."],
         },
         {
           title: "전주비빔밥",
@@ -179,11 +169,7 @@ export default {
           comment: 3,
           nickname: "비가오는날엔",
           like: 3,
-          steps: [
-            "밀가루와 김치를 넣고 반죽을 만든다.",
-            "반죽을 굽는다.",
-            "맛있게 먹는다.",
-          ],
+          steps: ["밀가루와 김치를 넣고 반죽을 만든다.", "반죽을 굽는다.", "맛있게 먹는다."],
         },
       ],
       // likenum: 5,

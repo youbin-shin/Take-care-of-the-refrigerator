@@ -39,6 +39,16 @@ public class BoardDaoImpl implements BoardDao{
     }
 
     @Override
+    public List<Board> selectByUserId(int userId) throws SQLException {
+        return template.selectList(ns + "selectBoardsByUserId", userId);
+    }
+
+    @Override
+    public List<Board> selectInterestBoardsByUserId(int userId) throws SQLException {
+        return template.selectList(ns + "selectInterestBoardsByUserId", userId);
+    }
+
+    @Override
     public int insertBoard(Board board) throws SQLException {
         return template.insert(ns + "insertBoard", board);
     }

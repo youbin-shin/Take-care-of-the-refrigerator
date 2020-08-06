@@ -1,5 +1,6 @@
 package com.web.server.service;
 
+import com.web.server.dto.Board;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 import com.web.server.repo.BoardDao;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 
 @Service
@@ -70,14 +72,25 @@ public class UserinfoServiceImpl implements UserinfoService {
         return resultUser;
     }
 
+    /**
+     * 사용자 마이페이지 조회
+     *
+     * @param email
+     * @return
+     * @throws SQLException
+     */
     @Override
     public UserProfileDto searchUserProfileByEmail(String email) throws SQLException{
     	UserProfileDto resultDto  = null;
+    	// get user
+        int userId = uDao.selectByIsEmail(email).getUserId();
         // users table (nickname, introduce, box) + follow table (following count, follower count)
-    	resultDto = uDao.selectUserProfileByEamil(email);
+    	resultDto = uDao.selectUserProfileByUserId(userId);
         // boards table (Boards written by user)
+        resultDto.setMyBoards(bDao.selectByUserId(userId));
         // interest_boards table (user's interest boards
-        return null;
+        resultDto.setInterestBoards(bDao.selectInterestBoardsByUserId(userId));
+        return resultDto;
     }
 
     /**
@@ -100,5 +113,4 @@ public class UserinfoServiceImpl implements UserinfoService {
     public int updateUser(User user) throws SQLException{
         return uDao.updateUser(user);
     }
-
 }

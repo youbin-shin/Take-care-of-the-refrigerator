@@ -20,7 +20,7 @@ public interface UserinfoDao {
 
     public User selectByIsEmail(String email);
     
-    public UserProfileDto selectUserProfileByEamil (String email) throws SQLException;
+    public UserProfileDto selectUserProfileByUserId (int userId) throws SQLException;
 
     public int checkAccount(String nickname) throws SQLException;
 

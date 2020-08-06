@@ -22,9 +22,14 @@
     </select>
     
     <!-- 마이페이지: 닉네임, 자기소개, 나의냉장고, 팔로잉 수, 팔로우 수 조회 -->
-    <select id="selectbyuserprofilebyemail" parameterType="string" resultMap="userprofile">
-    	select *
-    	for users
+    <select id="selectbyuserprofilebyuserid" parameterType="int" resultMap="userprofile">
+    	select nickname,
+               introduce,
+               box,
+               count(case when followee=#{userId} then #{userId} end) as following_count,
+	           count(case when follower=#{userId} then #{userId} end) as follower_count
+        from users, follow
+        where users.user_id = #{userId}
     </select>
 
     <select id="selectbyid" parameterType="int" resultType="user">
@@ -51,15 +56,21 @@
 
     <update id="update" parameterType="user">
 		update users
-		<set>
+        <set>
             <if test="nickname!=null">
-                nickname=#{nickname}
+                nickname = #{nickname},
             </if>
             <if test="password!=null">
-                password=#{password}
+                password = #{password},
+            </if>
+            <if test="introduce!=null">
+                introduce = #{introduce},
+            </if>
+            <if test="box!=null">
+                box = #{box}
             </if>
         </set>
-        where email=#{email}
+        where email = #{email}
 	</update>
 
     <delete id="delete" parameterType="string">

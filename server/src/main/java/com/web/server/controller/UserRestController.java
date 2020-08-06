@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.web.server.dto.UserProfileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +97,7 @@ public class UserRestController {
             // return new ResponseEntity<User>(userService.login(email, password), HttpStatus.OK);
 
         } catch (RuntimeException e) {
-            logger.info("로그인 실패", e.getMessage());
+            logger.info("로그인 실패");
             status = HttpStatus.UNAUTHORIZED; // status code : 401
             // body json add
             resultMap.put("status", status.value());
@@ -226,13 +227,13 @@ public class UserRestController {
                 // log
                 logger.info("개인 정보 조회 수정 성공");
             } else {
-                throw new RuntimeException();
+                throw new RuntimeException("개인 정보 수정 쿼리가 비정상 실행");
             }
         } catch (RuntimeException | SQLException e) {
             logger.info("개인 정보 조회 수정 실패");
-            logger.info("test email : {}", jwtService.getEamil(req.getHeader("jwt-auth-token")));
+            logger.info("test error getMessage : {}", e.getMessage());
+            logger.info("test email : {}", jwtService.getEamil(req.getHeader("jwt-auth-token")).toString());
             logger.info("test user : {}", user.toString());
-            logger.info("test getMessage : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST; // status code : 400
             // body json add
             resultMap.put("success", false);
@@ -248,7 +249,7 @@ public class UserRestController {
      * @return
      */
     @ApiOperation(value = "닉네임 중복 검사")
-    @GetMapping("/users/info/nickname")
+    @PostMapping("/users/info/nickname")
     public ResponseEntity<Map<String, Object>> getUserInfoByNickname(@RequestBody final User user) {
         String nickname = user.getNickname();
         Map<String, Object> resultMap = new HashMap<>();
@@ -311,32 +312,65 @@ public class UserRestController {
     }
 
 
-
-
+    /**
+     * 회원 마이페이지 조회
+     * 성공 : 200
+     * 실패 : 400
+     *
+     * @param req
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "회원 마이페이지 조회", response = User.class)
     @GetMapping("/users/mypage")
     public ResponseEntity<Map<String, Object>> getUserProfile(final HttpServletRequest req) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        UserProfileDto userProfileDto = null;
         try {
             String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
-            userService.searchUserProfileByEmail(email);
+            userProfileDto = userService.searchUserProfileByEmail(email);
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("success", true);
+            resultMap.put("mypage", userProfileDto);
+            logger.info("회원 마이페이지 조회 성공 : {}", userProfileDto.toString());
         } catch (RuntimeException e) {
-
+            logger.info("회원 마이페이지 조회 실패 에러 메세지 : {}", e.getMessage());
+            logger.info("회원 마이페이지 조회 실패 userProfile : {}", userProfileDto.toString());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @ApiOperation(value = "해당 아이디의 유저를 삭제한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-    @DeleteMapping("{uid}")
-    public ResponseEntity<String> deleteQnA(@PathVariable final String uid, final HttpSession session) {
-        logger.info("deleteUser - 호출");
-        if (userService.deleteUser(uid) == 1) {
-            session.invalidate();
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+
+    @ApiOperation(value = "회원 마이페이지 수정", response = User.class)
+    @PutMapping("/users/mypage/{columnName}")
+    public ResponseEntity<Map<String, Object>> setUserProfile(final HttpServletRequest req,
+                                                              @RequestBody User user,
+                                                              @PathVariable final String columnName) throws Exception {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            if(columnName.equals("introduce") || columnName.equals("box")) {
+                user.setEmail(jwtService.getEamil(req.getHeader("jwt-auth-token")));
+                userService.modify(user);
+                status = HttpStatus.ACCEPTED; // status code : 202
+                // body json add
+                resultMap.put("success", true);
+            } else {
+                status = HttpStatus.NOT_ACCEPTABLE; // statuc code : 406
+                resultMap.put("success", false);
+                throw new RuntimeException("없는 속성 수정 요청");
+            }
+        } catch (RuntimeException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
         }
-        return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+
 
     @ApiOperation(value = "유저의 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     @PutMapping("{uid}")

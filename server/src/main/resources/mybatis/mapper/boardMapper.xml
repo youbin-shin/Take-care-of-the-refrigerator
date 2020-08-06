@@ -29,6 +29,30 @@
         where board_id = #{boardId}
     </select>
 
+    <!--  게시글들 유저 아이디로 조회  -->
+    <select id="selectBoardsByUserId" parameterType="int" resultType="board">
+        select *
+        from boards
+        where user_id = #{userId}
+    </select>
+
+    <!--  관심 게시글들 유저 아이디로 조회  -->
+    <select id="selectInterestBoardsByUserId" parameterType="int" resultType="board">
+        select boards.user_id as user_id,
+               boards.title  as title,
+               title,
+               ingredient,
+               content,
+               create_at,
+               update_at,
+               grade,
+               cooking_time,
+               thumbnail_image
+        from interest_boards
+        join boards on interest_boards.board_id = boards.board_id
+        where interest_boards.user_id = #{userId}
+    </select>
+
     <!--  게시글 작성  -->
     <insert id="insertBoard" parameterType="board">
         <selectKey order="AFTER" resultType="int" keyProperty="boardId">

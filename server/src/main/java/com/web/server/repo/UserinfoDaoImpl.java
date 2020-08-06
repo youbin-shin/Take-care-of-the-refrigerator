@@ -80,8 +80,8 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
     @Override
-    public UserProfileDto selectUserProfileByEamil(String email) {
-    	return template.selectOne(ns + "selectbyuserprofilebyemail", email);
+    public UserProfileDto selectUserProfileByUserId(int userId) {
+    	return template.selectOne(ns + "selectbyuserprofilebyuserid", userId);
     }
     
     @Override

@@ -1,23 +1,16 @@
 <template>
   <div id="header" v-if="isHeader">
     <div class="upperHead d-flex justify-content-between">
-      <router-link
-        class="ml-4"
-        v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }"
-      >
+      <router-link class="ml-4" v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }">
         <img class="logoImage" src="../../assets/img/logo.png" />
       </router-link>
       <div class="right" v-if="this.$cookies.get('token') == null">
         <a @click="modalShow = !modalShow" class="a_tag_modal">로그인</a>
-        <a
-          style="margin:0px 20px"
-          @click="signUpShow = !signUpShow"
-          class="a_tag_modal"
-          >회원가입</a
-        >
+        <a style="margin:0px 20px" @click="signUpShow = !signUpShow" class="a_tag_modal">회원가입</a>
 
         <b-modal v-model="modalShow" hide-footer hide-header>
-          <h1 class="text-center">로그인</h1>
+          <h2 class="text-center">로그인</h2>
+
           <div>
             <div class="div_item">
               <span class="item_100px">아이디</span>
@@ -35,7 +28,7 @@
               <span class="item_100px">비밀번호</span>
               <input
                 class="item_200px"
-                type="text"
+                type="password"
                 ref="loginPassword"
                 id="passwloginPasswordord"
                 v-model="loginPassword"
@@ -44,13 +37,19 @@
               />
             </div>
           </div>
-          <b-button class="mt-3" block @click="login">로그인 하기</b-button>
-          <p class="go_signup" style="color:gray">
-            아직 회원이 아니신가요?
-            <span class="span_signup" @click="switchModal"
-              >회원가입 하러 가기</span
-            >
-          </p>
+          <div>
+            <b-button class="mt-3" block variant="info" size="lg" @click="login">로그인 하기</b-button>
+
+            <p class="go_signup" style="color:gray">
+              아직 회원이 아니신가요?
+              <b-button
+                class="ml-5"
+                size="sm"
+                variant="outline-info"
+                @click="switchModal"
+              >회원가입 하러 가기</b-button>
+            </p>
+          </div>
         </b-modal>
 
         <b-modal v-model="signUpShow" hide-footer hide-header>
@@ -72,7 +71,7 @@
               <span class="item_100px">비밀번호</span>
               <input
                 class="item_200px"
-                type="text"
+                type="password"
                 ref="signUpPassword"
                 id="signUpPassword"
                 v-model="signUpPassword"
@@ -83,7 +82,7 @@
               <span class="item_100px">비밀번호 확인</span>
               <input
                 class="item_200px"
-                type="text"
+                type="password"
                 ref="signUpPasswordconfirm"
                 id="signUpPasswordconfirm"
                 v-model="signUpPasswordconfirm"
@@ -103,15 +102,19 @@
             </div>
           </div>
 
-          <b-button class="mt-3" block @click="signUp">회원가입 하기</b-button>
-          <p class="go_signup" @click="switchModal">로그인으로 돌아가기</p>
+          <b-button class="mt-3" block variant="info" @click="signUp">회원가입 하기</b-button>
+
+          <p class="go_signup ml-4" @click="switchModal">
+            로그인으로 돌아가기
+            <b-button variant="light">
+              <b-icon-arrow-return-left></b-icon-arrow-return-left>
+            </b-button>
+          </p>
         </b-modal>
       </div>
       <div class="right" v-if="this.$cookies.get('token') != null">
         <a @click="logout" class="a_tag_modal">로그아웃</a>
-        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal"
-          >마이페이지</a
-        >
+        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal">마이페이지</a>
       </div>
     </div>
 
@@ -121,25 +124,17 @@
         <router-link class="text-white" to="/">홈</router-link>
       </div>
       <div>
-        <router-link class="text-white" to="/search"
-          >냉장고를 Vue탁해</router-link
-        >
+        <router-link class="text-white" to="/search">냉장고를 Vue탁해</router-link>
       </div>
       <div>
         <router-link
           v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }"
           class="login-btn text-white"
           v-if="this.$cookies.get('token') != null"
-          >Recipe 작성하기</router-link
-        >
+        >Recipe 작성하기</router-link>
       </div>
       <div>
-        <router-link
-          class="text-white"
-          v-if="this.$cookies.get('token') != null"
-          to="/notice"
-          >공지사항</router-link
-        >
+        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/notice">공지사항</router-link>
       </div>
     </div>
   </div>
@@ -226,7 +221,7 @@ export default {
       this.$router.push("/user/mypage");
     },
   },
-  data: function() {
+  data: function () {
     return {
       constants,
       keyword: "",
@@ -254,7 +249,7 @@ export default {
   height: 60px;
 }
 .lowerHeader {
-  background-color: rgb(153, 26, 47);
+  background-color: #991a2f;
   max-width: 100%;
   height: 60px;
 }
@@ -289,5 +284,13 @@ export default {
 }
 .text-center {
   text-align: center;
+}
+input[type="password"] {
+  font-family: "Avenir";
+}
+::placeholder {
+  padding: 8px;
+  color: black;
+  font-size: 0.7em;
 }
 </style>

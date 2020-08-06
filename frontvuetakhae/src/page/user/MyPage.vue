@@ -37,8 +37,7 @@
           close
           @click:close="closeChip(tag)"
           :key="tag"
-          >{{ tag }}</v-chip
-        >
+        >{{ tag }}</v-chip>
         <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
       </div>
       <p>조기 김치 설탕 소금 간장 식용유 계란 소고기 맛술 사과 배 캐비어</p>
@@ -54,42 +53,43 @@
       <p>손쉽게 만드는 폭탄주먹밥</p>
     </div>
     <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost"
-        >레시피 작성하기</b-button
-      >
-      <b-button
-        class="a_tag_modal bottom-button mr-2"
-        @click="modalShow = !modalShow"
-        >수정하기</b-button
-      >
+      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
+      <b-button class="a_tag_modal bottom-button mr-2" @click="modalShow = !modalShow">수정하기</b-button>
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
     <b-modal v-model="modalShow" hide-footer hide-header>
       <h1 class="text-center">{{ userData.uid }}개인 정보 수정하기</h1>
-      <div>
+      <div class="container ml-5">
         <div class="div_item">
-          <span class="item_100px">닉네임</span>
-          <input
-            :value="userData.nickname"
-            @input="userData.nickname = $event.target.value"
-            id="email"
-            type="text"
-          />
-          <b-button @click="nameCheck">중복확인하기</b-button>
-          <small v-if="nicknameCheck">사용가능한 닉네임입니다.</small>
+          <div>
+            <span class="item_100px">닉네임</span>
+            <input
+              class="ml-4 pl-2"
+              style="border: 1px solid #000000; background-color: #e2e2e2;"
+              :value="userData.nickname"
+              @input="userData.nickname = $event.target.value"
+              id="email"
+              type="text"
+            />
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
+          </div>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
           <input
+            class="ml-2"
+            style="border: 1px solid #000000; background-color: #e2e2e2;"
             @input="userData.password = $event.target.value"
             placeholder="새로운 비밀번호를 입력해주세요."
-            id="password"
             type="password"
           />
         </div>
       </div>
-      <b-button class="mt-3" block @click="updateData">저장하기</b-button>
+      <div>
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -271,7 +271,10 @@ export default {
   width: 100%;
   overflow: auto;
 }
-
+.small {
+  font-size: 0.4em;
+  margin: 2px;
+}
 .box {
   display: inline-block;
   width: 15%;
@@ -292,5 +295,16 @@ export default {
 }
 .bottom-button {
   margin-bottom: 50px;
+}
+input[type="password"] {
+  font-family: "Avenir";
+}
+::placeholder {
+  padding: 8px;
+  color: black;
+  font-size: 0.7em;
+}
+input[value="userData.nickname"] {
+  margin-left: 2px;
 }
 </style>

@@ -22,19 +22,16 @@
           ></v-textarea>
           <v-btn depressed small @click="updateIntroduce">저장</v-btn>
         </p>
-        <!-- <p class="text-intro" style="text-align:left">
-          안녕하세요~ 수지입니다. 요즘 요리에 취미를 갖고 있어서 좋은 꿀팁
-          레시피 생기면 공유할께요!!
-        </p> -->
       </div>
     </div>
     <!-- 나의 냉장고 코드 -->
     <div class="middle">
       <h1>나의 냉장고</h1>
+
       <div>
         <v-row class="m-2 inputBlank" variant="danger">
           <v-text-field
-            label="직접 추가하기"
+            label="냉장고 속 재료를 추가해주세요."
             v-model="addText"
             hide-details="auto"
             v-on:keyup.enter="plusFood()"
@@ -49,7 +46,8 @@
           :key="tag"
           >{{ tag }}</v-chip
         >
-        <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
+
+        <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
       </div>
     </div>
     <div class="interest">
@@ -112,19 +110,12 @@
 
 <script>
 import axios from "axios";
-
-const BACK_URL = "http://i3a305.p.ssafy.io:8399/api/";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   data() {
     return {
-      chips: [
-        // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
-        "간장",
-        "김치",
-        "돼지고기",
-        "새우",
-      ],
+      chips: [], // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
       modalShow: false,
       addText: "",
       emptyChip: false,
@@ -160,10 +151,12 @@ export default {
         this.userData.followerCount = response.data.mypage.followerCount;
         this.userData.myBoards = response.data.mypage.myBoards;
         this.userData.interestBoards = response.data.mypage.interestBoards;
+        this.chips = this.userData.box.split(",");
       });
   },
   methods: {
     updateIntroduce() {
+      // 자기소개 수정 method
       axios
         .put(
           `${BACK_URL}/users/mypage/introduce`,
@@ -263,6 +256,7 @@ export default {
       }
     },
     nameCheck() {
+      // 닉네임 중복 조회하는 메소드
       axios
         .post(
           `${BACK_URL}/users/info/nickname`,
@@ -290,10 +284,7 @@ export default {
     switchModal() {
       this.modalShow = !this.modalShow;
     },
-    remove(item) {
-      this.chips.splice(this.chips.indexOf(item), 1);
-      this.chips = [...this.chips];
-    },
+
     plusFood() {
       // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
@@ -310,10 +301,48 @@ export default {
       this.chips.push(this.addText);
       this.addText = "";
       this.emptyChip = false;
+      axios
+        .put(
+          `${BACK_URL}/users/mypage/box`,
+          {
+            box: this.chips.toString(),
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 202) {
+            alert("냉장고 재료가 추가되었습니다.");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     closeChip(tag) {
       // close 버튼 누를 경우 실행되는 메소드 (리스트에서 삭제)
       this.chips.splice(this.chips.indexOf(tag), 1);
+      axios
+        .put(
+          `${BACK_URL}/users/mypage/box`,
+          {
+            box: this.chips.toString(),
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 202) {
+            alert("냉장고 재료가 삭제되었습니다.");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
       if (this.chips.length === 0) {
         this.emptyChip = true;
       }

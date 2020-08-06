@@ -290,7 +290,7 @@ export default {
       console.log(ingreString);
       axios
         .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/create/",
+          "http://i3a305.p.ssafy.io:8399/api/boards/",
           {
             content: this.postData.review,
             cookingTime: this.postData.time,

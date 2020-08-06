@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="margin-top:30px">
-    <h1>{{ userData.nickname}}님의 마이 페이지</h1>
+    <h1>{{ userData.nickname }}님의 마이 페이지</h1>
 
     <div class="header">
       <div class="box" style="background: #BDBDBD;">
@@ -12,10 +12,10 @@
       <div class="introduce">
         <h3 style="text-align:left">팔로잉 18 명 / 팔로우 25 명</h3>
         <h2 style="text-align:left">자기소개</h2>
-        <p
-          class="text-intro"
-          style="text-align:left"
-        >안녕하세요~ 수지입니다. 요즘 요리에 취미를 갖고 있어서 좋은 꿀팁 레시피 생기면 공유할께요!!</p>
+        <p class="text-intro" style="text-align:left">
+          안녕하세요~ 수지입니다. 요즘 요리에 취미를 갖고 있어서 좋은 꿀팁
+          레시피 생기면 공유할께요!!
+        </p>
       </div>
     </div>
 
@@ -35,9 +35,10 @@
           class="m-1"
           v-for="tag in chips"
           close
-          @click:close="closeChip(tag);"
+          @click:close="closeChip(tag)"
           :key="tag"
-        >{{ tag }}</v-chip>
+          >{{ tag }}</v-chip
+        >
         <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
       </div>
       <p>조기 김치 설탕 소금 간장 식용유 계란 소고기 맛술 사과 배 캐비어</p>
@@ -53,8 +54,14 @@
       <p>손쉽게 만드는 폭탄주먹밥</p>
     </div>
     <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
-      <b-button class="a_tag_modal bottom-button mr-2" @click="modalShow = !modalShow">수정하기</b-button>
+      <b-button class="bottom-button mr-2" @click="moveCreatePost"
+        >레시피 작성하기</b-button
+      >
+      <b-button
+        class="a_tag_modal bottom-button mr-2"
+        @click="modalShow = !modalShow"
+        >수정하기</b-button
+      >
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
@@ -69,6 +76,7 @@
             id="email"
             type="text"
           />
+          <b-button @click="nameCheck">중복확인하기</b-button>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -109,6 +117,7 @@ export default {
         password: "",
         nickname: "",
       },
+      nicknameCheck: false,
     };
   },
   created() {
@@ -124,20 +133,78 @@ export default {
   },
   methods: {
     updateData() {
+      if (this.nicknameCheck === true) {
+        if (this.userData.password === "") {
+          // 닉네임만 변경할 경우
+          axios
+            .put(
+              `${BACK_URL}/users/info`,
+              {
+                nickname: this.userData.nickname,
+              },
+              {
+                headers: { "jwt-auth-token": this.$cookies.get("token") },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              if (response.status === 202) {
+                alert("회원정보가 수정되었습니다!");
+                this.modalShow = !this.modalShow;
+                this.$router.push("/user/mypage");
+                this.nicknameCheck = false;
+              } else {
+                alert("회원정보 수정이 실패했습니다");
+              }
+            });
+        } else {
+          axios
+            .put(
+              `${BACK_URL}/users/info`,
+              {
+                nickname: this.userData.nickname,
+                password: this.userData.password,
+              },
+              {
+                headers: { "jwt-auth-token": this.$cookies.get("token") },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              if (response.status === 202) {
+                alert("회원정보가 수정되었습니다!");
+                this.modalShow = !this.modalShow;
+                this.$router.push("/user/mypage");
+                this.nicknameCheck = false;
+              } else {
+                alert("회원정보 수정이 실패했습니다");
+              }
+            });
+        }
+      } else {
+        alert("닉네임 중복을 확인해주세요.");
+        return;
+      }
+    },
+    nameCheck() {
       axios
-        .put(`${BACK_URL}/users/info`, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-          params: {
+        .post(
+          `${BACK_URL}/users/info/nickname`,
+          {
             nickname: this.userData.nickname,
           },
-        })
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           console.log(response);
-          if (response.data == "success") {
-            alert("회원정보가 수정되었습니다!");
-            this.$router.push("/user/mypage");
+          if (response.status === 200) {
+            this.nicknameCheck = true;
+            alert("사용 가능한 닉네임입니다.");
           } else {
-            alert("회원정보 수정이 실패했습니다");
+            alert("새로운 닉네임을 입력해주세요.");
+            this.userData.nickname = "";
           }
         });
     },

@@ -40,6 +40,7 @@
                 id="passwloginPasswordord"
                 v-model="loginPassword"
                 placeholder="영문, 숫자 혼용 8자 이상"
+                v-on:keyup.enter="login()"
               />
             </div>
           </div>
@@ -114,9 +115,7 @@
       </div>
     </div>
 
-    <div
-      class="lowerHeader d-flex justify-content-around align-items-center mb-6"
-    >
+    <div class="lowerHeader d-flex justify-content-around align-items-center">
       <!-- 기능 nav -->
       <div>
         <router-link class="text-white" to="/">홈</router-link>

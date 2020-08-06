@@ -1,6 +1,9 @@
 <template>
-  <div class="container" style="margin-top: 30px;
-">
+  <div
+    class="container"
+    style="margin-top: 30px;
+"
+  >
     <b-form-group
       label-cols="4"
       label-cols-lg="2"
@@ -9,13 +12,18 @@
       label-for="input-lg"
       autofocus
     >
-      <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
+      <b-form-input
+        v-model="postData.title"
+        id="input-lg"
+        size="lg"
+      ></b-form-input>
     </b-form-group>
-
     <v-stepper v-model="e6" vertical>
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
-        <small class="mt-2">드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small>
+        <small class="mt-2"
+          >드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small
+        >
       </v-stepper-step>
       <v-stepper-content step="1">
         <v-card class="mb-12">
@@ -32,16 +40,24 @@
                     @end="drag = false"
                   >
                     <v-chip
-                      class="mr-1 mb-1"
+                      class="mr-2 mb-2"
                       v-for="tag in postData.content.ingredients"
                       :key="tag"
-                    >{{ tag }}</v-chip>
+                      close
+                      @click:close="closeChip(tag)"
+                      >{{ tag }}</v-chip
+                    >
                   </draggable>
                 </div>
               </b-col>
               <b-col>
                 <v-row class="m-2">
-                  <v-text-field label="직접 추가하기" v-model="addText" hide-details="auto"></v-text-field>
+                  <v-text-field
+                    label="직접 추가하기"
+                    v-model="addText"
+                    hide-details="auto"
+                    v-on:keyup.enter="plusFood"
+                  ></v-text-field>
                   <v-icon large @click="plusFood">mdi-plus</v-icon>
                 </v-row>
                 <div class="bg-my-box">
@@ -54,7 +70,9 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="mr-1 mb-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">
+                        {{ tag }}
+                      </v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -62,10 +80,15 @@
             </b-row>
           </b-container>
         </v-card>
+        <div>
+          데이터 잘들어오는 지 확인용 {{ postData.content.ingredients }}
+        </div>
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
 
-      <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
+      <v-stepper-step color="red" :complete="e6 > 2" step="2"
+        >요리 과정</v-stepper-step
+      >
 
       <v-stepper-content step="2">
         <v-card class="mb-12">
@@ -82,14 +105,26 @@
                   @end="drag = false"
                 >
                   <transition-group type="transition" :name="'flip-list'">
-                    <li v-for="tag in postData.content.steps" :key="tag.description">
+                    <li
+                      v-for="tag in postData.content.steps"
+                      :key="tag.description"
+                    >
                       <i aria-hidden="true"></i>
                       {{ tag.description }}
                       <button
                         class="btn btn-info"
                         style="background-color:red"
                         @click="deleleStep(tag.description)"
-                      >삭제</button>
+                      >
+                        삭제
+                      </button>
+                      <button
+                        class="btn btn-info"
+                        style="background-color:red"
+                        @click="deleleStep(tag.description)"
+                      >
+                        내 저장소
+                      </button>
                     </li>
                   </transition-group>
                 </draggable>
@@ -110,7 +145,9 @@
         <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
       </v-stepper-content>
 
-      <v-stepper-step color="red" :complete="e6 > 3" step="3">난이도 & 소요시간</v-stepper-step>
+      <v-stepper-step color="red" :complete="e6 > 3" step="3"
+        >난이도 & 소요시간</v-stepper-step
+      >
 
       <v-stepper-content step="3">
         <v-card class="mb-12" height="200px">
@@ -124,7 +161,8 @@
               medium
             ></v-rating>
           </div>
-          <hr />소요 시간
+          <hr />
+          소요 시간
           <b-form-input type="text" v-model="postData.time" />
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
@@ -161,7 +199,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 import draggable from "vuedraggable";
 import axios from "axios";
 
@@ -174,6 +211,8 @@ export default {
   },
   data() {
     return {
+      e6: 1,
+      rules: [(value) => !!value || "Required."],
       postData: {
         title: null,
         content: {
@@ -201,7 +240,7 @@ export default {
   },
   methods: {
     deleleStep(title) {
-      const idx = this.postData.content.steps.findIndex(function (item) {
+      const idx = this.postData.content.steps.findIndex(function(item) {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);
@@ -310,19 +349,6 @@ export default {
 }
 .flip-list-move {
   transition: transform 0.5s;
-}
-
-.list-group {
-  min-height: 20px;
-  width: 100%;
-}
-
-.list-group-item {
-  cursor: move;
-}
-
-.list-group-item i {
-  cursor: pointer;
 }
 .bg-my-gredient {
   background-color: burlywood;

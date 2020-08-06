@@ -2,25 +2,29 @@
   <div class="searchPost">
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
-        <h2 class="m-3 0 4">나의 냉장고</h2>
+        <h2 class="m-3">나의 냉장고</h2>
         <div>
-          <v-row class="m-2 inputBlank" variant="danger">
-            <v-text-field
-              label="직접 추가하기"
-              v-model="addText"
-              hide-details="auto"
-              v-on:keyup.enter="plusFood(); check();"
-            ></v-text-field>
-            <v-icon large @click="plusFood(); check();">mdi-plus</v-icon>
-          </v-row>
-          <v-chip
-            class="m-1"
-            v-for="tag in chips"
-            close
-            @click:close="closeChip(tag);"
-            :key="tag"
-          >{{ tag }}</v-chip>
-          <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
+          <div class="left d-sm-inline-flex pa-2">
+            <v-row class="m-2 inputBlank" variant="danger">
+              <v-text-field
+                label="직접 추가하기"
+                v-model="addText"
+                hide-details="auto"
+                v-on:keyup.enter="plusFood(); check();"
+              ></v-text-field>
+              <v-icon large @click="plusFood(); check();">mdi-plus</v-icon>
+            </v-row>
+          </div>
+          <div>
+            <v-chip
+              class="m-1"
+              v-for="tag in chips"
+              close
+              @click:close="closeChip(tag);"
+              :key="tag"
+            >{{ tag }}</v-chip>
+            <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
+          </div>
         </div>
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
@@ -279,9 +283,6 @@ export default {
 </script>
 
 <style>
-.inputBlank {
-  width: 25%;
-}
 .searchPost {
   background-image: url("https://user-images.githubusercontent.com/60081201/89270362-33b1d980-d676-11ea-8b50-bee693e1ee36.jpg");
   -webkit-background-size: cover;

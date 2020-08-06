@@ -77,6 +77,7 @@
             type="text"
           />
           <b-button @click="nameCheck">중복확인하기</b-button>
+          <small v-if="nicknameCheck">사용가능한 닉네임입니다.</small>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>

@@ -94,7 +94,7 @@
         <router-link class="text-white" to="/">홈</router-link>
       </div>
       <div>
-        <router-link class="text-white" to="/">냉장고를 Vue탁해</router-link>
+        <router-link class="text-white" to="/search">냉장고를 Vue탁해</router-link>
       </div>
       <div>
         <router-link v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }" class="login-btn text-white" v-if="this.$cookies.get('token') != null"

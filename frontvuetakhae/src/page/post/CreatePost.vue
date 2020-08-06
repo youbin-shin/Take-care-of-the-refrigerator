@@ -7,74 +7,68 @@
     <b-form-group label-cols="4" label-cols-lg="2" label-size="lg" label="제목" label-for="input-lg" autofocus>
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
-    <hr />
-    <h4>재료 입력</h4>
-    <p>드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</p>
-    <b-container class="bv-example-row">
-      <b-row>
-        <b-col class="bg-my-gredient">
-          <p class="text-white">요리에 필요한 재료</p>
-          <div>
-            <draggable tag="span" v-model="postData.content.ingredients" v-bind="dragOptions" @start="drag = true" @end="drag = false">
-              <transition-group name="no" class="list-group" tag="ul">
-                <li class="list-group-item" v-for="tag in postData.content.ingredients" :key="tag">
-                  <i aria-hidden="true"></i>
-                  {{ tag }}
-                </li>
-              </transition-group>
-            </draggable>
-          </div>
-        </b-col>
-        <b-col class="bg-my-plus">
-          직접 추가하기
-          <b-form-input type="text" v-model="addText" />
-          <button class="btn btn-info" @click="plusFood">추가</button>
-        </b-col>
-        <b-col class="bg-my-box">
-          나의 냉장고
-          <div>
-            <draggable class="list-group" tag="ul" v-model="list" v-bind="dragOptions" @start="drag = true" @end="drag = false">
-              <transition-group type="transition" :name="'flip-list'">
-                <li class="list-group-item" v-for="tag in list" :key="tag">
-                  <i aria-hidden="true"></i>
-                  {{ tag }}
-                </li>
-              </transition-group>
-            </draggable>
-          </div>
-        </b-col>
-      </b-row>
-    </b-container>
-    <hr />
-    <h4>요리 과정 입력하기</h4>
-    <b-container class="bv-example-row">
-      <b-row>
-        <b-col class="bg-my-step">
-          과정 순서
-          <draggable class="list-group" tag="ul" v-model="postData.content.steps" v-bind="dragOptions" @start="drag = true" @end="drag = false">
-            <transition-group type="transition" :name="'flip-list'">
-              <li class="list-group-item" v-for="tag in postData.content.steps" :key="tag.description">
-                <i aria-hidden="true"></i>
-                {{ tag.description }}
-                <button class="btn btn-info" style="background-color:red" @click="deleleStep(tag.description)">
-                  삭제
-                </button>
-              </li>
-            </transition-group>
-          </draggable>
-        </b-col>
-        <b-col class="bg-plus-step">
-          과정 입력
-          <b-form-input type="text" placeholder="요리 과정을 입력해주세요." v-model="postData.content.process" />
-          <button class="btn btn-info" @click="plusStep">과정추가</button>
-        </b-col>
-      </b-row>
-    </b-container>
+    <v-stepper v-model="e6" vertical>
+      <v-stepper-step color="red" :complete="e6 > 1" step="1">
+        재료
+        <small class="mt-2">드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small>
+      </v-stepper-step>
+      <v-stepper-content step="1">
+        <v-card class="mb-12">
+          <b-container class="bv-example-row">
+            <b-row>
+              <b-col class="bg-my-gredient">
+                <p class="text-white">요리에 필요한 재료</p>
+                <div>
+                  <draggable
+                    tag="span"
+                    v-model="postData.content.ingredients"
+                    v-bind="dragOptions"
+                    @start="drag = true"
+                    @end="drag = false"
+                  >
+                    <v-chip
+                      class="mr-1 mb-1"
+                      v-for="tag in postData.content.ingredients"
+                      :key="tag"
+                      close
+                      @click:close="closeChip(tag)"
+                    >{{ tag }}</v-chip>
+                  </draggable>
+                </div>
+              </b-col>
+              <b-col>
+                <v-row class="m-2">
+                  <v-text-field
+                    label="직접 추가하기"
+                    v-model="addText"
+                    hide-details="auto"
+                    v-on:keyup.enter="plusFood"
+                  ></v-text-field>
+                  <v-icon large @click="plusFood">mdi-plus</v-icon>
+                </v-row>
+                <div class="bg-my-box">
+                  나의 냉장고
+                  <div>
+                    <draggable
+                      tag="ul"
+                      v-model="list"
+                      v-bind="dragOptions"
+                      @start="drag = true"
+                      @end="drag = false"
+                    >
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                    </draggable>
+                  </div>
+                </div>
+              </b-col>
+            </b-row>
+          </b-container>
+        </v-card>
+        <div>데이터 잘들어오는 지 확인용 {{postData.content.ingredients }}</div>
+        <v-btn color="error" @click="e6 = 2">완료</v-btn>
+      </v-stepper-content>
 
-    <hr />
-    <p class="titles">난이도</p>
-    <b-form-input type="text" placeholder="숫자가 클수록 난이도가 높습니다." v-model="postData.difficulty" />
-    <br />
+      <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
 
     <p class="titles">소요 시간</p>
 
@@ -143,11 +137,26 @@ export default {
       this.postData.content.steps.splice(idx, 1);
     },
     plusFood() {
+      // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
         return;
       }
+      // 중복되는 데이터일 경우 추가 안되도록 한다.
+      for (var i = 0; i < this.postData.content.ingredients.length; i++) {
+        if (this.addText === this.postData.content.ingredients[i]) {
+          this.addText = "";
+          return;
+        }
+      }
+      // 위의 경우가 아니라면 추가한다.
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
+    },
+    closeChip(tag) {
+      this.postData.content.ingredients.splice(
+        this.postData.content.ingredients.indexOf(tag),
+        1
+      );
     },
     plusStep() {
       if (this.postData.content.process === "") {

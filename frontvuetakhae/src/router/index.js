@@ -10,6 +10,7 @@ import MyPage from "../page/user/MyPage.vue";
 import List from "../page/post/List.vue";
 import CreatePost from "../page/post/CreatePost.vue";
 import DetailPost from "../page/post/DetailPost.vue";
+import SearchPost from "../page/post/SearchPost.vue";
 
 Vue.use(Router);
 
@@ -35,6 +36,11 @@ export default new Router({
       path: "/detail/:no",
       name: constants.URL_TYPE.POST.DETAILPOST,
       component: DetailPost,
+    },
+    {
+      path: "/search",
+      name: constants.URL_TYPE.POST.SEARCHPOST,
+      component: SearchPost,
     },
   ],
 });

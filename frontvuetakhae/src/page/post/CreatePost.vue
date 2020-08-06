@@ -1,12 +1,17 @@
 <template>
-  <div
-    class="container"
-    style="margin-top: 30px;
-"
-  >
-    <b-form-group label-cols="4" label-cols-lg="2" label-size="lg" label="제목" label-for="input-lg" autofocus>
+  <div class="container" style="margin-top: 30px;
+">
+    <b-form-group
+      label-cols="4"
+      label-cols-lg="2"
+      label-size="lg"
+      label="제목"
+      label-for="input-lg"
+      autofocus
+    >
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
+
     <v-stepper v-model="e6" vertical>
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
@@ -30,20 +35,13 @@
                       class="mr-1 mb-1"
                       v-for="tag in postData.content.ingredients"
                       :key="tag"
-                      close
-                      @click:close="closeChip(tag)"
                     >{{ tag }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
               <b-col>
                 <v-row class="m-2">
-                  <v-text-field
-                    label="직접 추가하기"
-                    v-model="addText"
-                    hide-details="auto"
-                    v-on:keyup.enter="plusFood"
-                  ></v-text-field>
+                  <v-text-field label="직접 추가하기" v-model="addText" hide-details="auto"></v-text-field>
                   <v-icon large @click="plusFood">mdi-plus</v-icon>
                 </v-row>
                 <div class="bg-my-box">
@@ -56,7 +54,7 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                      <v-chip class="mr-1 mb-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -64,32 +62,104 @@
             </b-row>
           </b-container>
         </v-card>
-        <div>데이터 잘들어오는 지 확인용 {{postData.content.ingredients }}</div>
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
 
       <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
 
-    <p class="titles">소요 시간</p>
+      <v-stepper-content step="2">
+        <v-card class="mb-12">
+          <b-container class="bv-example-row">
+            <b-row>
+              <b-col class="bg-my-step">
+                과정 순서
+                <draggable
+                  class="list-group"
+                  tag="ul"
+                  v-model="postData.content.steps"
+                  v-bind="dragOptions"
+                  @start="drag = true"
+                  @end="drag = false"
+                >
+                  <transition-group type="transition" :name="'flip-list'">
+                    <li v-for="tag in postData.content.steps" :key="tag.description">
+                      <i aria-hidden="true"></i>
+                      {{ tag.description }}
+                      <button
+                        class="btn btn-info"
+                        style="background-color:red"
+                        @click="deleleStep(tag.description)"
+                      >삭제</button>
+                    </li>
+                  </transition-group>
+                </draggable>
+              </b-col>
+              <b-col class="bg-plus-step">
+                과정 입력
+                <b-form-input
+                  type="text"
+                  placeholder="요리 과정을 입력해주세요."
+                  v-model="postData.content.process"
+                />
+                <button class="btn btn-info" @click="plusStep">과정추가</button>
+              </b-col>
+            </b-row>
+          </b-container>
+        </v-card>
+        <v-btn color="error" class="mr-2" @click="e6 = 3">완료</v-btn>
+        <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
+      </v-stepper-content>
 
-    <b-form-input type="text" v-model="postData.time" />
-    <br />
-    <p class="titles">후기</p>
+      <v-stepper-step color="red" :complete="e6 > 3" step="3">난이도 & 소요시간</v-stepper-step>
 
-    <b-form-input type="text" v-model="postData.review" />
+      <v-stepper-content step="3">
+        <v-card class="mb-12" height="200px">
+          난이도
+          <div>
+            <small>별이 많을수록 어렵습니다.</small>
+            <v-rating
+              v-model="postData.difficulty"
+              background-color="orange lighten-3"
+              color="orange"
+              medium
+            ></v-rating>
+          </div>
+          <hr />소요 시간
+          <b-form-input type="text" v-model="postData.time" />
+        </v-card>
+        <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
+        <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
+      </v-stepper-content>
 
-    <br />
-    <div class="titles">썸네일 사진 넣기</div>
-    <br />
-    <br />
-    <input type="file" name="file" id="imageFileOpenInput" accept="image/*" style="float:left" />
-    <br />
+      <v-stepper-step color="red" step="4">후기 작성</v-stepper-step>
+      <v-stepper-content step="4">
+        <v-card class="mb-12 p-2" height="200px">
+          <v-text-field
+            label="요리하면서 꿀팁이나 소감을 작성해주세요."
+            v-model="postData.review"
+            :rules="rules"
+            hide-details="auto"
+          ></v-text-field>
 
-    <div>
-      <button class="btn btn-primary" @click="createPost">작성 완료</button>
-    </div>
+          <br />
+          <div class="titles">썸네일 사진 넣기</div>
+          <br />
+          <input
+            type="file"
+            name="file"
+            id="imageFileOpenInput"
+            accept="image/*"
+            style="float:left"
+          />
+          <br />
+        </v-card>
+        <v-btn color="error" class="mr-2" @click="createPost">작성 완료</v-btn>
+        <v-btn color="secondary" @click="e6 = 3">뒤로 가기</v-btn>
+      </v-stepper-content>
+    </v-stepper>
   </div>
 </template>
+
 <script>
 // import axios from "axios";
 import draggable from "vuedraggable";
@@ -131,7 +201,7 @@ export default {
   },
   methods: {
     deleleStep(title) {
-      const idx = this.postData.content.steps.findIndex(function(item) {
+      const idx = this.postData.content.steps.findIndex(function (item) {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);

@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <Header :isHeader="isHeader" />
     <router-view />
-  </div>
+  </v-app>
 </template>
 
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
@@ -36,7 +36,7 @@ export default {
       this.isHeader = isHeader;
     },
   },
-  data: function () {
+  data: function() {
     return {
       isHeader: true,
       constants,

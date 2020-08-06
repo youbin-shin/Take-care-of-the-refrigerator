@@ -1,19 +1,34 @@
 <template>
   <div id="header" v-if="isHeader">
     <div class="upperHead d-flex justify-content-between">
-      <router-link class="ml-4" v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }">
+      <router-link
+        class="ml-4"
+        v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }"
+      >
         <img class="logoImage" src="../../assets/img/logo.png" />
       </router-link>
       <div class="right" v-if="this.$cookies.get('token') == null">
         <a @click="modalShow = !modalShow" class="a_tag_modal">로그인</a>
-        <a style="margin:0px 20px" @click="signUpShow = !signUpShow" class="a_tag_modal">회원가입</a>
+        <a
+          style="margin:0px 20px"
+          @click="signUpShow = !signUpShow"
+          class="a_tag_modal"
+          >회원가입</a
+        >
 
         <b-modal v-model="modalShow" hide-footer hide-header>
           <h1 class="text-center">로그인</h1>
           <div>
             <div class="div_item">
               <span class="item_100px">아이디</span>
-              <input class="item_200px" type="text" id="loginEmail" ref="loginEmail" v-model="loginEmail" placeholder="이메일을 입력해주세요" />
+              <input
+                class="item_200px"
+                type="text"
+                id="loginEmail"
+                ref="loginEmail"
+                v-model="loginEmail"
+                placeholder="이메일을 입력해주세요"
+              />
             </div>
 
             <div class="div_item">
@@ -31,7 +46,9 @@
           <b-button class="mt-3" block @click="login">로그인 하기</b-button>
           <p class="go_signup" style="color:gray">
             아직 회원이 아니신가요?
-            <span class="span_signup" @click="switchModal">회원가입 하러 가기</span>
+            <span class="span_signup" @click="switchModal"
+              >회원가입 하러 가기</span
+            >
           </p>
         </b-modal>
 
@@ -40,7 +57,14 @@
           <div>
             <div class="div_item">
               <span class="item_100px">아이디</span>
-              <input class="item_200px" type="text" id="signUpEmail" ref="signUpEmail" v-model="signUpEmail" placeholder="이메일을 입력해주세요" />
+              <input
+                class="item_200px"
+                type="text"
+                id="signUpEmail"
+                ref="signUpEmail"
+                v-model="signUpEmail"
+                placeholder="이메일을 입력해주세요"
+              />
             </div>
 
             <div class="div_item">
@@ -84,25 +108,39 @@
       </div>
       <div class="right" v-if="this.$cookies.get('token') != null">
         <a @click="logout" class="a_tag_modal">로그아웃</a>
-        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal">마이페이지</a>
+        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal"
+          >마이페이지</a
+        >
       </div>
     </div>
 
-    <div class="lowerHeader d-flex justify-content-around align-items-center mb-6">
+    <div
+      class="lowerHeader d-flex justify-content-around align-items-center mb-6"
+    >
       <!-- 기능 nav -->
       <div>
         <router-link class="text-white" to="/">홈</router-link>
       </div>
       <div>
-        <router-link class="text-white" to="/search">냉장고를 Vue탁해</router-link>
+        <router-link class="text-white" to="/search"
+          >냉장고를 Vue탁해</router-link
+        >
       </div>
       <div>
-        <router-link v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }" class="login-btn text-white" v-if="this.$cookies.get('token') != null"
+        <router-link
+          v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }"
+          class="login-btn text-white"
+          v-if="this.$cookies.get('token') != null"
           >Recipe 작성하기</router-link
         >
       </div>
       <div>
-        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/notice">공지사항</router-link>
+        <router-link
+          class="text-white"
+          v-if="this.$cookies.get('token') != null"
+          to="/notice"
+          >공지사항</router-link
+        >
       </div>
     </div>
   </div>

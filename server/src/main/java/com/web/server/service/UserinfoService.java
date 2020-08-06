@@ -1,10 +1,12 @@
 package com.web.server.service;
 
+import com.web.server.dto.FollowDto;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 
 public interface UserinfoService {
@@ -13,6 +15,8 @@ public interface UserinfoService {
 
     // c
     public int insertUser(User user);
+
+    public int insertFollow(FollowDto follow);
 
     // r
     public boolean checkAccount(String nickname) throws SQLException;

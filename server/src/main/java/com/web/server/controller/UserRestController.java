@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.web.server.dto.FollowDto;
 import com.web.server.dto.UserProfileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRestController.class);
+    private static final boolean FOLLOWER = true;
+    private static final boolean FOLLOWING = false;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -321,9 +324,9 @@ public class UserRestController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "회원 마이페이지 조회", response = User.class)
+    @ApiOperation(value = "회원 마이페이지 조회")
     @GetMapping("/users/mypage")
-    public ResponseEntity<Map<String, Object>> getUserProfile(final HttpServletRequest req) throws Exception {
+    public ResponseEntity<Map<String, Object>> getUserProfile(final HttpServletRequest req) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         UserProfileDto userProfileDto = null;
@@ -335,7 +338,7 @@ public class UserRestController {
             resultMap.put("success", true);
             resultMap.put("mypage", userProfileDto);
             logger.info("회원 마이페이지 조회 성공 : {}", userProfileDto.toString());
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
             logger.info("회원 마이페이지 조회 실패 에러 메세지 : {}", e.getMessage());
             logger.info("회원 마이페이지 조회 실패 userProfile : {}", userProfileDto.toString());
             status = HttpStatus.BAD_REQUEST;
@@ -345,11 +348,23 @@ public class UserRestController {
     }
 
 
-    @ApiOperation(value = "회원 마이페이지 수정", response = User.class)
+    /**
+     * 회원 마이페이지 수정
+     * 자기소개 수정 또는 식자재 수정
+     * 성공 : 202
+     * 실패 : 400
+     *
+     * @param req
+     * @param user
+     * @param columnName
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "회원 마이페이지 수정")
     @PutMapping("/users/mypage/{columnName}")
     public ResponseEntity<Map<String, Object>> setUserProfile(final HttpServletRequest req,
                                                               @RequestBody User user,
-                                                              @PathVariable final String columnName) throws Exception {
+                                                              @PathVariable final String columnName) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -360,11 +375,10 @@ public class UserRestController {
                 // body json add
                 resultMap.put("success", true);
             } else {
-                status = HttpStatus.NOT_ACCEPTABLE; // statuc code : 406
                 resultMap.put("success", false);
                 throw new RuntimeException("없는 속성 수정 요청");
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
             logger.info("ERROR message : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST;
         }
@@ -372,18 +386,32 @@ public class UserRestController {
     }
 
 
-    @ApiOperation(value = "유저의 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
-    @PutMapping("{uid}")
-    public ResponseEntity<String> updateQnA(@RequestBody final User user, final HttpSession session) {
-        logger.info("updateQnA - 호출");
-        logger.info("" + user);
-        // user.setUid(uid);
-//        if (userService.updateUser(user) == 1) {
-//            session.setAttribute("user", user.getUserId());
-//            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//        }
-        return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+    @ApiOperation(value = "팔로우/팔로잉 요청")
+    @PostMapping("/users/follow")
+    public ResponseEntity<Map<String, Object>> requestFollow(final HttpServletRequest req,
+                                                             @RequestBody Map<String, String > map) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            if(map.containsKey("follow")){
+                String followValue = map.get("follow");
+                String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+                int userId = userService.searchByEmail(email).getUserId();
+                FollowDto follow = null;
+                if(followValue.equals("follower")) {
+                    follow.setFollower(userId);                 // 팔로워에 userId 추가
+                } else if (followValue.equals("following")) {
+                    follow.setFollowee(userId);                 // 팔로이에 userId 추가
+                }
+                userService.insertFollow(follow);
+            } else {
+                status = HttpStatus.NOT_FOUND;                  // status code : 404
+                throw new RuntimeException("follow 값 확인 필요.");
+            }
+        } catch (RuntimeException e) {
+            logger.info("ERROR message: {}", e.getMessage());
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
 
 }

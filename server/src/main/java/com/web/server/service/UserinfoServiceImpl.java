@@ -1,9 +1,11 @@
 package com.web.server.service;
 
 import com.web.server.dto.Board;
+import com.web.server.dto.FollowDto;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 import com.web.server.repo.BoardDao;
+import com.web.server.repo.FollowDao;
 import com.web.server.repo.UserinfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class UserinfoServiceImpl implements UserinfoService {
     
     @Autowired
     BoardDao bDao;
+
+    @Autowired
+    FollowDao fDao;
 
     @Override
     public User login(String email, String password) {
@@ -108,6 +113,12 @@ public class UserinfoServiceImpl implements UserinfoService {
     public int insertUser(User user) {
         return uDao.insertUser(user);
     }
+
+    @Override
+    public int insertFollow(FollowDto follow) {
+        return fDao.insert(follow);
+    }
+
 
     @Override
     public int updateUser(User user) throws SQLException{

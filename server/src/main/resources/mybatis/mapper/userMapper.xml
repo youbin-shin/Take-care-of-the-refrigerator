@@ -82,6 +82,10 @@
 		insert into users (email,password,nickname)
 		values(#{email}, #{password}, #{nickname})
 	</insert>
+
+    <insert id="insertFollow" parameterType="followdto">
+        INSERT INTO follow (follower, followee) VALUES (#{follower, jdbcType=INTEGER}, #{followee, jdbcType=INTEGER})
+    </insert>
 	
 	<resultMap type="com.web.server.dto.UserProfileDto" id="userprofile">
 		<id column="nickname" property="nickname"/>

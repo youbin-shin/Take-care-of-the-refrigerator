@@ -43,7 +43,4 @@ export default new Router({
       component: SearchPost,
     },
   ],
-  scrollBehavior() {
-    return { x: 0, y: 0 };
-  },
 });

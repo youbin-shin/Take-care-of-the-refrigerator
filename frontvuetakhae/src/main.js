@@ -12,9 +12,6 @@ import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 // Cookies
 import VueCookies from "vue-cookies";
-// vuetify
-import vuetify from "@/plugins/vuetify";
-
 Vue.use(VueCookies);
 library.add(faUserSecret);
 
@@ -28,6 +25,5 @@ Vue.config.productionTip = false;
 new Vue({
   el: "#app",
   router,
-  vuetify,
   render: (h) => h(App),
 }).$mount("#app");

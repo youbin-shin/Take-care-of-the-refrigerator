@@ -1,8 +1,8 @@
 <template>
-  <v-app id="app">
+  <div id="app">
     <Header :isHeader="isHeader" />
     <router-view />
-  </v-app>
+  </div>
 </template>
 
 <script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>

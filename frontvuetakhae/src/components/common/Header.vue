@@ -102,7 +102,7 @@
         >
       </div>
       <div>
-        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/">공지사항</router-link>
+        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/notice">공지사항</router-link>
       </div>
     </div>
   </div>

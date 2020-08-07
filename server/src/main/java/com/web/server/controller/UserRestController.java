@@ -386,6 +386,15 @@ public class UserRestController {
     }
 
 
+    /**
+     * 팔로우/팔로잉 요청
+     * 성공 : 200
+     * 실패 : 400
+     *
+     * @param req
+     * @param map
+     * @return
+     */
     @ApiOperation(value = "팔로우/팔로잉 요청")
     @PostMapping("/users/follow")
     public ResponseEntity<Map<String, Object>> requestFollow(final HttpServletRequest req,
@@ -412,14 +421,46 @@ public class UserRestController {
                 // body json add
                 resultMap.put("success", true);
             } else {
-                status = HttpStatus.NOT_FOUND;                  // status code : 404
                 // body json add
-                resultMap.put("sucess", false);
+                resultMap.put("success", false);
                 throw new RuntimeException("follow 값 확인 필요.");
             }
         } catch (RuntimeException | SQLException e) {
             logger.info("ERROR message: {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST;                    // status code : 400
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
+    /**
+     * 팔로우 여부 확인
+     * 성공 : 200
+     * 실패 : 400
+     *
+     * @param req
+     * @param nickname
+     * @return
+     */
+    @ApiOperation(value = "팔로우 여부 확인")
+    @GetMapping("/users/follow/other/{nickname}")
+    public ResponseEntity<Map<String, Object>> getFollowCheck(final HttpServletRequest req,
+                                                              @PathVariable final String nickname) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            status = HttpStatus.OK;
+            resultMap.put("success", true);
+            if(userService.checkFollow(email, nickname)) {
+                resultMap.put("follow", "no");
+            } else {
+                resultMap.put("follow", "yes");
+            }
+        } catch (RuntimeException | SQLException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }

@@ -23,6 +23,8 @@ public interface UserinfoService {
 
     public boolean checkAccount(String email, String nickname) throws SQLException;
 
+    public boolean checkFollow(String email, String nickname) throws SQLException;
+
     public User searchByEmail(String email);
 
     public User searchByNickName(String nickname);

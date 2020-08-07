@@ -58,6 +58,14 @@ public class UserinfoServiceImpl implements UserinfoService {
         return check == 0 ? true : false;
     }
 
+    @Override
+    public boolean checkFollow(String email, String nickname) throws SQLException {
+        int follower = uDao.selectByIsEmail(email).getUserId();
+        int followee = uDao.selectByNickName(nickname).getUserId();
+        int check = fDao.checkFollow(follower, followee);
+        return check == 0 ? true : false;
+    }
+
     /**
      * 사용자 정보 수정
      *

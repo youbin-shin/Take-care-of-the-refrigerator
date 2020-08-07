@@ -5,6 +5,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 @Repository
 public class FollowDaoImpl implements FollowDao {
     private String ns = "com.web.server.dto.User.";
@@ -15,5 +19,13 @@ public class FollowDaoImpl implements FollowDao {
     @Override
     public int insert(FollowDto follow) {
         return template.insert(ns + "insertFollow", follow);
+    }
+
+    @Override
+    public int checkFollow(int follower, int followee) throws SQLException {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("follower", follower);
+        map.put("followee", followee);
+        return template.selectOne(ns + "checkfollow", map);
     }
 }

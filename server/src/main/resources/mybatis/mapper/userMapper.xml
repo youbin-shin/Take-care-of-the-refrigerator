@@ -20,6 +20,11 @@
     <select id="checkbyemailandnickname" parameterType="hashMap" resultType="int">
         select sum(exists (select user_id from users where email = #{email} or nickname = #{nickname})) from users
     </select>
+
+    <!--  팔로우 여부 확인  -->
+    <select id="checkfollow" parameterType="hashMap" resultType="int">
+        select sum(exists (select follower from follow where follower = #{follower} and followee = #{followee})) from follow
+    </select>
     
     <!-- 마이페이지: 닉네임, 자기소개, 나의냉장고, 팔로잉 수, 팔로우 수 조회 -->
     <select id="selectbyuserprofilebyuserid" parameterType="int" resultMap="userprofile">

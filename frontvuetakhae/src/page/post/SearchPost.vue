@@ -21,8 +21,7 @@
                   plusFood();
                   check();
                 "
-                >mdi-plus</v-icon
-              >
+              >mdi-plus</v-icon>
             </v-row>
           </div>
           <div>
@@ -32,16 +31,13 @@
               close
               @click:close="closeChip(tag)"
               :key="tag"
-              >{{ tag }}</v-chip
-            >
+            >{{ tag }}</v-chip>
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
-      <h3 v-if="emptyChip" class="white--text">
-        요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.
-      </h3>
+      <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="showData in showDatas" :key="showData.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -49,15 +45,17 @@
               <v-list-item @click="goDetail(showData.boardId)">
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title class="headline">{{
+                  <v-list-item-title class="headline">
+                    {{
                     showData.title
-                  }}</v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;"
-                    >작성자 : {{ showData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align:right;">{{
+                    }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ showData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align:right;">
+                    {{
                     showData.createAt
-                  }}</small>
+                    }}
+                  </small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -68,8 +66,7 @@
               ></v-img>
 
               <v-card-text @click="goDetail(showData.boardId)">
-                <p class="caption">소요시간 : {{ showData.cookingTime }}시간</p>
-                난이도
+                <p class="caption">소요시간 : {{ showData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="p-0"
                   small
@@ -79,12 +76,7 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="goDetail(showData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히 보기</v-btn
-                >
+                <v-btn @click="goDetail(showData.boardId)" text color="deep-purple accent-4">자세히 보기</v-btn>
                 <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
                 <v-btn icon>
                   <v-icon>mdi-heart</v-icon>
@@ -93,19 +85,11 @@
                 <v-spacer></v-spacer>
                 <v-btn icon @click="changeEasy">
                   <div v-if="easy">
-                    <b-icon
-                      icon="emoji-smile"
-                      scale="2"
-                      variant="warning"
-                    ></b-icon>
+                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
                     <p class="caption mb-0 mt-1">easy</p>
                   </div>
                   <div v-else>
-                    <b-icon
-                      icon="emoji-frown"
-                      scale="2"
-                      variant="secondary"
-                    ></b-icon>
+                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
                     <p class="caption mb-0 mt-1">hard</p>
                   </div>
                 </v-btn>
@@ -139,8 +123,6 @@ export default {
         // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
         "간장",
         "김치",
-        "돼지고기",
-        "새우",
       ],
       dummyData: [
         {

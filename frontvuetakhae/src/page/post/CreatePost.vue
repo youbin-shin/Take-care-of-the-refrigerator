@@ -68,7 +68,7 @@
             </b-row>
           </b-container>
         </v-card>
-        <div>{{ postData.content.ingredients }}</div>
+        <!-- <div>{{ postData.content.ingredients }}</div> -->
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
 

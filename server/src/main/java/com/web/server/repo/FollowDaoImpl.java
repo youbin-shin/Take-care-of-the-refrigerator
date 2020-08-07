@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -27,6 +28,11 @@ public class FollowDaoImpl implements FollowDao {
         map.put("follower", follower);
         map.put("followee", followee);
         return template.selectOne(ns + "checkfollow", map);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectFollowList(Map<String, String> followMap) {
+        return template.selectList(ns + "selectFollowList", followMap);
     }
 
     @Override

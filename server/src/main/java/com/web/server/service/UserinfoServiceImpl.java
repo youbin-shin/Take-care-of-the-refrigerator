@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -106,6 +108,11 @@ public class UserinfoServiceImpl implements UserinfoService {
         // interest_boards table (user's interest boards
         resultDto.setInterestBoards(bDao.selectInterestBoardsByUserId(userId));
         return resultDto;
+    }
+
+    @Override
+    public List<Map<String, Object>> searchFollowList(Map<String, String> followMap) {
+        return fDao.selectFollowList(followMap);
     }
 
     /**

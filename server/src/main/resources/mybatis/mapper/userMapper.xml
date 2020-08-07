@@ -63,6 +63,21 @@
         select * from users
     </select>
 
+    <select id="selectFollowList" parameterType="hashMap" resultType="hashMap">
+        select nickname, image
+        from users
+        <choose>
+            <when test="follower != null">
+                join follow on users.user_id = follow.followee
+                where follow.follower = (select user_id from users where email = #{follower})
+            </when>
+            <when test="followee != null">
+                join follow on users.user_id = follow.follower
+                where follow.followee = (select user_id from users where email = #{followee})
+            </when>
+        </choose>
+    </select>
+
     <update id="update" parameterType="user">
 		update users
         <set>

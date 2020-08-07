@@ -2,6 +2,7 @@ package com.web.server.controller;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -466,6 +467,15 @@ public class UserRestController {
     }
 
 
+    /**
+     * 팔로우 취소
+     * 성공 : 200
+     * 실패 : 400
+     *
+     * @param req
+     * @param nickname
+     * @return
+     */
     @ApiOperation(value = "팔로우 취소")
     @DeleteMapping("/users/follow/other/{nickname}")
     public ResponseEntity<Map<String, Object>> deleteFollow(final HttpServletRequest req,
@@ -484,4 +494,40 @@ public class UserRestController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+
+
+    @GetMapping("/users/follow/list/{follow}")
+    public ResponseEntity<Map<String, Object>> getFollowList(final HttpServletRequest req,
+                                                            @PathVariable final String follow) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+
+            if(follow.equals("follower") || follow.equals("followee")) {
+                status = HttpStatus.OK;
+                String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+                Map<String, String> followMap = new HashMap<>();
+                List<Map<String, Object>> followList = null;
+
+                if(follow.equals("follower")) {
+                    followMap.put("follower", email);
+                } else {
+                    followMap.put("followee", email);
+                }
+                // 서비스 실행
+                followList = userService.searchFollowList(followMap);
+                // body json add
+                resultMap.put("users", followList);
+                resultMap.put("success", true);
+            }
+        } catch (RuntimeException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
 }

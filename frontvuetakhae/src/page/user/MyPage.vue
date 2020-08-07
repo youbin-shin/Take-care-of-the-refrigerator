@@ -15,11 +15,7 @@
         </h3>
         <h2 style="text-align:left">자기소개</h2>
         <p>
-          <v-textarea
-            name="input-7-4"
-            label="간단하게 자신에 대해 소개해주세요."
-            v-model="userData.introduce"
-          ></v-textarea>
+          <v-textarea name="input-7-4" label="간단하게 자신에 대해 소개해주세요." v-model="userData.introduce"></v-textarea>
           <v-btn depressed small @click="updateIntroduce">저장</v-btn>
         </p>
       </div>
@@ -44,8 +40,7 @@
           close
           @click:close="closeChip(tag)"
           :key="tag"
-          >{{ tag }}</v-chip
-        >
+        >{{ tag }}</v-chip>
 
         <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
       </div>
@@ -66,7 +61,10 @@
     </div>
     <div class="white--text">
       <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
-      <b-button class="a_tag_modal bottom-button mr-2" @click="modalShow = !modalShow">수정하기</b-button>
+      <b-button
+        class="a_tag_modal bottom-button mr-2"
+        @click="modalShow = !modalShow; loadData();"
+      >수정하기</b-button>
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
@@ -80,9 +78,8 @@
             <input
               class="ml-4 pl-2"
               style="border: 1px solid #000000; background-color: #e2e2e2;"
-              :value="userData.nickname"
-              @input="userData.nickname = $event.target.value"
-              id="email"
+              :value="userupdateData.nickname"
+              @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
             <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
@@ -129,7 +126,6 @@ export default {
       },
       userupdateData: {
         // 개인정보 수정할 때 필요한 정보
-        email: "",
         password: "",
         nickname: "",
       },
@@ -156,6 +152,7 @@ export default {
   methods: {
     updateIntroduce() {
       // 자기소개 수정 method
+
       axios
         .put(
           `${BACK_URL}/users/mypage/introduce`,
@@ -184,7 +181,6 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          this.userupdateData.email = response.data.email;
           this.userupdateData.nickname = response.data.nickname;
         })
         .catch((error) => {
@@ -196,6 +192,7 @@ export default {
       if (this.nicknameCheck === true) {
         if (this.userupdateData.password === "") {
           // 닉네임만 변경할 경우
+          console.log(this.userupdateData.nickname);
           axios
             .put(
               `${BACK_URL}/users/info`,

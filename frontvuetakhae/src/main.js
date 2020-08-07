@@ -10,11 +10,11 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 // Cookies
 import VueCookies from "vue-cookies";
-// vuetify
-import vuetify from "@/plugins/vuetify";
 
+import vuetify from './plugins/vuetify';
 Vue.use(VueCookies);
 library.add(faUserSecret);
 
@@ -29,5 +29,5 @@ new Vue({
   el: "#app",
   router,
   vuetify,
-  render: (h) => h(App),
+  render: (h) => h(App)
 }).$mount("#app");

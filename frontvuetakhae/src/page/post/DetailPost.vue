@@ -1,4 +1,5 @@
 <template>
+  <!-- <div> -->
   <div class="container" v-if="backData">
     <div class="detailHeader">
       <h1 class="mt-5 mb-2">
@@ -6,13 +7,15 @@
         <b-badge class="mr-2" variant="success">난이도 3</b-badge>
         <b-badge variant="secondary">소요시간 3시간</b-badge>
       </h1>
-      <div @click="changeHeart" class="heart mr-4">
-        좋아요 수 {{ likenum }}
-        <div v-if="isHeart">
-          <b-icon-heart></b-icon-heart>
+      <div @click="changeEasy" class="icon">
+        <!-- 좋아요 수 {{ likenum }} -->
+        <div v-if="easy">
+          <b-icon icon="emoji-smile" class="mr-1" scale="2" variant="warning"></b-icon>
+          <p class="caption mb-0 mt-1">easy</p>
         </div>
         <div v-else>
-          <b-icon-heart-fill></b-icon-heart-fill>
+          <b-icon icon="emoji-frown" class="mr-1" scale="2" variant="secondary"></b-icon>
+          <p class="caption mb-0 mt-1">hard</p>
         </div>
       </div>
       <b-row>
@@ -34,7 +37,9 @@
       <h2 class="detailContentItem">과정</h2>
 
       <ul v-for="step in backData.steps" :key="step">
-        <li>{{ step }}</li>
+        <li>
+          {{ step }}
+        </li>
       </ul>
       <hr />
       <b-row>
@@ -52,7 +57,9 @@
             <p>체리가 좋아</p>
           </b-col>
           <b-col cols="10">
-            <p>간단한 레시피 감사합니다. 요알못에서 벗어날 수 있을 것 같아요!</p>
+            <p>
+              간단한 레시피 감사합니다. 요알못에서 벗어날 수 있을 것 같아요!
+            </p>
             <p>{{ backData.date }}</p>
           </b-col>
         </b-row>
@@ -88,7 +95,6 @@
 <script>
 export default {
   name: "DetailPost",
-  inject: ["theme"],
   // props: { // back 연결되면 사용할 데이터
   //   backData: {
   //     type: Object,
@@ -99,6 +105,7 @@ export default {
   },
   data() {
     return {
+      easy: true,
       backData: {
         // title: "김치전",
         // content: "비오는 날 생각나는 김치전 드셔보세요!",
@@ -118,11 +125,7 @@ export default {
           comment: 3,
           nickname: "연어가좋아",
           like: 3,
-          steps: [
-            "연어를 자른다",
-            "밥 위에 연어를 올린다.",
-            "양파와 와사비로 고명을 해준다.",
-          ],
+          steps: ["연어를 자른다", "밥 위에 연어를 올린다.", "양파와 와사비로 고명을 해준다."],
         },
         {
           title: "쇠고기 미역국",
@@ -133,12 +136,7 @@ export default {
           comment: 3,
           nickname: "간장게장",
           like: 3,
-          steps: [
-            "물을 끓인다",
-            "미역을 넣고 끓인다.",
-            "소고기를 넣고 간장으로 간을 맞춰준다.",
-            "참기름으로 감칠맛을 더한다.",
-          ],
+          steps: ["물을 끓인다", "미역을 넣고 끓인다.", "소고기를 넣고 간장으로 간을 맞춰준다.", "참기름으로 감칠맛을 더한다."],
         },
         {
           title: "김치볶음밥",
@@ -149,12 +147,7 @@ export default {
           comment: 3,
           nickname: "골목식당",
           like: 3,
-          steps: [
-            "김치를 식용유에 볶는다.",
-            "스팸을 넣어 볶다가 밥을 넣는다.",
-            "간장을 살짝 태워 밥에 섞는다.",
-            "계란을 넣고 마무리한다.",
-          ],
+          steps: ["김치를 식용유에 볶는다.", "스팸을 넣어 볶다가 밥을 넣는다.", "간장을 살짝 태워 밥에 섞는다.", "계란을 넣고 마무리한다."],
         },
         {
           title: "전주비빔밥",
@@ -176,27 +169,19 @@ export default {
           comment: 3,
           nickname: "비가오는날엔",
           like: 3,
-          steps: [
-            "밀가루와 김치를 넣고 반죽을 만든다.",
-            "반죽을 굽는다.",
-            "맛있게 먹는다.",
-          ],
+          steps: ["밀가루와 김치를 넣고 반죽을 만든다.", "반죽을 굽는다.", "맛있게 먹는다."],
         },
       ],
-      likenum: 5,
-      isHeart: true,
+      // likenum: 5,
     };
   },
   computed: {}, // 미리 만들어 놓자
   methods: {
-    changeHeart() {
-      // this.isHeart != this.isHeart
-      if (this.isHeart === false) {
-        this.isHeart = true;
-        this.likenum = this.likenum - 1;
+    changeEasy() {
+      if (this.easy) {
+        this.easy = false;
       } else {
-        this.isHeart = false;
-        this.likenum = this.likenum + 1;
+        this.easy = true;
       }
     },
   },
@@ -214,7 +199,8 @@ export default {
 .detailContentItem {
   margin-bottom: 20px;
 }
-.heart {
+.icon {
   text-align: right;
+  cursor: pointer;
 }
 </style>

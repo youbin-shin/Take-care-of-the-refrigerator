@@ -17,6 +17,10 @@ public interface BoardDao {
     // 게시글 조리 단계 조회
     public List<StepOfBoardDto> searchStepsInBoard(int boardId) throws SQLException;
 
+    public List<Board> selectByUserId(int userId) throws SQLException;
+
+    public List<Board> selectInterestBoardsByUserId(int userId) throws SQLException;
+
     // 게시글 등록
 //    public int insertByEmail(String email, Board board) throws SQLException;
     public int insertBoard(Board board) throws SQLException;

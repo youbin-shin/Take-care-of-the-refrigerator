@@ -77,6 +77,11 @@ public class UserinfoServiceImpl implements UserinfoService {
         return resultUser;
     }
 
+    @Override
+    public User searchByNickName(String nickname) {
+        return uDao.selectByNickName(nickname);
+    }
+
     /**
      * 사용자 마이페이지 조회
      *
@@ -115,7 +120,7 @@ public class UserinfoServiceImpl implements UserinfoService {
     }
 
     @Override
-    public int insertFollow(FollowDto follow) {
+    public int insertFollow(FollowDto follow) throws SQLException {
         return fDao.insert(follow);
     }
 

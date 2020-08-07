@@ -12,12 +12,12 @@
     </select>
 
     <!-- 닉네임 중복 확인   -->
-    <select id="selectbynickname" parameterType="string" resultType="int">
+    <select id="checkbynickname" parameterType="string" resultType="int">
         select sum(exists (select user_id from users where nickname = #{nickname})) from users
     </select>
 
     <!-- 이메일, 닉네임 중복 확인   -->
-    <select id="selectbyemailandnickname" parameterType="hashMap" resultType="int">
+    <select id="checkbyemailandnickname" parameterType="hashMap" resultType="int">
         select sum(exists (select user_id from users where email = #{email} or nickname = #{nickname})) from users
     </select>
     
@@ -38,6 +38,10 @@
 
     <select id="selectbyemail" parameterType="string" resultType="user">
 		select * from users where email=#{email}
+	</select>
+
+    <select id="selectbynickname" parameterType="string" resultType="user">
+		select * from users where nickname=#{nickname}
 	</select>
 
     <select id="search" parameterType="hashMap" resultType="user">
@@ -83,8 +87,8 @@
 		values(#{email}, #{password}, #{nickname})
 	</insert>
 
-    <insert id="insertFollow" parameterType="followdto">
-        INSERT INTO follow (follower, followee) VALUES (#{follower, jdbcType=INTEGER}, #{followee, jdbcType=INTEGER})
+    <insert id="insertFollow" parameterType="follow">
+        INSERT INTO follow (follower, followee) VALUES (#{follower}, #{followee})
     </insert>
 	
 	<resultMap type="com.web.server.dto.UserProfileDto" id="userprofile">

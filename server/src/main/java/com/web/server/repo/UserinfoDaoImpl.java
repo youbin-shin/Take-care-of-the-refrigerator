@@ -37,7 +37,7 @@ public class UserinfoDaoImpl implements UserinfoDao {
      */
     @Override
     public int checkAccount(String nickname) throws SQLException {
-        return template.selectOne(ns + "selectbynickname", nickname);
+        return template.selectOne(ns + "checkbynickname", nickname);
     }
 
     /**
@@ -52,7 +52,7 @@ public class UserinfoDaoImpl implements UserinfoDao {
         Map<String, Object> map = new HashMap<>();
         map.put("email", email);
         map.put("nickname", nickname);
-        return template.selectOne(ns + "selectbyemailandnickname", map);
+        return template.selectOne(ns + "checkbyemailandnickname", map);
     }
 
 
@@ -77,6 +77,11 @@ public class UserinfoDaoImpl implements UserinfoDao {
     @Override
     public User selectByIsEmail(String email) {
         return template.selectOne(ns + "selectbyemail", email);
+    }
+
+    @Override
+    public User selectByNickName(String nickname) {
+        return template.selectOne(ns + "selectbynickname", nickname);
     }
 
     @Override

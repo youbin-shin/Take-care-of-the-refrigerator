@@ -19,6 +19,8 @@ public interface UserinfoDao {
     public User selectByIsId(String uid);
 
     public User selectByIsEmail(String email);
+
+    public User selectByNickName(String nickname);
     
     public UserProfileDto selectUserProfileByUserId (int userId) throws SQLException;
 

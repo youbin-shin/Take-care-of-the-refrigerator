@@ -393,23 +393,33 @@ public class UserRestController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            if(map.containsKey("follow")){
+            if(map.containsKey("follow") || map.containsKey("other")){
                 String followValue = map.get("follow");
                 String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
                 int userId = userService.searchByEmail(email).getUserId();
-                FollowDto follow = null;
+                int otherUserId = userService.searchByNickName(map.get("other")).getUserId();
+                FollowDto follow = new FollowDto();
+
                 if(followValue.equals("follower")) {
-                    follow.setFollower(userId);                 // 팔로워에 userId 추가
+                    follow.setFollower(userId);                 // 팔로워에 유저   userId 추가
+                    follow.setFollowee(otherUserId);            // 팔로이에 상대방 userId 추가
                 } else if (followValue.equals("following")) {
-                    follow.setFollowee(userId);                 // 팔로이에 userId 추가
+                    follow.setFollower(otherUserId);            // 팔로원에 상대방 userId 추가
+                    follow.setFollowee(userId);                 // 팔로이에 유저   userId 추가
                 }
                 userService.insertFollow(follow);
+                status = HttpStatus.OK;                         // status code : 200
+                // body json add
+                resultMap.put("success", true);
             } else {
                 status = HttpStatus.NOT_FOUND;                  // status code : 404
+                // body json add
+                resultMap.put("sucess", false);
                 throw new RuntimeException("follow 값 확인 필요.");
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | SQLException e) {
             logger.info("ERROR message: {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;                    // status code : 400
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }

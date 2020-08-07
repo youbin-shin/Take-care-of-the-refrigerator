@@ -22,7 +22,7 @@
           <b-container class="bv-example-row">
             <b-row>
               <b-col class="bg-my-gredient">
-                <p class="text-white">요리에 필요한 재료</p>
+                <h5>요리에 필요한 재료</h5>
                 <div>
                   <draggable
                     tag="span"
@@ -77,7 +77,7 @@
         <v-card class="mb-12">
           <b-container class="bv-example-row">
             <div class="bg-my-step">
-              과정 순서
+              <h5>과정 순서</h5>
               <draggable
                 class="list-group"
                 tag="ul"
@@ -88,21 +88,34 @@
               >
                 <transition-group type="transition" :name="'flip-list'">
                   <li v-for="tag in postData.content.steps" :key="tag.description">
-                    <v-overflow-btn :items="typeList" v-model="tag.type" label="타입 선택" segmented></v-overflow-btn>
-                    <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
-                    {{ tag.description }}
-                    <i aria-hidden="true"></i>
-                    <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
-                    <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
+                    <v-row>
+                      <v-col>
+                        <v-overflow-btn
+                          :items="typeList"
+                          v-model="tag.type"
+                          label="타입 선택"
+                          segmented
+                        ></v-overflow-btn>
+                      </v-col>
+                      <v-col>
+                        <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
+                      </v-col>
+                      <v-col md="8">
+                        {{ tag.description }}
+                        <i aria-hidden="true"></i>
+                        <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                        <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
+                      </v-col>
+                    </v-row>
                   </li>
                 </transition-group>
               </draggable>
             </div>
             <div class="bg-plus-step">
-              과정 입력
-              <v-row no-gutters>
-                <v-col cols="12" sm="6" md="8">
-                  <v-card class="pa-2" outlined tile>
+              <h5 class="mb-3">과정 입력</h5>
+              <v-row no-gutters justify="center">
+                <v-col md="5">
+                  <v-card>
                     <b-form-input
                       type="text"
                       placeholder="요리 과정을 입력해주세요."
@@ -111,11 +124,7 @@
                     />
                   </v-card>
                 </v-col>
-                <v-col cols="6" md="4">
-                  <v-card class="pa-2" outlined tile>
-                    <button class="btn btn-info" @click="plusStep">과정추가</button>
-                  </v-card>
-                </v-col>
+                <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
               </v-row>
             </div>
           </b-container>
@@ -199,7 +208,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 2, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -348,14 +357,18 @@ export default {
   transition: transform 0.5s;
 }
 .bg-my-gredient {
-  background-color: burlywood;
+  background-image: url("https://user-images.githubusercontent.com/60081201/89654292-60c6ec00-d903-11ea-9b36-2d6f0e1ef386.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
   padding: 20px;
   border-radius: 5%;
 }
 .bg-my-box {
-  background-color: skyblue;
+  background-color: rgb(158, 215, 238);
   padding: 20px;
   border-radius: 5%;
+  min-height: 120px;
 }
 .bg-my-step {
   background-color: khaki;
@@ -366,5 +379,8 @@ export default {
   background-color: lightsteelblue;
   padding: 20px;
   border-radius: 2%;
+}
+.list-group {
+  list-style: none;
 }
 </style>

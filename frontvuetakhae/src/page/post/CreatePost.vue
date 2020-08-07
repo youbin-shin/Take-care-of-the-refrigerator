@@ -11,7 +11,6 @@
     >
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
-
     <v-stepper v-model="e6" vertical>
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
@@ -32,16 +31,23 @@
                     @end="drag = false"
                   >
                     <v-chip
-                      class="mr-1 mb-1"
+                      class="mr-2 mb-2"
                       v-for="tag in postData.content.ingredients"
                       :key="tag"
+                      close
+                      @click:close="closeChip(tag)"
                     >{{ tag }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
               <b-col>
                 <v-row class="m-2">
-                  <v-text-field label="직접 추가하기" v-model="addText" hide-details="auto"></v-text-field>
+                  <v-text-field
+                    label="직접 추가하기"
+                    v-model="addText"
+                    hide-details="auto"
+                    v-on:keyup.enter="plusFood"
+                  ></v-text-field>
                   <v-icon large @click="plusFood">mdi-plus</v-icon>
                 </v-row>
                 <div class="bg-my-box">
@@ -54,7 +60,7 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="mr-1 mb-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -62,6 +68,7 @@
             </b-row>
           </b-container>
         </v-card>
+        <!-- <div>{{ postData.content.ingredients }}</div> -->
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
 
@@ -83,13 +90,17 @@
                 >
                   <transition-group type="transition" :name="'flip-list'">
                     <li v-for="tag in postData.content.steps" :key="tag.description">
+                      <v-overflow-btn
+                        :items="dropdown_icon"
+                        label="타입 선택"
+                        segmented
+                        target="#dropdown-example"
+                      ></v-overflow-btn>
+                      <b-form-input v-model="hashtag" placeholder="해시태그 입력"></b-form-input>
                       <i aria-hidden="true"></i>
                       {{ tag.description }}
-                      <button
-                        class="btn btn-info"
-                        style="background-color:red"
-                        @click="deleleStep(tag.description)"
-                      >삭제</button>
+                      <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                      <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                     </li>
                   </transition-group>
                 </draggable>
@@ -159,6 +170,7 @@
     </v-stepper>
   </div>
 </template>
+
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
@@ -172,6 +184,12 @@ export default {
   },
   data() {
     return {
+      hashtag: "",
+      dropdown_icon: [
+        { text: "재료 손질", callback: () => console.log("재료 손질") },
+        { text: "요리 준비", callback: () => console.log("요리 준비") },
+        { text: "플레이팅", callback: () => console.log("플레이팅") },
+      ],
       e6: 1,
       rules: [(value) => !!value || "Required."],
       postData: {
@@ -207,11 +225,26 @@ export default {
       this.postData.content.steps.splice(idx, 1);
     },
     plusFood() {
+      // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
         return;
       }
+      // 중복되는 데이터일 경우 추가 안되도록 한다.
+      for (var i = 0; i < this.postData.content.ingredients.length; i++) {
+        if (this.addText === this.postData.content.ingredients[i]) {
+          this.addText = "";
+          return;
+        }
+      }
+      // 위의 경우가 아니라면 추가한다.
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
+    },
+    closeChip(tag) {
+      this.postData.content.ingredients.splice(
+        this.postData.content.ingredients.indexOf(tag),
+        1
+      );
     },
     plusStep() {
       if (this.postData.content.process === "") {
@@ -236,7 +269,7 @@ export default {
       console.log(ingreString);
       axios
         .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/create/",
+          "http://i3a305.p.ssafy.io:8399/api/boards/",
           {
             content: this.postData.review,
             cookingTime: this.postData.time,

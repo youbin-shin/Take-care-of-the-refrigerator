@@ -36,7 +36,7 @@ export default {
       this.isHeader = isHeader;
     },
   },
-  data: function () {
+  data: function() {
     return {
       isHeader: true,
       constants,

@@ -28,4 +28,12 @@ public class FollowDaoImpl implements FollowDao {
         map.put("followee", followee);
         return template.selectOne(ns + "checkfollow", map);
     }
+
+    @Override
+    public int deleteFollow(int follower, int followee) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put("follower", follower);
+        map.put("followee", followee);
+        return template.delete(ns + "deletefollow", map);
+    }
 }

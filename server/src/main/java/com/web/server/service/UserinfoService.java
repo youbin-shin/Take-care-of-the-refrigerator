@@ -37,5 +37,7 @@ public interface UserinfoService {
     public int updateUser(User user) throws SQLException;
     // d
 
-    public int deleteUser(String email);
+    public int deleteUser(String email) throws SQLException;
+
+    public int deleteFollow(String email, String nickname) throws SQLException;
 }

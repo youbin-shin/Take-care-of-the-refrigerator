@@ -1,6 +1,5 @@
 package com.web.server.service;
 
-import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
 
 
 @Service
@@ -118,8 +115,21 @@ public class UserinfoServiceImpl implements UserinfoService {
      * @return
      */
     @Override
-    public int deleteUser(String email) {
+    public int deleteUser(String email) throws SQLException {
         return uDao.deleteUser(email);
+    }
+
+    /**
+     * 팔로우 취소
+     *
+     * @param email
+     * @param nickname
+     */
+    @Override
+    public int deleteFollow(String email, String nickname) {
+        int follower = uDao.selectByIsEmail(email).getUserId();
+        int followee = uDao.selectByNickName(nickname).getUserId();
+        return fDao.deleteFollow(follower, followee);
     }
 
     @Override

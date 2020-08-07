@@ -8,4 +8,6 @@ public interface FollowDao {
     public int insert(FollowDto follow);
 
     public int checkFollow(int follower, int followee) throws SQLException;
+
+    public int deleteFollow(int follower, int followee);
 }

@@ -82,11 +82,6 @@
         where email = #{email}
 	</update>
 
-    <delete id="delete" parameterType="string">
-		delete from users where
-		email=#{email}
-	</delete>
-
     <insert id="insert" parameterType="user">
 		insert into users (email,password,nickname)
 		values(#{email}, #{password}, #{nickname})
@@ -95,7 +90,17 @@
     <insert id="insertFollow" parameterType="follow">
         INSERT INTO follow (follower, followee) VALUES (#{follower}, #{followee})
     </insert>
-	
+
+    <delete id="delete" parameterType="string">
+		delete from users where
+		email=#{email}
+	</delete>
+
+    <delete id="deletefollow" parameterType="hashMap">
+        delete from follow
+        where follower=#{follower} and followee=#{followee}
+    </delete>
+
 	<resultMap type="com.web.server.dto.UserProfileDto" id="userprofile">
 		<id column="nickname" property="nickname"/>
 		<result column="introduce" property="introduce"/>

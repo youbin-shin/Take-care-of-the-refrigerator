@@ -305,7 +305,7 @@ public class UserRestController {
                 status = HttpStatus.NOT_ACCEPTABLE; // status code : 406
             }
         }
-        catch (RuntimeException e) {
+        catch (RuntimeException | SQLException e) {
             // 에러
             logger.info("ERROR.deleteUser (유저 삭제) : {}", e.getMessage());
             status = HttpStatus.BAD_REQUEST; // status code : 400
@@ -465,4 +465,23 @@ public class UserRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+
+    @ApiOperation(value = "팔로우 취소")
+    @DeleteMapping("/users/follow/other/{nickname}")
+    public ResponseEntity<Map<String, Object>> deleteFollow(final HttpServletRequest req,
+                                                            @PathVariable final String nickname) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            userService.deleteFollow(email, nickname);
+            status = HttpStatus.OK;
+            resultMap.put("success", true);
+        } catch (RuntimeException | SQLException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 }

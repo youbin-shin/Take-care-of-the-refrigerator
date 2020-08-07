@@ -13,6 +13,7 @@
         <typeAlias type="com.web.server.dto.User" alias="user"/>
         <typeAlias type="com.web.server.dto.Board" alias="board"/>
         <typeAlias type="com.web.server.dto.CommentDto" alias="comment"/>
+        <typeAlias type="com.web.server.dto.FollowDto" alias="follow"/>
         <!-- 게시글 목록에서 보이는 게시글 DTO -->
         <typeAlias type="com.web.server.dto.BoardSimpleDto" alias="boardsimple"/>
         <!-- 게시글에 저장될 step -->

@@ -1,16 +1,17 @@
 package com.web.server.repo;
 
-import com.web.server.dto.Board;
-import com.web.server.dto.BoardSimpleDto;
-import com.web.server.dto.StepOfBoardDto;
+import java.sql.SQLException;
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
-import java.util.List;
+import com.web.server.dto.Board;
+import com.web.server.dto.BoardSimpleDto;
+import com.web.server.dto.StepOfBoardDto;
 
 
 @Repository
@@ -35,6 +36,16 @@ public class BoardDaoImpl implements BoardDao{
     @Override
     public List<StepOfBoardDto> searchStepsInBoard(int boardId) throws SQLException {
         return template.selectList(ns + "selectStepsInBoardByBoardId", boardId);
+    }
+
+    @Override
+    public List<Board> selectByUserId(int userId) throws SQLException {
+        return template.selectList(ns + "selectBoardsByUserId", userId);
+    }
+
+    @Override
+    public List<Board> selectInterestBoardsByUserId(int userId) throws SQLException {
+        return template.selectList(ns + "selectInterestBoardsByUserId", userId);
     }
 
     @Override

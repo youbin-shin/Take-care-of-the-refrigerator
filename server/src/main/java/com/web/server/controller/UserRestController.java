@@ -528,6 +528,4 @@ public class UserRestController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
-
 }

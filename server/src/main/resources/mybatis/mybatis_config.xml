@@ -17,7 +17,9 @@
         <!-- 게시글 목록에서 보이는 게시글 DTO -->
         <typeAlias type="com.web.server.dto.BoardSimpleDto" alias="boardsimple"/>
         <!-- 게시글에 저장될 step -->
-        <typeAlias type="com.web.server.dto.StepOfBoardDto" alias="stepofboard"/>
+        <typeAlias type="com.web.server.dto.Steps" alias="step"/>
+        <typeAlias type="com.web.server.dto.Tags" alias="tag"/>
+        <typeAlias type="com.web.server.dto.StepTags" alias="stepTag"/>
     </typeAliases>
 
     <mappers>

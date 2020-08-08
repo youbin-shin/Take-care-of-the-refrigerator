@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public class CommentDaoImpl implements CommentDao{
     private String ns = "com.web.server.repo.CommentDao.";
-
     @Autowired
     SqlSessionTemplate template;
 
@@ -26,5 +25,20 @@ public class CommentDaoImpl implements CommentDao{
 //        }
 //        return comments;
         return template.selectList(ns + "selectCommentsInBoardByBoardId", boardId);
+    }
+
+    @Override
+    public void createCommentByBoardId(CommentDto comment) throws SQLException{
+        template.insert( ns+ "createCommentsInBoardByBoardId", comment);
+    }
+
+    @Override
+    public void updateCommentByBoardId(CommentDto comment) throws SQLException{
+        template.update(ns+"updateCommentsInBoardByBoardId", comment );
+    }
+
+    @Override
+    public int deleteCommentByBoardId(Integer commentId) throws SQLException{
+        return template.delete(ns+"deleteCommentsInBoardByBoardId", commentId);
     }
 }

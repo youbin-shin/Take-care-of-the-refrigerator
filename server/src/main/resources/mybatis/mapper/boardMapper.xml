@@ -30,6 +30,13 @@
         order by step_number
     </select>
 
+    <!--  유저아이디로 게시글 조회  -->
+    <select id="selectBoardsByUserId" parameterType="int" resultType="board">
+        select *
+        from boards
+        where user_id=#{userId}
+    </select>
+
     <!--  관심 게시글들 유저 아이디로 조회  -->
     <select id="selectInterestBoardsByUserId" parameterType="int" resultType="board">
         select boards.user_id as user_id,

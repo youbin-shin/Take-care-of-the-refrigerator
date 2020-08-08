@@ -19,7 +19,7 @@ public class UserinfoServiceImpl implements UserinfoService {
 
     @Autowired
     UserinfoDao uDao;
-    
+
     @Autowired
     BoardDao bDao;
 
@@ -30,10 +30,10 @@ public class UserinfoServiceImpl implements UserinfoService {
     public User login(String email, String password) {
         return uDao.login(email, password);
     }
-    
+
     /**
      * 닉네임 중복 여부 체크
-     * 
+     *
      * @param nickname
      * @return
      * @throws SQLException
@@ -98,14 +98,14 @@ public class UserinfoServiceImpl implements UserinfoService {
      */
     @Override
     public UserProfileDto searchUserProfileByEmail(String email) throws SQLException{
-    	UserProfileDto resultDto  = null;
-    	// get user
+        UserProfileDto resultDto  = null;
+        // get user
         int userId = uDao.selectByIsEmail(email).getUserId();
         // users table (nickname, introduce, box) + follow table (following count, follower count)
-    	resultDto = uDao.selectUserProfileByUserId(userId);
+        resultDto = uDao.selectUserProfileByUserId(userId);
         // boards table (Boards written by user)
         resultDto.setMyBoards(bDao.selectByUserId(userId));
-        // interest_boards table (user's interest boards
+        // interest_boards table (user's interest boards)
         resultDto.setInterestBoards(bDao.selectInterestBoardsByUserId(userId));
         return resultDto;
     }
@@ -117,7 +117,7 @@ public class UserinfoServiceImpl implements UserinfoService {
 
     /**
      * 사용자 삭제
-     * 
+     *
      * @param email
      * @return
      */

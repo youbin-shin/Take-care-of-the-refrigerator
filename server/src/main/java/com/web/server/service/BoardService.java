@@ -14,6 +14,8 @@ public interface BoardService {
 
     public boolean write(String email, Board board) throws SQLException;
 
+    int deleteBoard(int boardId) throws SQLException;
+
     public void writeComment(CommentDto comment) throws SQLException;
 
     public void updateComment(CommentDto comment) throws SQLException;

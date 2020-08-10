@@ -142,6 +142,31 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+    @ApiOperation(value = "게시글 삭제", response = String.class)
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<Map<String, Object>> deleteBoard(@PathVariable int boardId) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+            int result = boardService.deleteBoard(boardId);
+            if (result == 1) {
+                status = HttpStatus.OK;
+                resultMap.put("message", "삭제에 성공했습니다.");
+            } else {
+                status = HttpStatus.NO_CONTENT;
+                resultMap.put("message", "삭제할 게시글이 없습니다.");
+            }
+            resultMap.put("status", status.value());
+
+        } catch (RuntimeException | SQLException e) {
+            status = HttpStatus.BAD_REQUEST;
+            logger.info("게시글 삭제 ERROR : {}", e.getMessage());
+            resultMap.put("status", status.value());
+            resultMap.put("message", "삭제 실패");
+        }
+        return new ResponseEntity<>(resultMap, status);
+    }
+
     @RequestMapping(value = "/boards/{boardId}/comments", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> writeComment(@RequestBody CommentDto comment) {
         HttpStatus status = null;

@@ -74,4 +74,9 @@ public class BoardDaoImpl implements BoardDao{
     public List<Tags> getTagList(int selectedStepId) throws SQLException {
         return template.selectList(ns+"getTagList",selectedStepId);
     }
+
+    @Override
+    public int deleteBoard(int boardId) throws SQLException {
+        return template.delete(ns + "deleteBoard", boardId);
+    }
 }

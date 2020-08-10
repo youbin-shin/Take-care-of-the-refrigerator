@@ -195,15 +195,23 @@ class BoardRestController {
     }
 
     @RequestMapping(value = "/boards/{boardId}/comments/{commentId}", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateComment(@PathVariable("commentId") Integer commentId, @RequestBody CommentDto comment) {
-        ResponseEntity<String> entity = null;
+    public ResponseEntity<Map<String, Object>> updateComment(@PathVariable("commentId") Integer commentId, @RequestBody CommentDto comment) {
+        ResponseEntity<Map<String, Object>> entity = null;
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
         try {
             comment.setCommentId(commentId);
             boardService.updateComment(comment);
+            status = HttpStatus.OK;
+            resultMap.put("status", status.value());
+            resultMap.put("message", "글 수정을 성공하였습니다.");
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
         } catch (Exception e) {
-            e.printStackTrace();
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
         }
-        return entity;
     }
 
     @RequestMapping(value = "/boards/{boardId}/comments/{commentId}", method = RequestMethod.DELETE)

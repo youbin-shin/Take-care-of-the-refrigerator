@@ -32,9 +32,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11610524-70a1-4979-8bf5-2849cadf9105" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/resources/mybatis/mapper/boardHardEasyMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/web/server/controller/BoardRestcontroller.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/web/server/controller/BoardRestcontroller.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,6 +156,7 @@
       <workItem from="1596610383179" duration="9709000" />
       <workItem from="1596674039611" duration="12232000" />
       <workItem from="1596699415363" duration="3038000" />
+      <workItem from="1597030154960" duration="1347000" />
     </task>
     <servers />
   </component>

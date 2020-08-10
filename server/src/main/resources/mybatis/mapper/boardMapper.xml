@@ -18,9 +18,11 @@
 
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
-        select *
+        select *,(select nickname from users where user_id=boards.user_id) as nickname,
+        (select count(*) from hardeasy where grade = 2) as easyCount,(select count(*) from hardeasy where grade = 1) as difficultyCount
         from boards
         where board_id=#{boardId}
+        
     </select>
 
     <select id="selectStepsInBoardByBoardId" parameterType="int" resultType="step">

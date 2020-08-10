@@ -100,6 +100,10 @@ public class BoardServiceImpl implements BoardService{
         return boardDao.deleteBoard(boardId);
     }
     @Override
+    public List<BoardSimpleDto> searchAllByFood(List<String> foodList) throws SQLException{
+        return boardDao.searchAllByFood(foodList);
+    }
+    @Override
     public void writeComment(CommentDto comment) throws  SQLException{
         commentDao.createCommentByBoardId(comment);
     }
@@ -113,4 +117,6 @@ public class BoardServiceImpl implements BoardService{
     public  int deleteComment(Integer commentId) throws SQLException{
         return commentDao.deleteCommentByBoardId(commentId);
     }
+
+
 }

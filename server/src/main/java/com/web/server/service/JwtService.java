@@ -94,7 +94,8 @@ public class JwtService {
             email = map.get("email").toString();
         } catch (final Exception e) {
             // TODO: handle exception
-            throw new RuntimeException();
+            System.out.println("TTTTteterrq");
+            throw new RuntimeException("asdasd");
         }
 
         log.trace("email: {}", email);

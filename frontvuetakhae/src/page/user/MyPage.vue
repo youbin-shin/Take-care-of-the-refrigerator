@@ -1,30 +1,92 @@
 <template>
-  <div class="container" style="margin-top:30px">
+  <div class="container" style="margin-top: 30px;">
     <h1>{{ userData.nickname }}님의 마이 페이지</h1>
     <div class="header">
-      <div class="box" style="background: #BDBDBD;">
+      <div class="box" style="background: #bdbdbd;">
         <img
           class="profile"
           src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
         />
       </div>
       <div class="introduce">
-        <h3 style="text-align:left">
-          팔로잉 {{ userData.followingCount }} 명 / 팔로우
-          {{ userData.followerCount }} 명
+        <h3 class="mb-5" style="text-align: left;">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="ma-2"
+                outlined
+                color="indigo"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                @click="checkfollowee"
+                >팔로잉 {{ userData.followingCount }} 명</v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="followee in followeelist"
+                :key="followee.nickname"
+              >
+                <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="ma-2"
+                outlined
+                color="indigo"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                @click="checkfollower"
+                >팔로우 {{ userData.followerCount }} 명</v-btn
+              >
+            </template>
+            <v-list>
+              <v-list-item
+                v-for="follower in followerlist"
+                :key="follower.nickname"
+              >
+                <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <span v-if="other">
+            <!-- 다른 사용자의 마이페이지일 경우 -->
+            <v-btn class="ml-5" color="primary">팔로우</v-btn>
+          </span>
         </h3>
-        <h2 style="text-align:left">자기소개</h2>
-        <p>
-          <v-textarea name="input-7-4" label="간단하게 자신에 대해 소개해주세요." v-model="userData.introduce"></v-textarea>
-          <v-btn depressed small @click="updateIntroduce">저장</v-btn>
-        </p>
+        <h3 style="text-align: left;">자기소개</h3>
+        <v-col cols="12">
+          <div v-if="other">
+            <v-card class="mx-auto" max-width="100%" outlined>
+              <v-list-item three-line>
+                <v-list-item-content>
+                  <div class="overline mb-4">{{ userData.introduce }}</div>
+                </v-list-item-content>
+              </v-list-item>
+            </v-card>
+          </div>
+          <div v-else>
+            <v-textarea
+              solo
+              name="input-7-4"
+              label="간단하게 자신에 대해 소개해주세요."
+              v-model="userData.introduce"
+            ></v-textarea>
+            <v-btn depressed small @click="updateIntroduce">저장</v-btn>
+          </div>
+        </v-col>
       </div>
     </div>
     <!-- 나의 냉장고 코드 -->
     <div class="middle">
       <h1>나의 냉장고</h1>
-
-      <div>
+      <div v-if="other">{{ userData.box }}</div>
+      <div v-else>
         <v-row class="m-2 inputBlank" variant="danger">
           <v-text-field
             label="냉장고 속 재료를 추가해주세요."
@@ -40,8 +102,8 @@
           close
           @click:close="closeChip(tag)"
           :key="tag"
-        >{{ tag }}</v-chip>
-
+          >{{ tag }}</v-chip
+        >
         <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
       </div>
     </div>
@@ -52,19 +114,34 @@
     </div>
     <hr />
     <div class="interest">
-      <h1>내가 작성한 레시피 목록</h1>
-      <!-- <p>{{ userData.myBoards }}</p> -->
-      <li v-for="board in userData.myBoards" :key="board">
-        {{ board.boardId }} : {{ board.title }}
-        {{ board.createAt }}
-      </li>
+      <div v-if="other">
+        <h1>{{ userData.nickname }}님이 작성한 레시피 목록</h1>
+        <li v-for="board in userData.myBoards" :key="board">
+          {{ board.boardId }} : {{ board.title }}
+          {{ board.createAt }}
+        </li>
+      </div>
+      <div v-else>
+        <h1>내가 작성한 레시피 목록</h1>
+        <!-- <p>{{ userData.myBoards }}</p> -->
+        <li v-for="board in userData.myBoards" :key="board">
+          {{ board.boardId }} : {{ board.title }}
+          {{ board.createAt }}
+        </li>
+      </div>
     </div>
-    <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
+    <div class="white--text" v-if="other === false">
+      <b-button class="bottom-button mr-2" @click="moveCreatePost"
+        >레시피 작성하기</b-button
+      >
       <b-button
         class="a_tag_modal bottom-button mr-2"
-        @click="modalShow = !modalShow; loadData();"
-      >수정하기</b-button>
+        @click="
+          modalShow = !modalShow;
+          loadData();
+        "
+        >수정하기</b-button
+      >
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
@@ -82,9 +159,13 @@
               @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
-            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info"
+              >중복확인하기</b-button
+            >
           </div>
-          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">
+            사용가능한 닉네임입니다.
+          </p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -98,7 +179,9 @@
         </div>
       </div>
       <div>
-        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData"
+          >저장하기</b-button
+        >
       </div>
     </b-modal>
   </div>
@@ -111,6 +194,9 @@ const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 export default {
   data() {
     return {
+      other: false,
+      followerlist: [],
+      followeelist: [],
       chips: [], // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
       modalShow: false,
       addText: "",
@@ -150,9 +236,36 @@ export default {
       });
   },
   methods: {
+    checkfollower() {
+      axios
+        .get(`${BACK_URL}/users/follow/list/follower/`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.followerlist = response.data.users;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    checkfollowee() {
+      axios
+        .get(`${BACK_URL}/users/follow/list/follewing/`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.followeelist = response.data.users;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     updateIntroduce() {
       // 자기소개 수정 method
-
       axios
         .put(
           `${BACK_URL}/users/mypage/introduce`,

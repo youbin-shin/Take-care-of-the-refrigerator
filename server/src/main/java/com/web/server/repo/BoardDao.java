@@ -35,5 +35,8 @@ public interface BoardDao {
     int insertStepTags(StepTags stepTags) throws SQLException;
 
     List<Tags> getTagList(int selectedStepId) throws SQLException;
+
+    int deleteBoard(int boardId) throws SQLException;
+
 }
 

@@ -5,34 +5,50 @@
 <mapper namespace="com.web.server.repo.HardEasyDao">
 
     <!-- 1은  hard 2는 easy -->
-    <insert id="hardChoice">
-        INSERT INTO HardEasy (boardId,userId,hardEasy)
-        VALUES (#{boardId},#{userId},1)
-    </insert>
+    <select id="hardChoice" resultType="hardEasy">
+        select * from hardeasy WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
+<!--        <choose>-->
+<!--            <when test='grade>1'>-->
+<!--                delete * from hardeasy WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})-->
+<!--            </when>-->
+<!--&lt;!&ndash;            <when test='grade = 0'>&ndash;&gt;-->
+<!--&lt;!&ndash;                UPDATE hardeasy SET grade = 1 WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})&ndash;&gt;-->
+<!--&lt;!&ndash;            </when>&ndash;&gt;-->
+<!--            <otherwise>-->
+<!--                INSERT INTO hardeasy (board_id,user_id,grade)-->
+<!--                VALUES (#{boardId},#{userId},1)-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+    </select>
 
     <insert id="easyChoice">
-        INSERT INTO HardEasy (boardId,userId,hardEasy)
+        INSERT INTO HardEasy (boardId,userId,grade)
         VALUES (#{boardId},#{userId},2)
     </insert>
 
     <delete id="deleteChoice">
         DELETE FROM HardEasy
-        WHERE boardId=#{boardId} AND userId=#{userId}
+        WHERE boardId=#{boardId} AND userId=(select userId from users WHERE email=#{email})
     </delete>
 
     <select id="updateHardChoice">
         UPDATE HardEasy
-        SET boardHardCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND HardEasy=1)
+        SET boardHardCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND grade=1)
         WHERE boardId=#{boardId}
     </select>
 
     <select id="updateEasyChoice">
         UPDATE HardEasy
-        SET boardEasyCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND HardEasy=2)
+        SET boardEasyCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND grade=2)
         WHERE boardId=#{boardId}
+    </select>
+
+    <select id="existTable">
+        select count(*) from HardEasy WHERE boardId=#{boardId} AND userId=#{userId} AND grade=1
     </select>
 
     <!--    <select id="getHardChoice" resultType="int">-->
     <!--            SELECT COUNT * FROM HardEasy WHERE board_id = #{boardId} AND user_id = #{userId}-->
     <!--    </select>-->
 
+</mapper>

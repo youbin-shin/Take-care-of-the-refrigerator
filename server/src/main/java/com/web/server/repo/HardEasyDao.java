@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public interface HardEasyDao {
 
-    void createHardChoice(HardEasy hardEasy) throws SQLException;
+    HardEasy createHardChoice(HardEasy hardEasy) throws SQLException;
 
     void createEasyChoice(HardEasy hardEasy) throws SQLException;
 
@@ -16,4 +16,5 @@ public interface HardEasyDao {
 
     int updateEasyChoice(Integer boardId) throws SQLException;
 
+    int checkExistTable(Integer boardId, Integer userId) throws  SQLException;
 }

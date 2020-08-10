@@ -6,9 +6,11 @@ import java.sql.SQLException;
 
 public interface HardEasyService {
 
-    void createHardChoice(HardEasy hardEasy) throws SQLException;
+    HardEasy createHardChoice(HardEasy hardEasy) throws SQLException;
 
     void createEasyChoice(HardEasy hardEasy) throws SQLException;
 
     void deleteChoice(HardEasy hardEasy) throws SQLException;
+
+    int checkExistTable(Integer boardId,Integer userId) throws  SQLException;
 }

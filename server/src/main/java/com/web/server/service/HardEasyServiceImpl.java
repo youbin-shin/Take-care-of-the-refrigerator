@@ -14,9 +14,9 @@ public class HardEasyServiceImpl implements HardEasyService{
     HardEasyDao hardEasyDao;
 
     @Override
-    public void createHardChoice(HardEasy hardEasy) throws SQLException {
-        hardEasyDao.createHardChoice(hardEasy);
-        hardEasyDao.updateHardChoice(hardEasy.getBoardId());
+    public HardEasy createHardChoice(HardEasy hardEasy) throws SQLException {
+        return hardEasyDao.createHardChoice(hardEasy);
+//        hardEasyDao.updateHardChoice(hardEasy.getBoardId());
     }
 
     @Override
@@ -30,5 +30,10 @@ public class HardEasyServiceImpl implements HardEasyService{
         hardEasyDao.deleteChoice(hardEasy);
         hardEasyDao.updateHardChoice(hardEasy.getBoardId());
         hardEasyDao.updateEasyChoice(hardEasy.getBoardId());
+    }
+
+    @Override
+    public int checkExistTable(Integer boardId,Integer userId) throws SQLException{
+        return hardEasyDao.checkExistTable(boardId,userId);
     }
 }

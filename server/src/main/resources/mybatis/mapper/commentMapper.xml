@@ -11,4 +11,20 @@
         where comments.board_id=#{boardId}
     </select>
 
+    <!-- 댓글 작성 -->
+    <insert id="createCommentsInBoardByBoardId" parameterType="comment">
+        insert into comments(user_id,board_id,comment_content)
+        values (#{userId}, #{boardId}, #{commentContent})
+    </insert>
+
+    <update id="updateCommentsInBoardByBoardId">
+        UPDATE comments
+        SET comment_content = #{commentContent}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentsInBoardByBoardId">
+        DELETE FROM comments
+        WHERE comment_id=#{commentId}
+    </delete>
 </mapper>

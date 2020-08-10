@@ -21,4 +21,6 @@ public interface BoardService {
     public void updateComment(CommentDto comment) throws SQLException;
 
     public int deleteComment(Integer commentId) throws SQLException;
+
+    List<CommentDto> selectCommentByBoardId(int boardId);
 }

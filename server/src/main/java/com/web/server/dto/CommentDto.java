@@ -17,4 +17,5 @@ public class CommentDto {
     private String commentContent;  // 내용
 
     private String nickname;        // 닉네임
+    private String email;
 }

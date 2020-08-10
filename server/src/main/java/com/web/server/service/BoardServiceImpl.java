@@ -113,4 +113,9 @@ public class BoardServiceImpl implements BoardService{
     public  int deleteComment(Integer commentId) throws SQLException{
         return commentDao.deleteCommentByBoardId(commentId);
     }
+
+    @Override
+    public List<CommentDto> selectCommentByBoardId(int boardId) {
+        return commentDao.selectCommentByBoardId(boardId);
+    }
 }

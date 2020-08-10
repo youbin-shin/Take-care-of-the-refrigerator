@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 
 @Service
-public class HardEasyServicelmpl implements HardEasyService{
+public class HardEasyServiceImpl implements HardEasyService{
 
     @Autowired
     HardEasyDao hardEasyDao;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.SQLException;
 
 @Repository
-class HardEasyDaolmpl implements HardEasyDao{
+class HardEasyDaoImpl implements HardEasyDao{
     private String ns = "com.web.server.repo.HardEasyDao.";
     @Autowired
     SqlSessionTemplate template;

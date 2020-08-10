@@ -20,14 +20,10 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollowee"
-                >팔로잉 {{ userData.followingCount }} 명</v-btn
-              >
+              >팔로잉 {{ userData.followingCount }} 명</v-btn>
             </template>
             <v-list>
-              <v-list-item
-                v-for="followee in followeelist"
-                :key="followee.nickname"
-              >
+              <v-list-item v-for="followee in followeelist" :key="followee.nickname">
                 <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -42,14 +38,10 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollower"
-                >팔로우 {{ userData.followerCount }} 명</v-btn
-              >
+              >팔로우 {{ userData.followerCount }} 명</v-btn>
             </template>
             <v-list>
-              <v-list-item
-                v-for="follower in followerlist"
-                :key="follower.nickname"
-              >
+              <v-list-item v-for="follower in followerlist" :key="follower.nickname">
                 <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -102,8 +94,7 @@
           close
           @click:close="closeChip(tag)"
           :key="tag"
-          >{{ tag }}</v-chip
-        >
+        >{{ tag }}</v-chip>
         <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
       </div>
     </div>
@@ -131,17 +122,14 @@
       </div>
     </div>
     <div class="white--text" v-if="other === false">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost"
-        >레시피 작성하기</b-button
-      >
+      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
       <b-button
         class="a_tag_modal bottom-button mr-2"
         @click="
           modalShow = !modalShow;
           loadData();
         "
-        >수정하기</b-button
-      >
+      >수정하기</b-button>
       <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
     </div>
 
@@ -159,13 +147,9 @@
               @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
-            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info"
-              >중복확인하기</b-button
-            >
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
           </div>
-          <p class="small ml-4 pl-5" v-if="nicknameCheck">
-            사용가능한 닉네임입니다.
-          </p>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -179,9 +163,7 @@
         </div>
       </div>
       <div>
-        <b-button class="mt-3 d-flex justify-content-center" @click="updateData"
-          >저장하기</b-button
-        >
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
       </div>
     </b-modal>
   </div>
@@ -252,7 +234,7 @@ export default {
     },
     checkfollowee() {
       axios
-        .get(`${BACK_URL}/users/follow/list/follewing/`, {
+        .get(`${BACK_URL}/users/follow/list/followee/`, {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {

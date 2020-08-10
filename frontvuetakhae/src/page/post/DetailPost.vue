@@ -64,12 +64,12 @@
         <b-row>
           <b-col>
             <b-avatar variant="success" icon="people-fill"></b-avatar>
-            <p>수지</p>
+            <p>{{ }}</p>
           </b-col>
           <b-col cols="10">
             <b-input-group>
-              <b-form-input></b-form-input>
-              <b-button variant="secondary">등록</b-button>
+              <b-form-input label="댓글을 입력해주세요." v-model="commentInput"></b-form-input>
+              <b-button variant="secondary" @click="createComment">등록</b-button>
             </b-input-group>
           </b-col>
         </b-row>
@@ -93,9 +93,10 @@ export default {
   },
   created() {
     // this.backData = this.dummyData[this.$route.params.no - 1];
-    let boardId = this.$route.params.no;
-    axios.get(`${BACK_URL}/boards/${boardId}`).then((response) => {
+    let boardurlId = this.$route.params.no;
+    axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
       console.log(response);
+      this.detailData.boardId = response.data.board.boardId;
       this.detailData.title = response.data.board.title;
       this.detailData.userId = response.data.board.userId;
       this.detailData.ingredient = response.data.board.ingredient;
@@ -116,6 +117,7 @@ export default {
     return {
       easy: true,
       detailData: {
+        boardId: "",
         title: "",
         userId: "",
         ingredients: "",
@@ -130,86 +132,33 @@ export default {
         comments: [],
         commentsNum: null,
       },
-
-      // dummyData: [
-      //   {
-      //     title: "간단한 연어덮밥",
-      //     content: "30분안에 끝나는 연어덮밥 요리 방법",
-      //     image: "https://i.imgur.com/Ztp9hAN.jpg",
-      //     materials: "연어 간장 와사비 밥 양파",
-      //     date: "2020.07.30",
-      //     comment: 3,
-      //     nickname: "연어가좋아",
-      //     like: 3,
-      //     steps: [
-      //       "연어를 자른다",
-      //       "밥 위에 연어를 올린다.",
-      //       "양파와 와사비로 고명을 해준다.",
-      //     ],
-      //   },
-      //   {
-      //     title: "쇠고기 미역국",
-      //     content: "거의 밥도둑!",
-      //     image: "https://i.imgur.com/O1cQ8N7.jpg",
-      //     materials: "소고기 소금 미역 간장 참기름",
-      //     date: "2020.07.30",
-      //     comment: 3,
-      //     nickname: "간장게장",
-      //     like: 3,
-      //     steps: [
-      //       "물을 끓인다",
-      //       "미역을 넣고 끓인다.",
-      //       "소고기를 넣고 간장으로 간을 맞춰준다.",
-      //       "참기름으로 감칠맛을 더한다.",
-      //     ],
-      //   },
-      //   {
-      //     title: "김치볶음밥",
-      //     content: "백종원 선생님의 황금레시피",
-      //     image: "https://i.imgur.com/7pNI9BA.jpg",
-      //     materials: "김치 간장 스팸 베이컨 밥 계란",
-      //     date: "2020.07.30",
-      //     comment: 3,
-      //     nickname: "골목식당",
-      //     like: 3,
-      //     steps: [
-      //       "김치를 식용유에 볶는다.",
-      //       "스팸을 넣어 볶다가 밥을 넣는다.",
-      //       "간장을 살짝 태워 밥에 섞는다.",
-      //       "계란을 넣고 마무리한다.",
-      //     ],
-      //   },
-      //   {
-      //     title: "전주비빔밥",
-      //     content: "계속 생각나는 그 맛",
-      //     image: "https://i.imgur.com/oDHwKwP.jpg",
-      //     materials: "계란 소고기 당근 콩나물 간장 고추장 밥 오이 호박",
-      //     date: "2020.07.30",
-      //     comment: 3,
-      //     nickname: "콩나물국밥",
-      //     like: 3,
-      //     steps: ["밥을 한다", "나물을 준비한다.", "나물은 얹고 섞어준다."],
-      //   },
-      //   {
-      //     title: "김치전",
-      //     content: "비오는 날 생각나는",
-      //     image: "https://i.imgur.com/2nMSgb8.jpg",
-      //     date: "2020.07.30",
-      //     materials: "김치 소금 간장 다진마늘 양파 밀가루 물",
-      //     comment: 3,
-      //     nickname: "비가오는날엔",
-      //     like: 3,
-      //     steps: [
-      //       "밀가루와 김치를 넣고 반죽을 만든다.",
-      //       "반죽을 굽는다.",
-      //       "맛있게 먹는다.",
-      //     ],
-      //   },
-      // ],
-      // likenum: 5,
+      commentInput: null,
     };
   },
   methods: {
+    createComment() {
+      axios
+        .post(
+          `${BACK_URL}/boards/comments`,
+          {
+            boardId: this.detailData.boardId,
+            commentContent: this.commentInput,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("댓글이 작성되었습니다!");
+            this.$router.go();
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     changeEasy() {
       if (this.easy) {
         this.easy = false;

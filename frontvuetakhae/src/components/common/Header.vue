@@ -15,7 +15,7 @@
             <div class="div_item">
               <span class="item_100px">아이디</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 id="loginEmail"
                 ref="loginEmail"
@@ -27,7 +27,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="loginPassword"
                 id="passwloginPasswordord"
@@ -54,11 +54,11 @@
 
         <b-modal v-model="signUpShow" hide-footer hide-header>
           <h1 class="text-center">회원가입</h1>
-          <div>
+          <div class>
             <div class="div_item">
               <span class="item_100px">아이디</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 id="signUpEmail"
                 ref="signUpEmail"
@@ -70,7 +70,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="signUpPassword"
                 id="signUpPassword"
@@ -81,7 +81,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호 확인</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="signUpPasswordconfirm"
                 id="signUpPasswordconfirm"
@@ -92,7 +92,7 @@
             <div class="div_item">
               <span class="item_100px">닉네임</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 ref="signUpNickname"
                 id="signUpNickname"

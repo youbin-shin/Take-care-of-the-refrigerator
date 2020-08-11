@@ -104,7 +104,7 @@
           loadData();
         "
       >수정하기</b-button>
-      <b-button class="bottom-button mr-2" variant="danger">탈퇴하기</b-button>
+      <b-button class="bottom-button mr-2" variant="danger" @click="deleteData()">탈퇴하기</b-button>
     </div>
 
     <!-- 개인 정보 수정하기 모달 코드 -->
@@ -319,6 +319,21 @@ export default {
         alert("닉네임 중복을 확인해주세요.");
         return;
       }
+    },
+    deleteData() {
+      axios
+        .delete(`${BACK_URL}/users`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then(() => {
+          alert("탈퇴가 완료되었습니다.");
+          this.$cookies.remove("token");
+          this.$router.push("/");
+          this.$router.go();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     nameCheck() {
       // 닉네임 중복 조회하는 메소드

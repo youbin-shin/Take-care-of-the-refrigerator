@@ -205,7 +205,6 @@ export default {
         });
     },
     checkfollowee() {
-      // 다른 사람의 팔로우리스트가 뜨는 지 확인하기
       axios
         .post(
           `${BACK_URL}/users/follow/list/followee/`,

@@ -304,6 +304,7 @@ export default {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 .searchPostContent {
   min-height: 400px;

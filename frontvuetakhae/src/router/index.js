@@ -5,7 +5,7 @@ import constants from "../lib/constants";
 
 // 유저
 import MyPage from "../page/user/MyPage.vue";
-
+import OtherPage from "../page/user/OtherPage.vue";
 // 포스트
 import List from "../page/post/List.vue";
 import CreatePost from "../page/post/CreatePost.vue";
@@ -21,6 +21,11 @@ export default new Router({
       path: "/user/mypage",
       name: "mypage",
       component: MyPage,
+    },
+    {
+      path: "/users/otherpage/:nickname",
+      name: "otherpage",
+      component: OtherPage,
     },
     // 포스트
     {

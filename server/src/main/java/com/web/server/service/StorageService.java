@@ -10,6 +10,8 @@ public interface StorageService {
 
     void init();
 
+    String storeProfileImage(MultipartFile file);
+
     String store(MultipartFile file);
 
     Stream<Path> loadAll();

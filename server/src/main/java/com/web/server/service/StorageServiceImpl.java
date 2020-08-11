@@ -13,6 +13,7 @@ import com.web.server.exception.FileStorageException;
 import com.web.server.exception.MyFileNotFoundException;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -20,19 +21,57 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.stream.Stream;
 
 @Service
-
 public class StorageServiceImpl implements StorageService{
-	
+
+    private final String IMAGESDIR = "images";
+
 	private final Path rootLocation;
-	
+
+	private String getDate() {
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        return formatter.format(currentTimestamp);
+    }
+
+	private String getNow() {
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date now = calendar.getTime();
+        java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+	    return formatter.format(currentTimestamp);
+    }
+
+    private void checkFile(MultipartFile file) {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        if (file.isEmpty()) {
+            throw new FileStorageException("Failed to store empty file " + filename);
+        }
+        if (filename.contains("..")) {
+            // This is a security check
+            throw new FileStorageException(
+                    "Cannot store file with relative path outside current directory "
+                            + filename);
+        }
+        if (!file.getContentType().equals("image/png") && !file.getContentType().equals("image/jpeg")) {
+            // file type 확인
+            throw new FileStorageException(
+                    "옳지 않은 파일 포맷"
+                            + filename);
+        }
+    }
+
 	@Autowired
 	public StorageServiceImpl(StorageProperties properties) {
 		this.rootLocation = Paths.get(properties.getLocation());
 	}
-	
+
 	@Override
     @PostConstruct
     public void init() {
@@ -44,19 +83,29 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
+    public String storeProfileImage(MultipartFile file) {
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        try {
+            checkFile(file);
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, this.rootLocation.resolve(filename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+        catch (IOException e) {
+            throw new FileStorageException("Failed to store file " + filename, e);
+        }
+
+        return filename;
+    }
+
+    @Override
     public String store(MultipartFile file) {
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         try {
-            if (file.isEmpty()) {
-                throw new FileStorageException("Failed to store empty file " + filename);
-            }
-            if (filename.contains("..")) {
-                // This is a security check
-                throw new FileStorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + filename);
-            }
+            checkFile(file);
             try (InputStream inputStream = file.getInputStream()) {
+                filename = getNow() + "_" + filename;
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }

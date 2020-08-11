@@ -2,6 +2,7 @@ package com.web.server.controller;
 
 
 import com.web.server.dto.Board;
+import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
 import com.web.server.service.BoardService;
@@ -67,7 +68,7 @@ public class BoardRestController {
 
     @ApiOperation(value = "냉장고를 뷰탁해 페이지에서 재료들로 게시글을 검색")
     @GetMapping("/boards/foodList")
-    public ResponseEntity<Map<String, Object>> searchAllBoardsByFood(HttpServletResponse res, @RequestBody final List<String> foodList) {
+    public ResponseEntity<Map<String, Object>> searchAllBoardsByFood(HttpServletResponse res, @RequestBody final BoardSearchByFoodList foodList) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
 

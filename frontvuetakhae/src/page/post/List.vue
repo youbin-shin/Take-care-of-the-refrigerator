@@ -33,11 +33,17 @@
         <ul v-for="backData in backDatas" :key="backData.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
-              <v-list-item @click="goDetail(backData.boardId)">
+              <v-list-item>
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title class="headline">{{ backData.title }}</v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ backData.nickname }}</v-list-item-subtitle>
+                  <v-list-item-title
+                    class="headline"
+                    @click="goDetail(backData.boardId)"
+                  >{{ backData.title }}</v-list-item-title>
+                  <v-list-item-subtitle
+                    style="text-align:right;"
+                    @click="goOtherpage(backData.nickname)"
+                  >작성자 : {{ backData.nickname }}</v-list-item-subtitle>
                   <small style="text-align:right;">{{ backData.createAt }}</small>
                 </v-list-item-content>
               </v-list-item>
@@ -99,10 +105,17 @@ const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "Post",
-  components: {
-    // DetailPost,
+
+  data: () => {
+    return {
+      limit: 0,
+      backDatas: [],
+      easy: true,
+      userData: {
+        nickname: "",
+      },
+    };
   },
-  watch: {},
   created() {
     axios.get(`${BACK_URL}/boards`).then((response) => {
       console.log(response.data);
@@ -113,6 +126,23 @@ export default {
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
+    goOtherpage(nickname) {
+      axios
+        .get(`${BACK_URL}/users/mypage`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          this.userData.nickname = response.data.mypage.nickname;
+          if (this.userData.nickname === nickname) {
+            this.$router.push("/user/mypage");
+          } else {
+            this.$router.push("/users/otherpage/" + nickname);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     changeEasy() {
       if (this.easy) {
         this.easy = false;
@@ -120,13 +150,6 @@ export default {
         this.easy = true;
       }
     },
-  },
-  data: () => {
-    return {
-      limit: 0,
-      backDatas: [],
-      easy: true,
-    };
   },
 };
 </script>

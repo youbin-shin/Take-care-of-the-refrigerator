@@ -101,7 +101,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSimpleDto> searchAllByFood(List<String> foodList) throws SQLException {
+    public List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException {
         return boardDao.searchAllByFood(foodList);
     }
 

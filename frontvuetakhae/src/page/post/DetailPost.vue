@@ -22,8 +22,8 @@
         <b-col>
           <b-avatar class="mt-2"></b-avatar>
         </b-col>
-        <b-col cols="10">
-          <p>{{ detailData.userId }}</p>
+        <b-col cols="10" class="writerArea">
+          <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
           <p>{{ detailData.createAt }}</p>
         </b-col>
         <b-col>댓글 {{ detailData.commentsNum }}</b-col>
@@ -85,20 +85,13 @@ const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "DetailPost",
-  props: {
-    // back 연결되면 사용할 데이터
-    // detailData: {
-    //   type: Object,
-    // },
-  },
   created() {
-    // this.backData = this.dummyData[this.$route.params.no - 1];
     let boardurlId = this.$route.params.no;
     axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
       console.log(response);
       this.detailData.boardId = response.data.board.boardId;
       this.detailData.title = response.data.board.title;
-      this.detailData.userId = response.data.board.userId;
+      this.detailData.nickname = response.data.board.nickname;
       this.detailData.ingredient = response.data.board.ingredient;
       this.detailData.content = response.data.board.content;
       this.detailData.createAt = response.data.board.createAt;
@@ -119,7 +112,7 @@ export default {
       detailData: {
         boardId: "",
         title: "",
-        userId: "",
+        nickname: "",
         ingredients: "",
         content: "",
         createAt: "",
@@ -133,9 +126,29 @@ export default {
         commentsNum: null,
       },
       commentInput: null,
+      userData: {
+        nickname: "",
+      },
     };
   },
   methods: {
+    goOtherpage() {
+      axios
+        .get(`${BACK_URL}/users/mypage`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          this.userData.nickname = response.data.mypage.nickname;
+          if (this.userData.nickname === this.detailData.nickname) {
+            this.$router.push("/user/mypage");
+          } else {
+            this.$router.push("/users/otherpage/" + this.detailData.nickname);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     createComment() {
       axios
         .post(
@@ -183,6 +196,9 @@ export default {
 }
 .icon {
   text-align: right;
+  cursor: pointer;
+}
+.writerArea {
   cursor: pointer;
 }
 </style>

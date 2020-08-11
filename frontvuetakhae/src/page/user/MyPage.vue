@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="margin-top: 30px;">
-    <h1>{{ userData.nickname }}님의 마이 페이지</h1>
+    <h1>{{ userData.nickname }}님의 마이페이지</h1>
     <div class="header">
       <div class="box" style="background: #bdbdbd;">
         <img
@@ -46,57 +46,40 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <span v-if="other">
-            <!-- 다른 사용자의 마이페이지일 경우 -->
-            <v-btn class="ml-5" color="primary">팔로우</v-btn>
-          </span>
         </h3>
         <h3 style="text-align: left;">자기소개</h3>
         <v-col cols="12">
-          <div v-if="other">
-            <v-card class="mx-auto" max-width="100%" outlined>
-              <v-list-item three-line>
-                <v-list-item-content>
-                  <div class="overline mb-4">{{ userData.introduce }}</div>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-          </div>
-          <div v-else>
-            <v-textarea
-              solo
-              name="input-7-4"
-              label="간단하게 자신에 대해 소개해주세요."
-              v-model="userData.introduce"
-            ></v-textarea>
-            <v-btn depressed small @click="updateIntroduce">저장</v-btn>
-          </div>
+          <v-textarea
+            solo
+            name="input-7-4"
+            label="간단하게 자신에 대해 소개해주세요."
+            v-model="userData.introduce"
+          ></v-textarea>
+          <v-btn depressed small @click="updateIntroduce">저장</v-btn>
         </v-col>
       </div>
     </div>
     <!-- 나의 냉장고 코드 -->
     <div class="middle">
       <h1>나의 냉장고</h1>
-      <div v-if="other">{{ userData.box }}</div>
-      <div v-else>
-        <v-row class="m-2 inputBlank" variant="danger">
-          <v-text-field
-            label="냉장고 속 재료를 추가해주세요."
-            v-model="addText"
-            hide-details="auto"
-            v-on:keyup.enter="plusFood()"
-          ></v-text-field>
-          <v-icon large @click="plusFood()">mdi-plus</v-icon>
-        </v-row>
-        <v-chip
-          class="m-1"
-          v-for="tag in chips"
-          close
-          @click:close="closeChip(tag)"
-          :key="tag"
-        >{{ tag }}</v-chip>
-        <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
-      </div>
+
+      <v-row class="m-2 inputBlank" variant="danger">
+        <v-text-field
+          label="냉장고 속 재료를 추가해주세요."
+          v-model="addText"
+          hide-details="auto"
+          v-on:keyup.enter="plusFood()"
+        ></v-text-field>
+        <v-icon large @click="plusFood()">mdi-plus</v-icon>
+      </v-row>
+      <v-chip
+        class="m-1"
+        v-for="tag in chips"
+        close
+        @click:close="closeChip(tag)"
+        :key="tag"
+      >{{ tag }}</v-chip>
+      <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
       <h1>관심 레시피</h1>
@@ -105,23 +88,14 @@
     </div>
     <hr />
     <div class="interest">
-      <div v-if="other">
-        <h1>{{ userData.nickname }}님이 작성한 레시피 목록</h1>
-        <li v-for="board in userData.myBoards" :key="board">
-          {{ board.boardId }} : {{ board.title }}
-          {{ board.createAt }}
-        </li>
-      </div>
-      <div v-else>
-        <h1>내가 작성한 레시피 목록</h1>
-        <!-- <p>{{ userData.myBoards }}</p> -->
-        <li v-for="board in userData.myBoards" :key="board">
-          {{ board.boardId }} : {{ board.title }}
-          {{ board.createAt }}
-        </li>
-      </div>
+      <h1>내가 작성한 레시피 목록</h1>
+      <!-- <p>{{ userData.myBoards }}</p> -->
+      <li v-for="board in userData.myBoards" :key="board">
+        {{ board.boardId }} : {{ board.title }}
+        {{ board.createAt }}
+      </li>
     </div>
-    <div class="white--text" v-if="other === false">
+    <div class="white--text">
       <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
       <b-button
         class="a_tag_modal bottom-button mr-2"
@@ -174,9 +148,9 @@ import axios from "axios";
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
+  name: "MyPage",
   data() {
     return {
-      other: false,
       followerlist: [],
       followeelist: [],
       chips: [], // 마이페이지에 입력한 나의 냉장고 데이터를 넣기

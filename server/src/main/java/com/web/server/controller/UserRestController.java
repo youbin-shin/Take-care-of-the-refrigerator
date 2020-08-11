@@ -531,6 +531,15 @@ public class UserRestController {
     }
 
 
+    /**
+     * 팔로잉/팔로우 명단 조회
+     * 성공 : 200
+     * 실패 : 400
+     *
+     * @param req
+     * @param follow
+     * @return
+     */
     @GetMapping("/users/follow/list/{follow}")
     public ResponseEntity<Map<String, Object>> getFollowList(final HttpServletRequest req,
                                                             @PathVariable final String follow) {
@@ -542,6 +551,47 @@ public class UserRestController {
             if(follow.equals("follower") || follow.equals("followee")) {
                 status = HttpStatus.OK;
                 String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+                Map<String, String> followMap = new HashMap<>();
+                List<Map<String, Object>> followList = null;
+
+                if(follow.equals("follower")) {
+                    followMap.put("follower", email);
+                } else {
+                    followMap.put("followee", email);
+                }
+                // 서비스 실행
+                followList = userService.searchFollowList(followMap);
+                // body json add
+                resultMap.put("users", followList);
+                resultMap.put("success", true);
+            }
+        } catch (RuntimeException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
+    /**
+     * 다른 사용자의 팔로우/팔로잉 명단 조회
+     * 
+     * @param map
+     * @param follow
+     * @return
+     */
+    @PostMapping("/users/follow/list/{follow}")
+    public ResponseEntity<Map<String, Object>> getFollowOtherList(@RequestBody final Map<String, String> map,
+                                                                  @PathVariable final String follow) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+
+            if(follow.equals("follower") || follow.equals("followee")) {
+                status = HttpStatus.OK;
+                String email = userService.searchByNickName(map.get("other")).getEmail();
                 Map<String, String> followMap = new HashMap<>();
                 List<Map<String, Object>> followList = null;
 

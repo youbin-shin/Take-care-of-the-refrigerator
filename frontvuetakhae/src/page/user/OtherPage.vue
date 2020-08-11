@@ -188,9 +188,13 @@ export default {
     },
     checkfollower() {
       axios
-        .get(`${BACK_URL}/users/follow/list/follower/`, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/users/follow/list/follower/`,
+          { other: this.mypage.nickname },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             this.followerlist = response.data.users;
@@ -203,9 +207,13 @@ export default {
     checkfollowee() {
       // 다른 사람의 팔로우리스트가 뜨는 지 확인하기
       axios
-        .get(`${BACK_URL}/users/follow/list/followee/`, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/users/follow/list/followee/`,
+          { other: this.mypage.nickname },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             this.followeelist = response.data.users;

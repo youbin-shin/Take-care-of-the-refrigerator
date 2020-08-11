@@ -1,22 +1,24 @@
 package com.web.server.controller;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.web.server.service.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.web.server.dto.FileResponseDto;
 import com.web.server.service.StorageService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class FileRestController {
@@ -25,11 +27,14 @@ public class FileRestController {
 
     private StorageService storageService;
 
+    @Autowired
+    private JwtService jwtService;
+
     public FileRestController(StorageService storageService) {
         this.storageService = storageService;
     }
 
-    @GetMapping("/downloads")
+    @GetMapping("/files")
     public String listAllFiles(Model model) {
 
         model.addAttribute("files", storageService.loadAll().map(
@@ -42,7 +47,7 @@ public class FileRestController {
         return "listFiles";
     }
 
-    @GetMapping("/download/{filename:.+}")
+    @GetMapping("/file/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
 
@@ -54,21 +59,64 @@ public class FileRestController {
                 .body(resource);
     }
 
-    @PostMapping("/upload-file")
-    @ResponseBody
-    public FileResponseDto uploadFile(@RequestParam("file") MultipartFile file) {
-        String name = storageService.store(file);
-        String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/download/")
-                .path(name)
-                .toUriString();
+    @PostMapping("/api/mypage/image")
+    public ResponseEntity<Map<String, Object>> uploadProfileImage(final HttpServletRequest req,
+                                                                  @RequestParam("file") MultipartFile file) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
 
-        return new FileResponseDto(name, uri, file.getContentType(), file.getSize());
+        try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            String name = storageService.storeProfileImage(file, email);
+
+            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/file/")
+                    .path(name)
+                    .toUriString();
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("image", uri);
+            resultMap.put("success", true);
+        }
+        catch (RuntimeException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @PostMapping("/upload-multiple-files")
+    @PostMapping("/api/file")
     @ResponseBody
-    public List<FileResponseDto> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file) {
+
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+            String name = storageService.store(file);
+            String uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/file/")
+                    .path(name)
+                    .toUriString();
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("image", uri);
+            resultMap.put("success", true);
+        }
+        catch (RuntimeException e) {
+            logger.info("ERROR message : {}", e.getMessage());
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @PostMapping("/api/files")
+    @ResponseBody
+    public List<ResponseEntity<Map<String, Object>>> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
                 .map(file -> uploadFile(file))
                 .collect(Collectors.toList());

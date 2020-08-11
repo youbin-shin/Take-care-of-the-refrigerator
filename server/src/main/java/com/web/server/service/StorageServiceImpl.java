@@ -28,23 +28,13 @@ import java.util.stream.Stream;
 @Service
 public class StorageServiceImpl implements StorageService{
 
-    private final String IMAGESDIR = "images";
-
 	private final Path rootLocation;
-
-	private String getDate() {
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date now = calendar.getTime();
-        java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        return formatter.format(currentTimestamp);
-    }
 
 	private String getNow() {
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
 	    return formatter.format(currentTimestamp);
     }
 
@@ -83,10 +73,12 @@ public class StorageServiceImpl implements StorageService{
     }
 
     @Override
-    public String storeProfileImage(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    public String storeProfileImage(MultipartFile file, String filename) {
         try {
             checkFile(file);
+            String [] str = StringUtils.cleanPath(file.getOriginalFilename()).split("\\.");
+            filename = filename + "." + str[str.length - 1];
+
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
@@ -95,18 +87,21 @@ public class StorageServiceImpl implements StorageService{
         catch (IOException e) {
             throw new FileStorageException("Failed to store file " + filename, e);
         }
-
         return filename;
     }
 
     @Override
     public String store(MultipartFile file) {
+
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
         try {
             checkFile(file);
+
             try (InputStream inputStream = file.getInputStream()) {
                 filename = getNow() + "_" + filename;
-                Files.copy(inputStream, this.rootLocation.resolve(filename),
+                Files.copy(inputStream,
+                        this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }
         }

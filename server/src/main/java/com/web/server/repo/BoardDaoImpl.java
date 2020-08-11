@@ -82,9 +82,9 @@ public class BoardDaoImpl implements BoardDao{
     }
 
     @Override
-    public List<BoardSimpleDto> searchAllByFood(List<String> foodList) throws SQLException {
+    public List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException {
         HashMap map = new HashMap();
-        map.put("foodList",foodList);
+        map.put("foodList",foodList.getFoodList());
         return template.selectList(ns+"searchAllByFood",map);
     }
 }

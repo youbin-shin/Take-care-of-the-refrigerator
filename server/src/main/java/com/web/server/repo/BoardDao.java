@@ -38,6 +38,6 @@ public interface BoardDao {
 
     int deleteBoard(int boardId) throws SQLException;
 
-    List<BoardSimpleDto> searchAllByFood(List<String> foodList) throws SQLException;
+    List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 }
 

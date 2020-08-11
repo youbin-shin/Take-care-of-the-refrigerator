@@ -23,4 +23,6 @@ public interface BoardService {
     public int deleteComment(Integer commentId) throws SQLException;
 
     List<CommentDto> selectCommentByBoardId(int boardId);
+
+    List<BoardSimpleDto> searchAllByFood(List<String> foodList) throws SQLException;
 }

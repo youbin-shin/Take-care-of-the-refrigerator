@@ -13,11 +13,13 @@ import lombok.NoArgsConstructor;
 public class Board {
     private int boardId;
     private int userId;
+    private int views;
     private String title;
     private String ingredient;
     private String content;
     private Date createAt;
     private Date updateAt;
+
 
     private Integer grade;
     private Double cookingTime;

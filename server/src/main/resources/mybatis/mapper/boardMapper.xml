@@ -123,5 +123,11 @@
         values (#{stepId},#{tagId})
     </insert>
 
+    <update id="addViews" parameterType="int">
+        UPDATE boards
+        set views= views + 1
+        WHERE board_id=#{boardId}
+    </update>
+
 
 </mapper>

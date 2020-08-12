@@ -26,4 +26,6 @@ public interface BoardService {
     List<CommentDto> selectCommentByBoardId(int boardId);
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
+
+    public void updateViewCnt(Integer boardId) throws SQLException;
 }

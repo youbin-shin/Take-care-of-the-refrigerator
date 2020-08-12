@@ -14,26 +14,42 @@ public class HardEasyServiceImpl implements HardEasyService{
     HardEasyDao hardEasyDao;
 
     @Override
-    public HardEasy createHardChoice(HardEasy hardEasy) throws SQLException {
-        return hardEasyDao.createHardChoice(hardEasy);
-//        hardEasyDao.updateHardChoice(hardEasy.getBoardId());
+    public HardEasy checkChoice(HardEasy hardEasy) throws SQLException {
+        return hardEasyDao.checkChoice(hardEasy);
     }
 
     @Override
     public void createEasyChoice(HardEasy hardEasy) throws SQLException {
         hardEasyDao.createEasyChoice(hardEasy);
-        hardEasyDao.updateEasyChoice(hardEasy.getBoardId());
+    }
+
+    @Override
+    public void createHardChoice(HardEasy hardEasy) throws SQLException {
+        hardEasyDao.createHardChoice(hardEasy);;
     }
 
     @Override
     public void deleteChoice(HardEasy hardEasy) throws SQLException {
         hardEasyDao.deleteChoice(hardEasy);
-        hardEasyDao.updateHardChoice(hardEasy.getBoardId());
-        hardEasyDao.updateEasyChoice(hardEasy.getBoardId());
     }
 
     @Override
-    public int checkExistTable(Integer boardId,Integer userId) throws SQLException{
-        return hardEasyDao.checkExistTable(boardId,userId);
+    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
+        hardEasyDao.hardToEasyChange(hardEasy);
+    }
+
+    @Override
+    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
+        hardEasyDao.easyToHardChange(hardEasy);
+    }
+
+    @Override
+    public int updateHardChoice(HardEasy hardEasy) throws SQLException{
+        return hardEasyDao.updateHardChoice(hardEasy);
+    }
+
+    @Override
+    public int updateEasyChoice(HardEasy hardEasy) throws SQLException{
+        return hardEasyDao.updateEasyChoice(hardEasy);
     }
 }

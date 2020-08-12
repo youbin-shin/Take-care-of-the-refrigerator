@@ -18,13 +18,18 @@ class HardEasyDaoImpl implements HardEasyDao{
 
 
     @Override
-    public HardEasy createHardChoice(HardEasy hardEasy) throws  SQLException{
-        return template.selectOne(ns+"hardChoice",hardEasy);
+    public HardEasy checkChoice(HardEasy hardEasy) throws  SQLException{
+        return template.selectOne(ns+"checkChoice",hardEasy);
     }
 
     @Override
     public void createEasyChoice(HardEasy hardEasy) throws SQLException {
-        template.selectOne(ns+"EardChoice",hardEasy);
+        template.selectOne(ns+"easyChoice",hardEasy);
+    }
+
+    @Override
+    public void createHardChoice(HardEasy hardEasy) throws SQLException {
+        template.selectOne(ns+"hardChoice",hardEasy);
     }
 
     @Override
@@ -33,20 +38,22 @@ class HardEasyDaoImpl implements HardEasyDao{
     }
 
     @Override
-    public int updateHardChoice(Integer boardId) throws SQLException{
-        return template.update(ns+"updateHardChoice",boardId);
+    public int updateHardChoice(HardEasy hardEasy) throws SQLException{
+        return template.selectOne(ns+"updateHardChoice",hardEasy);
     }
 
     @Override
-    public int updateEasyChoice(Integer boardId) throws SQLException{
-        return template.update(ns+"updateEasyChoice",boardId);
+    public int updateEasyChoice(HardEasy hardEasy) throws SQLException{
+        return template.selectOne(ns+"updateEasyChoice",hardEasy);
     }
 
     @Override
-    public int checkExistTable(Integer boardId, Integer userId) throws  SQLException{
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        map.put("boardId", boardId);
-        map.put("userId", userId);
-        return template.selectOne(ns+"existTable",map);
+    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
+        template.update(ns+"hardToEasyChangeChoice",hardEasy);
+    }
+
+    @Override
+    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
+        template.update(ns+"easyToHardChangeChoice",hardEasy);
     }
 }

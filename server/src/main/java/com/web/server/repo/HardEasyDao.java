@@ -6,15 +6,19 @@ import java.sql.SQLException;
 
 public interface HardEasyDao {
 
-    HardEasy createHardChoice(HardEasy hardEasy) throws SQLException;
+    HardEasy checkChoice(HardEasy hardEasy) throws SQLException;
 
     void createEasyChoice(HardEasy hardEasy) throws SQLException;
 
+    void createHardChoice(HardEasy hardEasy) throws SQLException;
+
     void deleteChoice(HardEasy hardEasy) throws SQLException;
 
-    int updateHardChoice(Integer boardId) throws SQLException;
+    int updateHardChoice(HardEasy hardEasy) throws SQLException;
 
-    int updateEasyChoice(Integer boardId) throws SQLException;
+    int updateEasyChoice(HardEasy hardEasy) throws SQLException;
 
-    int checkExistTable(Integer boardId, Integer userId) throws  SQLException;
+    void hardToEasyChange (HardEasy hardEasy) throws SQLException;
+
+    void easyToHardChange (HardEasy hardEasy) throws SQLException;
 }

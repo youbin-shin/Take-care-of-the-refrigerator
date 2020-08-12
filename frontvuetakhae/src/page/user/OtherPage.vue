@@ -20,7 +20,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollowee"
-              >팔로잉 {{ mypage.followingCount }} 명</v-btn>
+              >팔로워 {{ mypage.followingCount }} 명</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="followee in followeelist" :key="followee.nickname">
@@ -38,7 +38,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollower"
-              >팔로우 {{ mypage.followerCount }} 명</v-btn>
+              >팔로잉 {{ mypage.followerCount }} 명</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="follower in followerlist" :key="follower.nickname">

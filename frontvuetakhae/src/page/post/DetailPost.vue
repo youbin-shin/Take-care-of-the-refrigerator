@@ -70,12 +70,8 @@
             </div>
           </b-col>
           <b-col v-if="userData.nickname==comment.nickname">
-            <v-btn @click="updateComment(comment.commentId)">수정</v-btn>
-            <v-btn
-              color="secondary"
-              class="mt-2"
-              @click="deleteComment(comment.commentId, comment.commentContent)"
-            >삭제</v-btn>
+            <v-btn @click="updateComment(comment.commentId, comment.commentContent)">수정</v-btn>
+            <v-btn color="secondary" class="mt-2" @click="deleteComment(comment.commentId)">삭제</v-btn>
           </b-col>
           <b-col v-else></b-col>
         </b-row>
@@ -220,29 +216,28 @@ export default {
           alert(error);
         });
     },
-  },
-  updateComment(commentId, commentcontent) {
-    console.log(this.commentUpdate);
-    axios
-      .put(
-        `${BACK_URL}/boards/comments/${commentId}`,
-        {
-          commentContent: commentcontent,
-        },
-        {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        if (response.status === 200) {
-          alert("댓글이 수정되었습니다.");
-          this.$router.go();
-        }
-      })
-      .catch((error) => {
-        alert(error);
-      });
+    updateComment(commentId, commentcontent) {
+      axios
+        .put(
+          `${BACK_URL}/boards/comments/${commentId}`,
+          {
+            commentContent: commentcontent,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("댓글이 수정되었습니다.");
+            this.$router.go();
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
   },
 };
 </script>

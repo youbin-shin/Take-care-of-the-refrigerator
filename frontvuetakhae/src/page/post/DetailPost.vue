@@ -84,7 +84,7 @@
           <b-col cols="10">
             <b-input-group>
               <b-form-input label="댓글을 입력해주세요." v-model="commentInput"></b-form-input>
-              <v-btn color="purple" class="white--text" @click="createComment">등록</v-btn>
+              <v-btn color="red lighten-2" class="white--text" @click="createComment">등록</v-btn>
             </b-input-group>
           </b-col>
         </b-row>
@@ -148,7 +148,6 @@ export default {
         comments: [],
       },
       commentInput: null,
-      commentUpdate: null,
       userData: {
         nickname: "",
       },

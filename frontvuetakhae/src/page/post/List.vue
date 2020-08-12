@@ -54,10 +54,10 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text @click="goDetail(backData.boardId)">
-                <p class="caption">소요시간 : {{ backData.cookingTime }}시간</p>난이도
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left">
+                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>난이도
                 <v-rating
-                  class="p-0"
+                  class="d-inline-flex pa-2"
                   small
                   v-model="backData.grade"
                   background-color="orange lighten-3"
@@ -66,18 +66,19 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
-                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
+                <v-bottom-navigation
+                  class="elevation-0"
+                  style="width: 60px"
+                  :input-value="showNav"
+                  color="deep-purple"
+                >
+                  <v-btn>
+                    <span>즐겨찾기</span>
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+                </v-bottom-navigation>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="changeEasy">
-                  <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-                    <p class="caption mb-0 mt-1">easy</p>
-                  </div>
-                  <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-                    <p class="caption mb-0 mt-1">hard</p>
-                  </div>
-                </v-btn>
+
                 <v-btn icon>
                   <v-icon>mdi-share-variant</v-icon>
                 </v-btn>
@@ -110,7 +111,6 @@ export default {
     return {
       limit: 0,
       backDatas: [],
-      easy: true,
       userData: {
         nickname: "",
       },
@@ -142,13 +142,6 @@ export default {
         .catch((error) => {
           alert(error);
         });
-    },
-    changeEasy() {
-      if (this.easy) {
-        this.easy = false;
-      } else {
-        this.easy = true;
-      }
     },
   },
 };
@@ -199,34 +192,14 @@ export default {
 .postcard {
   cursor: pointer;
 }
-/* .tag-list-wrap {
-  position: fixed;
-  left: 90%;
-  top: 600px;
-} */
 .input:focus {
   outline: none;
 }
 .v-card {
   cursor: pointer;
 }
-/* .tag-list-wrap h4 {
-  font-size: 1em;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #000;
-  margin-bottom: 20px;
-  font-weight: 600;
+.element.style {
+  width: 60px;
 }
-
-.tag-list-wrap ul.tag-list {
-  width: 100%;
-  float: left;
-  padding-right: 30px;
-  list-style: none;
-}
-
-.tag-list-wrap ul.tag-list li {
-  cursor: pointer;
-  margin-bottom: 15px;
-} */
 </style>
+

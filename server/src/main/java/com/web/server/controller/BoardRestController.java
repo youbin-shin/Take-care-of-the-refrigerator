@@ -57,7 +57,6 @@ public class BoardRestController {
             resultMap.put("status", status.value());
             resultMap.put("message", "성공");
         } catch (RuntimeException | SQLException e) {
-            status = HttpStatus.BAD_REQUEST;
             // body json add
             resultMap.put("status", status.value());
             resultMap.put("message", "실패");
@@ -107,7 +106,8 @@ public class BoardRestController {
             Board board = null;
             // 서비스
             board = boardService.searchByBoardId(Integer.parseInt(boardId));
-
+            boardService.updateViewCnt(Integer.parseInt(boardId));
+            board.setViews(board.getViews()+1);
             status = HttpStatus.OK;
             // body json add
             resultMap.put("board", board);

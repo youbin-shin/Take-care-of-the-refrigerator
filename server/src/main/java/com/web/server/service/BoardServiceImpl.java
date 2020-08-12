@@ -124,4 +124,9 @@ public class BoardServiceImpl implements BoardService {
     public List<CommentDto> selectCommentByBoardId(int boardId) {
         return commentDao.selectCommentByBoardId(boardId);
     }
+
+    @Override
+    public void updateViewCnt(Integer BoardId) throws  SQLException{
+        boardDao.updateViewCnt(BoardId);
+    }
 }

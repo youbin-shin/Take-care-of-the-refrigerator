@@ -216,7 +216,6 @@ export default {
         });
     },
     updateComment(commentId, commentcontent) {
-      console.log(this.commentUpdate);
       axios
         .put(
           `${BACK_URL}/boards/comments/${commentId}`,

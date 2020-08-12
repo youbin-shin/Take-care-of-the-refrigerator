@@ -13,7 +13,6 @@ import com.web.server.exception.FileStorageException;
 import com.web.server.exception.MyFileNotFoundException;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;

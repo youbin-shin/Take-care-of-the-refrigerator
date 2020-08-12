@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -78,5 +79,12 @@ public class BoardDaoImpl implements BoardDao{
     @Override
     public int deleteBoard(int boardId) throws SQLException {
         return template.delete(ns + "deleteBoard", boardId);
+    }
+
+    @Override
+    public List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException {
+        HashMap map = new HashMap();
+        map.put("foodList",foodList.getFoodList());
+        return template.selectList(ns+"searchAllByFood",map);
     }
 }

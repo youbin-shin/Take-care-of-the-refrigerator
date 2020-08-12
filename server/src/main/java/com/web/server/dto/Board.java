@@ -14,7 +14,11 @@ public class Board {
     private int boardId;
     private int userId;
     private int views;
+    private int easyCount;
+    private int difficultyCount;
     private String title;
+    private String nickname;
+    private String email;
     private String ingredient;
     private String content;
     private Date createAt;

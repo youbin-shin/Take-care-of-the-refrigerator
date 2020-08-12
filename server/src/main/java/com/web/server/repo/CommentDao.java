@@ -17,5 +17,7 @@ public interface CommentDao {
     void updateCommentByBoardId(CommentDto comment) throws SQLException;
 
     int deleteCommentByBoardId(Integer commentId) throws SQLException;
+
+    List<CommentDto> selectCommentByBoardId(int boardId);
 }
 

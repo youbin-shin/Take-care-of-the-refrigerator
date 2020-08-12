@@ -39,11 +39,9 @@ public class HardEasyRestController {
                 String token = req.getHeader("jwt-auth-token");
                 String email = jwtService.getEamil(token);
                 HardEasy hardEasy = new HardEasy();
-//                System.out.println("email : " + email + "   , boardId : " + boardId);
                 hardEasy.setEmail(email);
                 hardEasy.setBoardId(boardId);
                 if (hardEasyService.checkChoice(hardEasy) == null) {   // 쿼리문이 없을때
-                    System.out.println("mnulll");
                     hardEasyService.createHardChoice(hardEasy);
                 } else {  // 쿼리문이 존재할때
                     HardEasy result = hardEasyService.checkChoice(hardEasy);
@@ -62,7 +60,6 @@ public class HardEasyRestController {
                 resultMap.put("hardCount",hardEasyService.updateHardChoice(hardEasy));
             } catch (Exception e) {
                 status = HttpStatus.BAD_REQUEST;
-                // body json add
                 resultMap.put("status", status.value());
                 resultMap.put("message", e.getMessage());
 
@@ -73,11 +70,9 @@ public class HardEasyRestController {
                 String token = req.getHeader("jwt-auth-token");
                 String email = jwtService.getEamil(token);
                 HardEasy hardEasy = new HardEasy();
-                System.out.println("email : " + email + "   , boardId : " + boardId);
                 hardEasy.setEmail(email);
                 hardEasy.setBoardId(boardId);
                 if (hardEasyService.checkChoice(hardEasy) == null) {   // 쿼리문이 없을때
-                    System.out.println("mnulll");
                     hardEasyService.createEasyChoice(hardEasy);
                 } else {  // 쿼리문이 존재할때
                     HardEasy result = hardEasyService.checkChoice(hardEasy);
@@ -87,7 +82,6 @@ public class HardEasyRestController {
                     } else {
                         hardEasyService.hardToEasyChange(hardEasy);
                     }
-                    System.out.println(result.getGrade());
                 }
                 status = HttpStatus.OK;
                 resultMap.put("status", status.value());
@@ -95,7 +89,6 @@ public class HardEasyRestController {
                 resultMap.put("hardCount",hardEasyService.updateHardChoice(hardEasy));
             } catch (Exception e) {
                 status = HttpStatus.BAD_REQUEST;
-                // body json add
                 resultMap.put("status", status.value());
                 resultMap.put("message", e.getMessage());
             }

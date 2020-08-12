@@ -21,17 +21,12 @@
                   plusFood();
                   check();
                 "
-              >mdi-plus</v-icon>
+                >mdi-plus</v-icon
+              >
             </v-row>
           </div>
           <div>
-            <v-chip
-              class="m-1"
-              v-for="tag in chips"
-              close
-              @click:close="closeChip(tag)"
-              :key="tag"
-            >{{ tag }}</v-chip>
+            <v-chip class="m-1" v-for="tag in chips" close @click:close="closeChip(tag)" :key="tag">{{ tag }}</v-chip>
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
@@ -205,6 +200,7 @@ export default {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 .searchPostContent {
   min-height: 400px;

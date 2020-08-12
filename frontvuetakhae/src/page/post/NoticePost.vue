@@ -92,6 +92,10 @@ export default {
 <style>
 .notice-bg {
   background-image: url("https://user-images.githubusercontent.com/60081201/89377548-0bd17d00-d72d-11ea-95aa-b144ef9162a5.jpg");
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   min-height: 100%;
 }
 .image {

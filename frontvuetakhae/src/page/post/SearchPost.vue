@@ -21,17 +21,12 @@
                   plusFood();
                   check();
                 "
-              >mdi-plus</v-icon>
+                >mdi-plus</v-icon
+              >
             </v-row>
           </div>
           <div>
-            <v-chip
-              class="m-1"
-              v-for="tag in chips"
-              close
-              @click:close="closeChip(tag)"
-              :key="tag"
-            >{{ tag }}</v-chip>
+            <v-chip class="m-1" v-for="tag in chips" close @click:close="closeChip(tag)" :key="tag">{{ tag }}</v-chip>
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
@@ -46,34 +41,21 @@
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="headline">
-                    {{
-                    showData.title
-                    }}
+                    {{ showData.title }}
                   </v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ showData.nickname }}</v-list-item-subtitle>
-                  <small style="text-align:right;">
-                    {{
-                    showData.createAt
-                    }}
+                  <v-list-item-subtitle style="text-align: right;">작성자 : {{ showData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">
+                    {{ showData.createAt }}
                   </small>
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img
-                :src="showData.thumbnailImage"
-                height="194"
-                @click="goDetail(showData.boardId)"
-              ></v-img>
+              <v-img :src="showData.thumbnailImage" height="194" @click="goDetail(showData.boardId)"></v-img>
 
               <v-card-text @click="goDetail(showData.boardId)">
-                <p class="caption">소요시간 : {{ showData.cookingTime }}시간</p>난이도
-                <v-rating
-                  class="p-0"
-                  small
-                  v-model="showData.grade"
-                  background-color="orange lighten-3"
-                  color="orange"
-                ></v-rating>
+                <p class="caption">소요시간 : {{ showData.cookingTime }}시간</p>
+                난이도
+                <v-rating class="p-0" small v-model="showData.grade" background-color="orange lighten-3" color="orange"></v-rating>
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="goDetail(showData.boardId)" text color="deep-purple accent-4">자세히 보기</v-btn>
@@ -134,11 +116,7 @@ export default {
           comment: 3,
           nickname: "연어가좋아",
           like: 3,
-          steps: [
-            "연어를 자른다",
-            "밥 위에 연어를 올린다.",
-            "양파와 와사비로 고명을 해준다.",
-          ],
+          steps: ["연어를 자른다", "밥 위에 연어를 올린다.", "양파와 와사비로 고명을 해준다."],
         },
         {
           title: "쇠고기 미역국",
@@ -149,12 +127,7 @@ export default {
           comment: 3,
           nickname: "간장게장",
           like: 3,
-          steps: [
-            "물을 끓인다",
-            "미역을 넣고 끓인다.",
-            "소고기를 넣고 간장으로 간을 맞춰준다.",
-            "참기름으로 감칠맛을 더한다.",
-          ],
+          steps: ["물을 끓인다", "미역을 넣고 끓인다.", "소고기를 넣고 간장으로 간을 맞춰준다.", "참기름으로 감칠맛을 더한다."],
         },
         {
           title: "김치볶음밥",
@@ -165,28 +138,13 @@ export default {
           comment: 3,
           nickname: "골목식당",
           like: 3,
-          steps: [
-            "김치를 식용유에 볶는다.",
-            "스팸을 넣어 볶다가 밥을 넣는다.",
-            "간장을 살짝 태워 밥에 섞는다.",
-            "계란을 넣고 마무리한다.",
-          ],
+          steps: ["김치를 식용유에 볶는다.", "스팸을 넣어 볶다가 밥을 넣는다.", "간장을 살짝 태워 밥에 섞는다.", "계란을 넣고 마무리한다."],
         },
         {
           title: "전주비빔밥",
           content: "계속 생각나는 그 맛",
           image: "https://i.imgur.com/oDHwKwP.jpg",
-          materials: [
-            "계란",
-            "소고기",
-            "당근",
-            "콩나물",
-            "간장",
-            "고추장",
-            "밥",
-            "오이",
-            "호박",
-          ],
+          materials: ["계란", "소고기", "당근", "콩나물", "간장", "고추장", "밥", "오이", "호박"],
           date: "2020.07.30",
           comment: 3,
           nickname: "콩나물국밥",
@@ -198,23 +156,11 @@ export default {
           content: "비오는 날 생각나는",
           image: "https://i.imgur.com/2nMSgb8.jpg",
           date: "2020.07.30",
-          materials: [
-            "김치",
-            "소금",
-            "간장",
-            "다진마늘",
-            "양파",
-            "밀가루",
-            "물",
-          ],
+          materials: ["김치", "소금", "간장", "다진마늘", "양파", "밀가루", "물"],
           comment: 3,
           nickname: "비가오는날엔",
           like: 3,
-          steps: [
-            "밀가루와 김치를 넣고 반죽을 만든다.",
-            "반죽을 굽는다.",
-            "맛있게 먹는다.",
-          ],
+          steps: ["밀가루와 김치를 넣고 반죽을 만든다.", "반죽을 굽는다.", "맛있게 먹는다."],
         },
       ],
     };
@@ -304,6 +250,7 @@ export default {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  min-height: 100%;
 }
 .searchPostContent {
   min-height: 400px;

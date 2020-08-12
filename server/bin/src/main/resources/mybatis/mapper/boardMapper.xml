@@ -16,11 +16,28 @@
         from boards join users on boards.user_id = users.user_id
     </select>
 
+    <select id="searchAllByFood" resultType="boardsimple">
+        select board_id,
+        title,
+        nickname,
+        create_at,
+        thumbnail_image,
+        cooking_time,
+        grade
+        from boards join users on boards.user_id = users.user_id
+        where
+        <foreach collection="foodList" item="food" open="(" close=")" separator="and">
+            ingredient LIKE CONCAT('%', #{food}, '%')
+        </foreach>
+    </select>
+
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
-        select *
+        select *,(select nickname from users where user_id=boards.user_id) as nickname,
+        (select count(*) from hardeasy where grade = 2) as easyCount,(select count(*) from hardeasy where grade = 1) as difficultyCount
         from boards
         where board_id=#{boardId}
+        
     </select>
 
     <select id="selectStepsInBoardByBoardId" parameterType="int" resultType="step">

@@ -6,7 +6,7 @@
 
     <!--  게시글 번호로 댓글 조회  -->
     <select id="selectCommentsInBoardByBoardId" parameterType="int" resultType="comment">
-        select users.nickname as nickname, comment_content, create_at from comments
+        select users.nickname as nickname, comment_content, create_at,comment_id,users.user_id,users.email,board_id from comments
         join users on users.user_id = comments.user_id
         where comments.board_id=#{boardId}
     </select>
@@ -14,7 +14,7 @@
     <!-- 댓글 작성 -->
     <insert id="createCommentsInBoardByBoardId" parameterType="comment">
         insert into comments(user_id,board_id,comment_content)
-        values (#{userId}, #{boardId}, #{commentContent})
+        values ((select user_id from users where email=#{email}), #{boardId}, #{commentContent})
     </insert>
 
     <update id="updateCommentsInBoardByBoardId">
@@ -27,6 +27,5 @@
         DELETE FROM comments
         WHERE comment_id=#{commentId}
     </delete>
-
 
 </mapper>

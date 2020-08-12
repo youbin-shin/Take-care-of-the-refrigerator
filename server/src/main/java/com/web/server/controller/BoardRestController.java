@@ -2,6 +2,7 @@ package com.web.server.controller;
 
 
 import com.web.server.dto.Board;
+import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
 import com.web.server.service.BoardService;
@@ -42,7 +43,7 @@ public class BoardRestController {
      */
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping("/boards")
-    public ResponseEntity<Map<String, Object>> searchAllBoards (HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletResponse res) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
 
@@ -64,6 +65,30 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+    @ApiOperation(value = "냉장고를 뷰탁해 페이지에서 재료들로 게시글을 검색")
+    @PostMapping("/boards/foodList")
+    public ResponseEntity<Map<String, Object>> searchAllBoardsByFood(HttpServletResponse res, @RequestBody final BoardSearchByFoodList foodList) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+            List<BoardSimpleDto> boards = null;
+            boards = boardService.searchAllByFood(foodList);
+
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("boards", boards);
+            resultMap.put("status", status.value());
+            resultMap.put("message", "성공");
+        } catch (RuntimeException | SQLException e) {
+            status = HttpStatus.BAD_REQUEST;
+            // body json add
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+        }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 
     /**
      * 게시글 디테일
@@ -73,8 +98,8 @@ public class BoardRestController {
      */
     @ApiOperation(value = "게시글 번호로 게시글 조회", response = String.class)
     @GetMapping("/boards/{boardId}")
-    public ResponseEntity<Map<String, Object>> searchBoard (@PathVariable final String boardId,
-                                                            HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> searchBoard(@PathVariable final String boardId,
+                                                           HttpServletResponse res) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
@@ -101,7 +126,7 @@ public class BoardRestController {
 
     /**
      * 게스글 작성
-     * 
+     *
      * @param req
      * @param board
      * @param res
@@ -166,11 +191,15 @@ public class BoardRestController {
         return new ResponseEntity<>(resultMap, status);
     }
 
-    @RequestMapping(value = "/boards/{boardId}/comments", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> writeComment(@RequestBody CommentDto comment) {
+    @ApiOperation(value = "댓글 작성", response = String.class)
+    @RequestMapping(value = "/boards/comments", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> writeComment(HttpServletRequest req, @RequestBody CommentDto comment) {
         HttpStatus status = null;
         Map<String, Object> resultMap = new HashMap<>();
+        String token = req.getHeader("jwt-auth-token");
         try {
+            String email = jwtService.getEamil(token);
+            comment.setEmail(email);
             boardService.writeComment(comment);
             status = HttpStatus.OK;
             resultMap.put("status", status.value());
@@ -179,42 +208,24 @@ public class BoardRestController {
         } catch (Exception e) {
             status = HttpStatus.BAD_REQUEST;
             resultMap.put("status", status.value());
-            resultMap.put("message", "글 작성이 잘못되었습니다.");
+            resultMap.put("message", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, status);
         }
     }
 
-    @RequestMapping(value = "/boards/{boardId}/comments/{commentId}", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateComment(@PathVariable("commentId") Integer commentId, @RequestBody CommentDto comment) {
-        ResponseEntity<String> entity = null;
+    @ApiOperation(value = "댓글 수정", response = String.class)
+    @RequestMapping(value = "/boards/comments/{commentId}", method = RequestMethod.PUT)
+    public ResponseEntity<Map<String, Object>> updateComment(@PathVariable("commentId") Integer commentId, @RequestBody CommentDto comment) {
+        ResponseEntity<Map<String, Object>> entity = null;
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
         try {
             comment.setCommentId(commentId);
             boardService.updateComment(comment);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return entity;
-    }
-
-    @RequestMapping(value = "/boards/{boardId}/comments/{commentId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentId") Integer commentId) {
-        ResponseEntity<Map<String, Object>> entity = null;
-        HttpStatus status = null;
-        Map<String, Object> resultMap = new HashMap<>();
-
-        try {
-            if(boardService.deleteComment(commentId) ==1){
-                status = HttpStatus.OK;
-                resultMap.put("status", status.value());
-                resultMap.put("message", "삭제 성공하였습니다.");
-                return new ResponseEntity<Map<String, Object>>(resultMap, status);
-            }else {
-                status = HttpStatus.NOT_FOUND;
-                resultMap.put("status", status.value());
-                resultMap.put("message", "삭제 실패하였습니다.");
-                return new ResponseEntity<Map<String, Object>>(resultMap, status);
-
-            }
+            status = HttpStatus.OK;
+            resultMap.put("status", status.value());
+            resultMap.put("message", "글 수정을 성공하였습니다.");
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
         } catch (Exception e) {
             status = HttpStatus.BAD_REQUEST;
             resultMap.put("status", status.value());
@@ -222,4 +233,55 @@ public class BoardRestController {
             return new ResponseEntity<Map<String, Object>>(resultMap, status);
         }
     }
+
+
+    @ApiOperation(value = "댓글 삭제", response = String.class)
+    @RequestMapping(value = "/boards/comments/{commentId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentId") Integer commentId) {
+        ResponseEntity<Map<String, Object>> entity = null;
+        HttpStatus status = null;
+        Map<String, Object> resultMap = new HashMap<>();
+
+        try {
+            if (boardService.deleteComment(commentId) == 1) {
+                status = HttpStatus.OK;
+                resultMap.put("status", status.value());
+                resultMap.put("message", "삭제 성공하였습니다.");
+                return new ResponseEntity<Map<String, Object>>(resultMap, status);
+            } else {
+                status = HttpStatus.NOT_FOUND;
+                resultMap.put("status", status.value());
+                resultMap.put("message", "삭제 실패하였습니다.");
+            }
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        } catch (Exception e) {
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        }
+    }
+
+    @ApiOperation(value = "게시글 번호로 댓글 조회", response = String.class)
+    @RequestMapping(value = "/boards/comments", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> selectCommentByBoardId(@RequestBody int boardId) {
+        ResponseEntity<Map<String, Object>> entity = null;
+        HttpStatus status = null;
+        Map<String, Object> resultMap = new HashMap<>();
+        try {
+            List<CommentDto> commentList = null;
+            commentList = boardService.selectCommentByBoardId(boardId);
+
+        } catch (Exception e) {
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
+        }
+
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+
 }

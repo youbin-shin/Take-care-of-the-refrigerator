@@ -5,9 +5,22 @@
       <div class="search-input">
         <input class="search-input-text" type="text" placeholder="관심있는 요리를 검색하세요." />
         <div class="search-img">
-          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
-            <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+          <svg
+            width="1em"
+            height="1em"
+            viewBox="0 0 16 16"
+            class="bi bi-search"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"
+            />
           </svg>
         </div>
       </div>
@@ -20,11 +33,17 @@
         <ul v-for="backData in backDatas" :key="backData.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
-              <v-list-item @click="goDetail(backData.boardId)">
+              <v-list-item>
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title class="headline">{{ backData.title }}</v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ backData.nickname }}</v-list-item-subtitle>
+                  <v-list-item-title
+                    class="headline"
+                    @click="goDetail(backData.boardId)"
+                  >{{ backData.title }}</v-list-item-title>
+                  <v-list-item-subtitle
+                    style="text-align:right;"
+                    @click="goOtherpage(backData.nickname)"
+                  >작성자 : {{ backData.nickname }}</v-list-item-subtitle>
                   <small style="text-align:right;">{{ backData.createAt }}</small>
                 </v-list-item-content>
               </v-list-item>
@@ -82,15 +101,23 @@
 
 <script>
 import axios from "axios";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "Post",
-  components: {
-    // DetailPost,
+
+  data: () => {
+    return {
+      limit: 0,
+      backDatas: [],
+      easy: true,
+      userData: {
+        nickname: "",
+      },
+    };
   },
-  watch: {},
   created() {
-    axios.get("http://i3a305.p.ssafy.io:8399/api/boards").then((response) => {
+    axios.get(`${BACK_URL}/boards`).then((response) => {
       console.log(response.data);
       this.backDatas = response.data.boards;
     });
@@ -99,6 +126,23 @@ export default {
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
+    goOtherpage(nickname) {
+      axios
+        .get(`${BACK_URL}/users/mypage`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          this.userData.nickname = response.data.mypage.nickname;
+          if (this.userData.nickname === nickname) {
+            this.$router.push("/user/mypage");
+          } else {
+            this.$router.push("/users/otherpage/" + nickname);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
     changeEasy() {
       if (this.easy) {
         this.easy = false;
@@ -106,65 +150,6 @@ export default {
         this.easy = true;
       }
     },
-  },
-  data: () => {
-    return {
-      limit: 0,
-      backDatas: [],
-      easy: true,
-      // backDatas: {
-      //   data1: {
-      //     title: "간단한 연어덮밥",
-      //     content: "30분안에 끝나는 연어덮밥 요리 방법",
-      //     image: "https://i.imgur.com/Ztp9hAN.jpg",
-      //     date: "2020.02.03",
-      //     comment: 3,
-      //     nickname: "연어가좋아",
-      //     like: 3,
-      //     pk: 1,
-      //   },
-      //   data2: {
-      //     title: "쇠고기 미역국",
-      //     content: "거의 밥도둑!",
-      //     image: "https://i.imgur.com/O1cQ8N7.jpg",
-      //     date: "2020.08.10",
-      //     comment: 3,
-      //     nickname: "간장게장",
-      //     like: 3,
-      //     pk: 2,
-      //   },
-      //   data3: {
-      //     title: "김치볶음밥",
-      //     content: "백종원 선생님의 황금레시피",
-      //     image: "https://i.imgur.com/7pNI9BA.jpg",
-      //     date: "2020.05.03",
-      //     comment: 3,
-      //     nickname: "골목식당",
-      //     like: 3,
-      //     pk: 3,
-      //   },
-      //   data4: {
-      //     title: "전주비빔밥",
-      //     content: "계속 생각나는 그 맛",
-      //     image: "https://i.imgur.com/oDHwKwP.jpg",
-      //     date: "2020.12.13",
-      //     comment: 3,
-      //     nickname: "콩나물국밥",
-      //     like: 3,
-      //     pk: 3,
-      //   },
-      //   data5: {
-      //     title: "김치전",
-      //     content: "비오는 날 생각나는",
-      //     image: "https://i.imgur.com/2nMSgb8.jpg",
-      //     date: "2018.02.03",
-      //     comment: 3,
-      //     nickname: "비가오는날엔",
-      //     like: 3,
-      //     pk: 3,
-      //   },
-      // },
-    };
   },
 };
 </script>
@@ -196,7 +181,10 @@ export default {
 }
 .search-bar {
   background-image: url("https://user-images.githubusercontent.com/60081201/88775069-3799b380-d1bf-11ea-8473-8e1e322c1923.jpg");
-  background-size: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   height: 400px;
 }
 .search-bar-title {

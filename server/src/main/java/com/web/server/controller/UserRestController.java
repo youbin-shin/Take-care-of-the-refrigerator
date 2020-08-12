@@ -347,6 +347,41 @@ public class UserRestController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+    
+    /**
+    * 다른 유저 마페이지 조회
+    * 성공 : 200
+    * 실패 : 400
+    *
+    * @param req
+    * @return
+    * @throws Exception
+    */
+    @ApiOperation(value = "다른 유저 마이페이지 조회")
+    @GetMapping("/users/otherpage/{nickname}")
+    public ResponseEntity<Map<String, Object>> getOtherProfile(final HttpServletRequest req,
+    															@PathVariable final String nickname) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	UserProfileDto userProfileDto = null;
+    	try {
+    		String email = userService.searchByNickName(nickname).getEmail();
+    		userProfileDto = userService.searchUserProfileByEmail(email);
+    		status = HttpStatus.OK;
+    		// body json add
+    		resultMap.put("success", true);
+    		resultMap.put("mypage", userProfileDto);
+    		logger.info("회원 마이페이지 조회 성공 : {}", userProfileDto.toString());
+    	} catch (RuntimeException | SQLException e) {
+    		logger.info("회원 마이페이지 조회 실패 에러 메세지 : {}", e.getMessage());
+    		logger.info("회원 마이페이지 조회 실패 userProfile : {}", userProfileDto.toString());
+    		status = HttpStatus.BAD_REQUEST;
+    		resultMap.put("success", false);
+    	}
+    	return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+    
+    
 
 
     /**

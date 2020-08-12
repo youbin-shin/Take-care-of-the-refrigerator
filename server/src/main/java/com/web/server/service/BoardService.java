@@ -1,6 +1,7 @@
 package com.web.server.service;
 
 import com.web.server.dto.Board;
+import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
 
@@ -21,4 +22,8 @@ public interface BoardService {
     public void updateComment(CommentDto comment) throws SQLException;
 
     public int deleteComment(Integer commentId) throws SQLException;
+
+    List<CommentDto> selectCommentByBoardId(int boardId);
+
+    List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 }

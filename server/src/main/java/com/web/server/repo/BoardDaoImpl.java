@@ -87,4 +87,9 @@ public class BoardDaoImpl implements BoardDao{
         map.put("foodList",foodList.getFoodList());
         return template.selectList(ns+"searchAllByFood",map);
     }
+
+    @Override
+    public void updateViewCnt(Integer boardId) throws SQLException{
+        template.update(ns+"addViews",boardId);
+    }
 }

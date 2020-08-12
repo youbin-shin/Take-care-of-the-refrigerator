@@ -39,5 +39,8 @@ public interface BoardDao {
     int deleteBoard(int boardId) throws SQLException;
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
+
+    // 조회수 갱신
+    void updateViewCnt(Integer boardId) throws  SQLException;
 }
 

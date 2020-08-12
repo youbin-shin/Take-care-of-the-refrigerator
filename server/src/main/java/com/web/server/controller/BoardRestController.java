@@ -106,7 +106,8 @@ public class BoardRestController {
             Board board = null;
             // 서비스
             board = boardService.searchByBoardId(Integer.parseInt(boardId));
-
+            boardService.updateViewCnt(Integer.parseInt(boardId));
+            board.setViews(board.getViews()+1);
             status = HttpStatus.OK;
             // body json add
             resultMap.put("board", board);

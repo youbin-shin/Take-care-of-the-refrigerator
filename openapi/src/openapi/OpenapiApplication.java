@@ -37,7 +37,7 @@ public class OpenapiApplication {
 			// MANUAL01 ~ MANUAL99 까지 있는거 확인해야하는데...
 			int j = 1;
 
-			for(; j < 30; j++) {
+			for(; j < 20; j++) {
 				String manualText = (String) entity.get(manual + String.format("%02d",j));
 				String manualImagePath = (String) entity.get(manualImg + String.format("%02d",j));
 				if(manualText.isEmpty()) {

@@ -66,17 +66,33 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
-                <v-bottom-navigation
-                  class="elevation-0"
-                  style="width: 60px"
-                  :input-value="showNav"
-                  color="deep-purple"
-                >
-                  <v-btn>
-                    <span>즐겨찾기</span>
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                </v-bottom-navigation>
+                <span @click="heartRecipe">
+                  <span v-if="backData.favorite">
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                      color="deep-purple"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                  <span v-else>
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                </span>
                 <v-spacer></v-spacer>
 
                 <v-btn icon>
@@ -123,6 +139,9 @@ export default {
     });
   },
   methods: {
+    heartRecipe() {
+      // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
+    },
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
@@ -139,8 +158,8 @@ export default {
             this.$router.push("/users/otherpage/" + nickname);
           }
         })
-        .catch((error) => {
-          alert(error);
+        .catch(() => {
+          alert("로그인 후 이용 가능합니다.");
         });
     },
   },

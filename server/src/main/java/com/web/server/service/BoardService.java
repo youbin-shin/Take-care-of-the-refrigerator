@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BoardService {
-    public List<BoardSimpleDto> searchAll() throws SQLException;
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException;
 
     public Board searchByBoardId(int boardId) throws SQLException;
 

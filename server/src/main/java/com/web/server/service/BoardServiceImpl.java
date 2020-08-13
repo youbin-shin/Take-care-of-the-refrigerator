@@ -24,8 +24,8 @@ public class BoardServiceImpl implements BoardService {
     CommentDao commentDao;
 
     @Override
-    public List<BoardSimpleDto> searchAll() throws SQLException {
-        return boardDao.searchAll();
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException {
+        return boardDao.searchAll(email);
     }
 
     @Override

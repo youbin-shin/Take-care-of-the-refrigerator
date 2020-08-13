@@ -13,7 +13,7 @@
         thumbnail_image,
         cooking_time,
         grade,
-        (select count(*) from interest_boards where board_id=boards.board_id) as favorite
+        (select count(*) from interest_boards where board_id=boards.board_id and user_id=(select user_id from users where email=#{email})) as favorite
         from boards join users on boards.user_id = users.user_id
         where temporary = 0
     </select>

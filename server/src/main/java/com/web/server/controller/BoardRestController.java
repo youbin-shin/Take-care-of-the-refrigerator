@@ -43,13 +43,20 @@ public class BoardRestController {
      */
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping("/boards")
-    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletRequest req,HttpServletResponse res) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        String email = "";
+            try{
+            String token = req.getHeader("jwt-auth-token");
+            email = jwtService.getEamil(token);
+            }catch (Exception e){
+
+            }
 
         try {
             List<BoardSimpleDto> boards = null;
-            boards = boardService.searchAll();
+            boards = boardService.searchAll(email);
 
             status = HttpStatus.OK;
             // body json add

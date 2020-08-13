@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BoardDao {
     // 게시글 전체 조회
-    public List<BoardSimpleDto> searchAll() throws SQLException;
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException;
 
     // 게시글 번호로 조회
     public Board searchByBoardId(int boardId) throws SQLException;

@@ -22,8 +22,8 @@ public class BoardDaoImpl implements BoardDao{
     SqlSessionTemplate template;
 
     @Override
-    public List<BoardSimpleDto> searchAll() throws SQLException {
-        return template.selectList(ns + "selectAll");
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException {
+        return template.selectList(ns + "selectAll",email);
     }
 
     @Override

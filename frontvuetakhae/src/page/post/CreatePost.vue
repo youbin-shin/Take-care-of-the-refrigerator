@@ -91,6 +91,7 @@
                     <v-row>
                       <v-col>
                         <v-overflow-btn
+                          class="type-button mt-0"
                           :items="typeList"
                           v-model="tag.type"
                           label="타입 선택"
@@ -98,13 +99,19 @@
                         ></v-overflow-btn>
                       </v-col>
                       <v-col>
-                        <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
+                        <div class="input-tag">
+                          <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
+                        </div>
                       </v-col>
-                      <v-col md="8">
-                        {{ tag.description }}
-                        <i aria-hidden="true"></i>
-                        <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
-                        <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
+                      <v-col>
+                        <div class="d-flex flex-column">
+                          {{ tag.description }}
+                          <i aria-hidden="true"></i>
+                          <div class>
+                            <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                            <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
+                          </div>
+                        </div>
                       </v-col>
                     </v-row>
                   </li>
@@ -147,7 +154,12 @@
             ></v-rating>
           </div>
           <hr />소요 시간
-          <b-form-input type="text" v-model="postData.time" />
+          <b-form-input
+            class="timeinput"
+            type="text"
+            v-model="postData.time"
+            style="width:100px;height:40px;font-size:12px"
+          />
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
@@ -208,7 +220,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 2, // 페이지 변수 (처음 시작은 1부터)
+      e6: 1, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -283,8 +295,8 @@ export default {
         tags.push(this.postData.content.steps[i].hashtag);
         delete this.postData.content.steps[i].hashtag;
       }
-      // console.log(tags);
-      // console.log(this.postData.content.steps);
+      console.log(tags);
+      console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),
@@ -382,5 +394,16 @@ export default {
 }
 .list-group {
   list-style: none;
+}
+.input-tag {
+  width: 110px;
+  margin-left: 80px;
+}
+.type-button {
+  width: 150px;
+  height: 25px;
+}
+.timeinput {
+  margin: 0 auto;
 }
 </style>

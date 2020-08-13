@@ -20,6 +20,7 @@
         <typeAlias type="com.web.server.dto.Steps" alias="step"/>
         <typeAlias type="com.web.server.dto.Tags" alias="tag"/>
         <typeAlias type="com.web.server.dto.StepTags" alias="stepTag"/>
+        <typeAlias type="com.web.server.dto.HardEasy" alias="hardEasy"/>
     </typeAliases>
 
     <mappers>
@@ -27,5 +28,6 @@
         <mapper resource="mybatis/mapper/userMapper.xml"/>
         <mapper resource="mybatis/mapper/boardMapper.xml"/>
         <mapper resource="mybatis/mapper/commentMapper.xml"/>
+        <mapper resource="mybatis/mapper/boardHardEasyMapper.xml"/>
     </mappers>
 </configuration>

@@ -6,33 +6,41 @@
 
     <!-- 1은  hard 2는 easy -->
     <insert id="hardChoice">
-        INSERT INTO HardEasy (boardId,userId,hardEasy)
-        VALUES (#{boardId},#{userId},1)
+        INSERT INTO hardeasy (board_id,user_id,grade)
+        VALUES (#{boardId},(select user_id from users WHERE email=#{email}),1)
     </insert>
 
+    <select id="checkChoice" resultType="hardEasy">
+        select * from hardeasy WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
+    </select>
+
+    <select id="easyToHardChangeChoice">
+        UPDATE hardeasy
+        SET grade = 1
+        WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
+    </select>
+
+    <select id="hardToEasyChangeChoice">
+        UPDATE hardeasy
+        SET grade = 2
+        WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
+    </select>
+
     <insert id="easyChoice">
-        INSERT INTO HardEasy (boardId,userId,hardEasy)
-        VALUES (#{boardId},#{userId},2)
+        INSERT INTO hardeasy (board_id,user_id,grade)
+        VALUES (#{boardId},(select user_id from users WHERE email=#{email}),2)
     </insert>
 
     <delete id="deleteChoice">
-        DELETE FROM HardEasy
-        WHERE boardId=#{boardId} AND userId=#{userId}
+        DELETE FROM hardeasy
+        WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
     </delete>
 
-    <select id="updateHardChoice">
-        UPDATE HardEasy
-        SET boardHardCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND HardEasy=1)
-        WHERE boardId=#{boardId}
+    <select id="updateHardChoice" resultType="int">
+        select count(*) from hardeasy WHERE board_id=#{boardId} AND grade=1
     </select>
 
-    <select id="updateEasyChoice">
-        UPDATE HardEasy
-        SET boardEasyCnt=(SELECT COUNT(*) FROM HardEasy WHERE boardId=#{boardId} AND HardEasy=2)
-        WHERE boardId=#{boardId}
+    <select id="updateEasyChoice" resultType="int">
+        select count(*) from hardeasy WHERE board_id=#{boardId} AND grade=2
     </select>
-
-    <!--    <select id="getHardChoice" resultType="int">-->
-    <!--            SELECT COUNT * FROM HardEasy WHERE board_id = #{boardId} AND user_id = #{userId}-->
-    <!--    </select>-->
-
+</mapper>

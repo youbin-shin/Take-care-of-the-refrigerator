@@ -174,10 +174,9 @@ export default {
   size: 30px;
   font-size: 20px;
   border: none;
-  border-right: 0px;
-  border-top: 0px;
-  border-left: 0px;
-  border-bottom: 0px;
+  margin-right: 100px;
+  letter-spacing: 2px;
+  padding-left: 5px;
 }
 .search-bar {
   background-image: url("https://user-images.githubusercontent.com/60081201/88775069-3799b380-d1bf-11ea-8473-8e1e322c1923.jpg");

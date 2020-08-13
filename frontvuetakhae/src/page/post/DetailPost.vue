@@ -26,7 +26,7 @@
           <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
           <p>{{ detailData.createAt }}</p>
         </b-col>
-        <b-col>댓글 {{ detailData.commentsNum }}</b-col>
+        <b-col>댓글 {{ detailData.comments.length }}</b-col>
       </b-row>
       <!-- <p>댓글수{{detailData.commentsNum}} {{detail.comments}}</p> -->
     </div>
@@ -59,6 +59,14 @@
             <p>{{ comment.commentContent }}</p>
             <p>{{ comment.createAt }}</p>
           </b-col>
+          <b-col v-if="userData.nickname==comment.nickname">
+            <v-btn
+              color="secondary"
+              class="white--text"
+              @click="deleteComment(comment.commentId)"
+            >삭제</v-btn>
+          </b-col>
+          <b-col v-else></b-col>
         </b-row>
 
         <b-row>
@@ -69,7 +77,7 @@
           <b-col cols="10">
             <b-input-group>
               <b-form-input label="댓글을 입력해주세요." v-model="commentInput"></b-form-input>
-              <b-button variant="secondary" @click="createComment">등록</b-button>
+              <v-btn color="purple" class="white--text" v-on:click="createComment">등록</v-btn>
             </b-input-group>
           </b-col>
         </b-row>
@@ -102,9 +110,18 @@ export default {
       this.detailData.steps = response.data.board.steps;
       this.detailData.tags = response.data.board.tags;
       this.detailData.comments = response.data.board.comments;
-      this.commentsNum = response.data.board.comments.length;
       console.log(this.detailData);
     });
+    axios
+      .get(`${BACK_URL}/users/mypage`, {
+        headers: { "jwt-auth-token": this.$cookies.get("token") },
+      })
+      .then((response) => {
+        this.userData.nickname = response.data.mypage.nickname;
+      })
+      .catch((error) => {
+        alert(error);
+      });
   },
   data() {
     return {
@@ -123,7 +140,6 @@ export default {
         steps: [],
         tags: [],
         comments: [],
-        commentsNum: null,
       },
       commentInput: null,
       userData: {
@@ -178,6 +194,20 @@ export default {
       } else {
         this.easy = true;
       }
+    },
+    deleteComment(commentId) {
+      axios
+        .delete(`${BACK_URL}/boards/comments/${commentId}`)
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("댓글이 삭제되었습니다.");
+            this.$router.go();
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
   },
 };

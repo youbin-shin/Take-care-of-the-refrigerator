@@ -126,7 +126,26 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updateViewCnt(Integer BoardId) throws  SQLException{
+    public void updateViewCnt(Integer BoardId) throws SQLException {
         boardDao.updateViewCnt(BoardId);
+    }
+
+    @Override
+    public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException{
+        int cnt = boardDao.isExistFavorite(email, boardId);
+        System.out.println("cnt : " + cnt);
+        int result = 0;
+        if (cnt == 1) {
+             result = boardDao.deleteFavorite(email, boardId);
+             if(result==1){
+                 result = -1;
+             }
+        } else {
+             result = boardDao.insertFavorite(email, boardId);
+             if(result==1){
+                 result = 1;
+             }
+        }
+        return result;
     }
 }

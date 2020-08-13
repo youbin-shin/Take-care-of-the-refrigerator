@@ -12,7 +12,7 @@ public class OpenapiApplication {
 	private static final String BASE_URL = "http://openapi.foodsafetykorea.go.kr/api/";
 	private static final String BASE_KEY = "87bbd3eb96fa4636a4fb";
 	static int START_INDEX = 1;
-	static int END_INDEX = 5;
+	static int END_INDEX = 5; // 1000;
 	
 	
 	public OpenapiApplication() throws Exception {
@@ -20,15 +20,37 @@ public class OpenapiApplication {
 	    JSONObject jsonobject = (JSONObject)jsonparser.parse(readUrl());
 	    JSONObject json =  (JSONObject) jsonobject.get("COOKRCP01");
 	    JSONObject jsonResult =  (JSONObject) json.get("RESULT");
+	    boolean successFlag = jsonResult.get("CODE").equals("INFO-000");
 	    String jsonTotal =  (String) json.get("total_count");
-	    
+
+	    String manual = "MANUAL";
+	    String manualImg = "MANUAL_IMG";
+
+		// successFlag 값을 기준으로 실행해야함...
 	    JSONArray array = (JSONArray)json.get("row");
-	    for(int i = 0 ; i < array.size(); i++){
-	        
-	        JSONObject entity = (JSONObject)array.get(i);
-	        String movieNm = (String) entity.get("RCP_NM");
-	        System.out.println(movieNm);
+		for(int i = 0 ; i < array.size(); i++){
+
+			JSONObject entity = (JSONObject)array.get(i);
+			String recipeName = (String) entity.get("RCP_NM");
+			System.out.println(recipeName);
+
+			// MANUAL01 ~ MANUAL99 까지 있는거 확인해야하는데...
+			int j = 1;
+
+			for(; j < 30; j++) {
+				String manualText = (String) entity.get(manual + String.format("%02d",j));
+				String manualImagePath = (String) entity.get(manualImg + String.format("%02d",j));
+				if(manualText.isEmpty()) {
+					break;
+				}
+
+				System.out.println(manualText);				// 확인 출력
+				if(!manualImagePath.isEmpty()) {
+					System.out.println(manualImagePath);	// 확인 출력
+				}
+			}
 	    }
+		System.out.println();
 	}
 	
 	
@@ -38,7 +60,7 @@ public class OpenapiApplication {
 			.append(BASE_KEY).append("/")		// 키 입력
 			.append("COOKRCP01").append("/")	// 서비스명 입력
 			.append("json").append("/")			// 요청파일 타입 입력
-			.append(START_INDEX).append("/")		// 요청 시작 위치
+			.append(START_INDEX).append("/")	// 요청 시작 위치
 			.append(END_INDEX);					// 요청 종료 위치
 		
         BufferedInputStream reader = null;
@@ -61,12 +83,6 @@ public class OpenapiApplication {
 	
 
 	public static void main(String[] args) {
-		// open api 가져와 DB 저장하는 프로그램
-		
-		
-		// open api 데이터 가져오기
-		// DB 에 저장하기
-		
 		try {
 			new OpenapiApplication();
 			

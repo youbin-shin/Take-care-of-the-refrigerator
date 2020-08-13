@@ -73,7 +73,7 @@
       <div>{{ mypage.box }}</div>
     </div>
     <div class="interest">
-      <h1>관심 레시피</h1>
+      <h1>즐겨찾기한 레시피</h1>
       <p>연어 킹의 연어 덮밥</p>
       <p>진주새럼의 진주비빔밥</p>
     </div>

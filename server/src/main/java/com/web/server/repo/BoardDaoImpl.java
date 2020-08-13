@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public class BoardDaoImpl implements BoardDao{
+public class BoardDaoImpl implements BoardDao {
     private String ns = "com.web.server.repo.BoardDao.";
 
     static Logger logger = LoggerFactory.getLogger(BoardDaoImpl.class);
@@ -22,8 +22,8 @@ public class BoardDaoImpl implements BoardDao{
     SqlSessionTemplate template;
 
     @Override
-    public List<BoardSimpleDto> searchAll() throws SQLException {
-        return template.selectList(ns + "selectAll");
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException {
+        return template.selectList(ns + "selectAll", email);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class BoardDaoImpl implements BoardDao{
 
     @Override
     public int insertStepTags(StepTags stepTags) throws SQLException {
-        return template.insert(ns+"insertStepTags",stepTags);
+        return template.insert(ns + "insertStepTags", stepTags);
     }
 
     @Override
     public List<Tags> getTagList(int selectedStepId) throws SQLException {
-        return template.selectList(ns+"getTagList",selectedStepId);
+        return template.selectList(ns + "getTagList", selectedStepId);
     }
 
     @Override
@@ -84,7 +84,36 @@ public class BoardDaoImpl implements BoardDao{
     @Override
     public List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException {
         HashMap map = new HashMap();
-        map.put("foodList",foodList.getFoodList());
-        return template.selectList(ns+"searchAllByFood",map);
+        map.put("foodList", foodList.getFoodList());
+        return template.selectList(ns + "searchAllByFood", map);
+    }
+
+    @Override
+    public void updateViewCnt(Integer boardId) throws SQLException {
+        template.update(ns + "addViews", boardId);
+    }
+
+    @Override
+    public int isExistFavorite(String email, FavoriteRequestBody favoriteRequestBody) {
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("boardId", favoriteRequestBody.getBoardId());
+        return template.selectOne(ns + "isExistFavorite", map);
+    }
+
+    @Override
+    public int deleteFavorite(String email, FavoriteRequestBody favoriteRequestBody) {
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("boardId", favoriteRequestBody.getBoardId());
+        return template.delete(ns + "deleteFavorite", map);
+    }
+
+    @Override
+    public int insertFavorite(String email, FavoriteRequestBody favoriteRequestBody) {
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("boardId", favoriteRequestBody.getBoardId());
+        return template.insert(ns + "insertFavorite", map);
     }
 }

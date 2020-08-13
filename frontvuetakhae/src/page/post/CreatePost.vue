@@ -329,8 +329,8 @@ export default {
         tags.push(this.postData.content.steps[i].hashtag);
         delete this.postData.content.steps[i].hashtag;
       }
-      // console.log(tags);
-      // console.log(this.postData.content.steps);
+      console.log(tags);
+      console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),

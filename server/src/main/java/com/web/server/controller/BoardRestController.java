@@ -1,10 +1,7 @@
 package com.web.server.controller;
 
 
-import com.web.server.dto.Board;
-import com.web.server.dto.BoardSearchByFoodList;
-import com.web.server.dto.BoardSimpleDto;
-import com.web.server.dto.CommentDto;
+import com.web.server.dto.*;
 import com.web.server.service.BoardService;
 import com.web.server.service.JwtService;
 import io.swagger.annotations.ApiOperation;
@@ -43,13 +40,20 @@ public class BoardRestController {
      */
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping("/boards")
-    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        String email = "";
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            email = jwtService.getEamil(token);
+        } catch (Exception e) {
+
+        }
 
         try {
             List<BoardSimpleDto> boards = null;
-            boards = boardService.searchAll();
+            boards = boardService.searchAll(email);
 
             status = HttpStatus.OK;
             // body json add
@@ -106,7 +110,8 @@ public class BoardRestController {
             Board board = null;
             // 서비스
             board = boardService.searchByBoardId(Integer.parseInt(boardId));
-
+            boardService.updateViewCnt(Integer.parseInt(boardId));
+            board.setViews(board.getViews() + 1);
             status = HttpStatus.OK;
             // body json add
             resultMap.put("board", board);
@@ -123,6 +128,37 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+
+    @ApiOperation(value = "유저가 게시글을 즐겨찾기 등록/취소")
+    @PostMapping("/boards/favorite")
+    public ResponseEntity<Map<String, Object>> postFavorite(HttpServletRequest req, @RequestBody final FavoriteRequestBody favoriteRequestBody,
+                                                            HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            String email = jwtService.getEamil(token);
+            int result = boardService.postFavorite(email, favoriteRequestBody);
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("status", status.value());
+            String message = "성공";
+            if (result == 1) {
+                message = "즐겨찾기 등록에 성공하셨습니다.";
+            } else if (result == -1) {
+                message = "즐겨찾기 취소에 성공하셨습니다.";
+            }
+            resultMap.put("message", message);
+        } catch (RuntimeException | SQLException e) {
+            status = HttpStatus.BAD_REQUEST;
+            // body json add
+            resultMap.put("status", status.value());
+            resultMap.put("message", "실패");
+
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 
     /**
      * 게스글 작성

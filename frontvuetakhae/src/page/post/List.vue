@@ -41,10 +41,14 @@
                     @click="goDetail(backData.boardId)"
                   >{{ backData.title }}</v-list-item-title>
                   <v-list-item-subtitle
-                    style="text-align:right;"
+                    style="text-align: right;"
                     @click="goOtherpage(backData.nickname)"
                   >작성자 : {{ backData.nickname }}</v-list-item-subtitle>
-                  <small style="text-align:right;">{{ backData.createAt }}</small>
+                  <small style="text-align: right;">
+                    {{
+                    backData.createAt
+                    }}
+                  </small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -54,10 +58,10 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text @click="goDetail(backData.boardId)">
-                <p class="caption">소요시간 : {{ backData.cookingTime }}시간</p>난이도
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>난이도
                 <v-rating
-                  class="p-0"
+                  class="d-inline-flex pa-2"
                   small
                   v-model="backData.grade"
                   background-color="orange lighten-3"
@@ -66,20 +70,51 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
-                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
+                <span @click="heartRecipe">
+                  <span v-if="backData.favorite">
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                      color="deep-purple"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                  <span v-else>
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                      color="secondary lighten-2"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                </span>
                 <v-spacer></v-spacer>
-                <v-btn icon @click="changeEasy">
-                  <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-                    <p class="caption mb-0 mt-1">easy</p>
-                  </div>
-                  <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-                    <p class="caption mb-0 mt-1">hard</p>
-                  </div>
-                </v-btn>
+
                 <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
+                  <img
+                    @click="
+                      kakaoShare(
+                        backData.title,
+                        backData.boardId,
+                        backData.thumbnailImage,
+                        backData.nickname
+                      )
+                    "
+                    src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"
+                    width="40"
+                  />
+
+                  <!-- <v-icon>mdi-share-variant</v-icon> -->
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -98,7 +133,10 @@
     </div>
   </div>
 </template>
-
+<script
+  type="text/JavaScript"
+  src="https://developers.kakao.com/sdk/js/kakao.min.js"
+></script>
 <script>
 import axios from "axios";
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
@@ -110,7 +148,6 @@ export default {
     return {
       limit: 0,
       backDatas: [],
-      easy: true,
       userData: {
         nickname: "",
       },
@@ -121,8 +158,40 @@ export default {
       console.log(response.data);
       this.backDatas = response.data.boards;
     });
+    Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
   },
   methods: {
+    heartRecipe() {
+      // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
+    },
+    kakaoShare(title, boardId, imgUrl, nickName) {
+      Kakao.Link.sendDefault({
+        objectType: "feed",
+        content: {
+          title: title, // 콘텐츠의 타이틀
+          description: "작성자 : " + nickName, // 콘텐츠 상세설명
+          imageUrl: imgUrl, // 썸네일 이미지
+          link: {
+            mobileWebUrl: "http://i3a305.p.ssafy.io/#/detail/" + boardId, // 모바일 카카오톡에서 사용하는 웹 링크 URL
+            webUrl: "http://i3a305.p.ssafy.io/#/detail/" + boardId, // PC버전 카카오톡에서 사용하는 웹 링크 URL
+          },
+        },
+        social: {
+          likeCount: 0, // LIKE 개수
+          commentCount: 0, // 댓글 개수
+          sharedCount: 0, // 공유 회수
+        },
+        buttons: [
+          {
+            title: "게시글 확인", // 버튼 제목
+            link: {
+              mobileWebUrl: "http://i3a305.p.ssafy.io/#/detail/" + boardId, // 모바일 카카오톡에서 사용하는 웹 링크 URL
+              webUrl: "http://i3a305.p.ssafy.io/#/detail/" + boardId, // PC버전 카카오톡에서 사용하는 웹 링크 URL
+            },
+          },
+        ],
+      });
+    },
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
@@ -139,16 +208,9 @@ export default {
             this.$router.push("/users/otherpage/" + nickname);
           }
         })
-        .catch((error) => {
-          alert(error);
+        .catch(() => {
+          alert("로그인 후 이용 가능합니다.");
         });
-    },
-    changeEasy() {
-      if (this.easy) {
-        this.easy = false;
-      } else {
-        this.easy = true;
-      }
     },
   },
 };
@@ -198,34 +260,13 @@ export default {
 .postcard {
   cursor: pointer;
 }
-/* .tag-list-wrap {
-  position: fixed;
-  left: 90%;
-  top: 600px;
-} */
 .input:focus {
   outline: none;
 }
 .v-card {
   cursor: pointer;
 }
-/* .tag-list-wrap h4 {
-  font-size: 1em;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #000;
-  margin-bottom: 20px;
-  font-weight: 600;
+.element.style {
+  width: 60px;
 }
-
-.tag-list-wrap ul.tag-list {
-  width: 100%;
-  float: left;
-  padding-right: 30px;
-  list-style: none;
-}
-
-.tag-list-wrap ul.tag-list li {
-  cursor: pointer;
-  margin-bottom: 15px;
-} */
 </style>

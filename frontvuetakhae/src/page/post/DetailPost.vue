@@ -50,21 +50,28 @@
       <hr />
       <div class="comments">
         <h4>댓글</h4>
-        <b-row v-for="comment in detailData.comments" :key="comment">
+        <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
             <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
             <p>{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
-            <p>{{ comment.commentContent }}</p>
-            <p>{{ comment.createAt }}</p>
+            <div v-if="userData.nickname==comment.nickname">
+              <input
+                :value="comment.commentContent"
+                @input="comment.commentContent = $event.target.value"
+                class="inputLength"
+              />
+              <p>{{ comment.createAt }}</p>
+            </div>
+            <div v-else>
+              <p>{{ comment.commentContent }}</p>
+              <p>{{ comment.createAt }}</p>
+            </div>
           </b-col>
           <b-col v-if="userData.nickname==comment.nickname">
-            <v-btn
-              color="secondary"
-              class="white--text"
-              @click="deleteComment(comment.commentId)"
-            >삭제</v-btn>
+            <v-btn @click="updateComment(comment.commentId, comment.commentContent)">수정</v-btn>
+            <v-btn color="secondary" class="mt-2" @click="deleteComment(comment.commentId)">삭제</v-btn>
           </b-col>
           <b-col v-else></b-col>
         </b-row>
@@ -77,7 +84,7 @@
           <b-col cols="10">
             <b-input-group>
               <b-form-input label="댓글을 입력해주세요." v-model="commentInput"></b-form-input>
-              <v-btn color="purple" class="white--text" v-on:click="createComment">등록</v-btn>
+              <v-btn color="red lighten-2" class="white--text" @click="createComment">등록</v-btn>
             </b-input-group>
           </b-col>
         </b-row>
@@ -110,7 +117,6 @@ export default {
       this.detailData.steps = response.data.board.steps;
       this.detailData.tags = response.data.board.tags;
       this.detailData.comments = response.data.board.comments;
-      console.log(this.detailData);
     });
     axios
       .get(`${BACK_URL}/users/mypage`, {
@@ -209,6 +215,28 @@ export default {
           alert(error);
         });
     },
+    updateComment(commentId, commentcontent) {
+      axios
+        .put(
+          `${BACK_URL}/boards/comments/${commentId}`,
+          {
+            commentContent: commentcontent,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("댓글이 수정되었습니다.");
+            this.$router.go();
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
   },
 };
 </script>
@@ -230,5 +258,8 @@ export default {
 }
 .writerArea {
   cursor: pointer;
+}
+.inputLength {
+  width: 100%;
 }
 </style>

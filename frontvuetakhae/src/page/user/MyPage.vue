@@ -1,6 +1,7 @@
 <template>
   <div class="container" style="margin-top: 30px;">
     <h1>{{ userData.nickname }}님의 마이페이지</h1>
+
     <div class="header">
       <div class="box" style="background: #bdbdbd;">
         <img
@@ -8,6 +9,16 @@
           src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
         />
       </div>
+      <!-- <div>
+        <input type="file" id="file" ref="file" v-on:change="onFileSelected()" />
+
+        <label>
+          File
+          <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" />
+        </label>
+        <button v-on:click="submitFile()">Submit</button>
+      </div>-->
+
       <div class="introduce">
         <h3 class="mb-5" style="text-align: left;">
           <v-menu offset-y>
@@ -82,7 +93,7 @@
       <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
-      <h1>관심 레시피</h1>
+      <h1>즐겨찾기한 레시피</h1>
       <p>연어 킹의 연어 덮밥</p>
       <p>진주새럼의 진주비빔밥</p>
     </div>
@@ -145,12 +156,14 @@
 
 <script>
 import axios from "axios";
-const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399";
 
 export default {
   name: "MyPage",
   data() {
     return {
+      file: "",
+      selectedFile: null,
       followerlist: [],
       followeelist: [],
       chips: [], // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
@@ -176,7 +189,7 @@ export default {
   },
   created() {
     axios
-      .get(`${BACK_URL}/users/mypage`, {
+      .get(`${BACK_URL}/api/users/mypage`, {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
@@ -192,12 +205,47 @@ export default {
       });
   },
   methods: {
+    onFileSelected() {
+      this.selectedFile = event.target.files[0];
+      // this.selectedFile = this.$refs.fileInput.files[0];
+
+      // console.log(this.selectedFile);
+      const fd = new FormData();
+      fd.append("file", this.selectedFile, this.selectedFile.name);
+      fd.append({ "jwt-auth-token": this.$cookies.get("token") });
+      console.log(fd);
+      axios
+        .post(`${BACK_URL}/api/mypage/image/${this.userData.nickname}`, fd)
+        .then((response) => {
+          console.log(response);
+        });
+    },
+    submitFile() {
+      let formData = new FormData();
+      formData.append("file", this.file);
+      console.log(formData);
+      axios
+        .post(
+          `${BACK_URL}/api/mypage/image/${this.userData.nickname}`,
+          formData
+        )
+        .then(function () {
+          console.log("SUCCESS!!");
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+    },
     checkfollower() {
       axios
-        .get(`${BACK_URL}/users/follow/list/follower/`, {
+        .get(`${BACK_URL}/api/users/follow/list/follower/`, {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
+          console.log(response);
           if (response.status === 200) {
             this.followerlist = response.data.users;
           }
@@ -208,7 +256,7 @@ export default {
     },
     checkfollowee() {
       axios
-        .get(`${BACK_URL}/users/follow/list/followee/`, {
+        .get(`${BACK_URL}/api/users/follow/list/followee/`, {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
@@ -224,7 +272,7 @@ export default {
       // 자기소개 수정 method
       axios
         .put(
-          `${BACK_URL}/users/mypage/introduce`,
+          `${BACK_URL}/api/users/mypage/introduce`,
           {
             introduce: this.userData.introduce,
           },
@@ -245,7 +293,7 @@ export default {
     loadData() {
       // 개인 정보 수정 모달 클릭시 저장된 user 데이터 가져오는 method
       axios
-        .get(`${BACK_URL}/users/info`, {
+        .get(`${BACK_URL}/api/users/info`, {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
@@ -264,7 +312,7 @@ export default {
           console.log(this.userupdateData.nickname);
           axios
             .put(
-              `${BACK_URL}/users/info`,
+              `${BACK_URL}/api/users/info`,
               {
                 nickname: this.userupdateData.nickname,
               },
@@ -290,7 +338,7 @@ export default {
           // 닉네임과 비밀번호 모두 변경하는 경우
           axios
             .put(
-              `${BACK_URL}/users/info`,
+              `${BACK_URL}/api/users/info`,
               {
                 nickname: this.userupdateData.nickname,
                 password: this.userupdateData.password,
@@ -322,7 +370,7 @@ export default {
     },
     deleteData() {
       axios
-        .delete(`${BACK_URL}/users`, {
+        .delete(`${BACK_URL}/api/users`, {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then(() => {
@@ -339,7 +387,7 @@ export default {
       // 닉네임 중복 조회하는 메소드
       axios
         .post(
-          `${BACK_URL}/users/info/nickname`,
+          `${BACK_URL}/api/users/info/nickname`,
           {
             nickname: this.userupdateData.nickname,
           },
@@ -383,7 +431,7 @@ export default {
       this.emptyChip = false;
       axios
         .put(
-          `${BACK_URL}/users/mypage/box`,
+          `${BACK_URL}/api/users/mypage/box`,
           {
             box: this.chips.toString(),
           },
@@ -406,7 +454,7 @@ export default {
       this.chips.splice(this.chips.indexOf(tag), 1);
       axios
         .put(
-          `${BACK_URL}/users/mypage/box`,
+          `${BACK_URL}/api/users/mypage/box`,
           {
             box: this.chips.toString(),
           },
@@ -466,7 +514,7 @@ export default {
   display: inline-block;
   width: 15%;
   height: 150px;
-  float: left;
+  /* float: left; */
   border-radius: 30%;
   overflow: hidden;
 }

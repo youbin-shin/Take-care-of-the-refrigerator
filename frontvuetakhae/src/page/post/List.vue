@@ -89,6 +89,7 @@
                       class="elevation-0"
                       :value="backData.favorite"
                       style="width: 60px"
+                      color="secondary lighten-2"
                     >
                       <v-btn>
                         <span>즐겨찾기</span>

@@ -9,10 +9,15 @@
           src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
         />
       </div>
-      <div>
-        <input type="file" @change="onFileSelected" />
-        <!-- <button @click="onUpload">Upload</button> -->
-      </div>
+      <!-- <div>
+        <input type="file" id="file" ref="file" v-on:change="onFileSelected()" />
+
+        <label>
+          File
+          <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" />
+        </label>
+        <button v-on:click="submitFile()">Submit</button>
+      </div>-->
 
       <div class="introduce">
         <h3 class="mb-5" style="text-align: left;">
@@ -157,6 +162,7 @@ export default {
   name: "MyPage",
   data() {
     return {
+      file: "",
       selectedFile: null,
       followerlist: [],
       followeelist: [],
@@ -199,27 +205,39 @@ export default {
       });
   },
   methods: {
-    onFileSelected(event) {
-      console.log(event);
+    onFileSelected() {
       this.selectedFile = event.target.files[0];
-    },
-    onUpload() {
-      // 파이어베이스
-      // const fd = new FormData();
-      // fd.append('image', this.selectedFile, this.selectedFile.name)
+      // this.selectedFile = this.$refs.fileInput.files[0];
+
+      // console.log(this.selectedFile);
+      const fd = new FormData();
+      fd.append("file", this.selectedFile, this.selectedFile.name);
+      fd.append({ "jwt-auth-token": this.$cookies.get("token") });
+      console.log(fd);
       axios
-        .post(
-          `${BACK_URL}/api/mypage/image/`,
-          {
-            files: this.selectedFile,
-          },
-          {
-            headers: { "jwt-auth-token": this.$cookies.get("token") },
-          }
-        )
+        .post(`${BACK_URL}/api/mypage/image/${this.userData.nickname}`, fd)
         .then((response) => {
           console.log(response);
         });
+    },
+    submitFile() {
+      let formData = new FormData();
+      formData.append("file", this.file);
+      console.log(formData);
+      axios
+        .post(
+          `${BACK_URL}/api/mypage/image/${this.userData.nickname}`,
+          formData
+        )
+        .then(function () {
+          console.log("SUCCESS!!");
+        })
+        .catch(function () {
+          console.log("FAILURE!!");
+        });
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
     },
     checkfollower() {
       axios

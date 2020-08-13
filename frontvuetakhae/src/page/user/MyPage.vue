@@ -204,6 +204,7 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     onUpload() {
+      // 파이어베이스
       // const fd = new FormData();
       // fd.append('image', this.selectedFile, this.selectedFile.name)
       axios

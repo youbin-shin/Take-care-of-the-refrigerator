@@ -27,4 +27,6 @@ public interface BoardService {
     void updateViewCnt(Integer boardId) throws SQLException;
 
     int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException;
+
+    List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
 }

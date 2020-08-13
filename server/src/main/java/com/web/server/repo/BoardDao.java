@@ -48,5 +48,7 @@ public interface BoardDao {
     int deleteFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
 
     int insertFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
+
+    List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
 }
 

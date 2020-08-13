@@ -23,7 +23,11 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public List<BoardSimpleDto> searchAll(String email) throws SQLException {
-        return template.selectList(ns + "selectAll", email);
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("keyword",null);
+        map.put("type",null);
+        return template.selectList(ns + "selectAll", map);
     }
 
     @Override
@@ -99,6 +103,15 @@ public class BoardDaoImpl implements BoardDao {
         map.put("email", email);
         map.put("boardId", favoriteRequestBody.getBoardId());
         return template.selectOne(ns + "isExistFavorite", map);
+    }
+
+    @Override
+    public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("keyword",searchByKeywordDto.getKeyword());
+        map.put("type",searchByKeywordDto.getType());
+        return template.selectList(ns + "selectAll", map);
     }
 
     @Override

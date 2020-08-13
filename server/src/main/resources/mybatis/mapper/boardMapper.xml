@@ -17,6 +17,16 @@
         where email=#{email})) as favorite
         from boards join users on boards.user_id = users.user_id
         where temporary = 0
+        <if test="keyword != null">
+        <choose>
+            <when test="type == 1">
+                and title LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+            <when test="type == 2">
+                and nickname LIKE CONCAT('%', #{keyword}, '%')
+            </when>
+        </choose>
+        </if>
     </select>
 
     <select id="isExistFavorite" resultType="int">

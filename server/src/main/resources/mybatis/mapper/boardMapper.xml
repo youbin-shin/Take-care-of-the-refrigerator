@@ -13,10 +13,26 @@
         thumbnail_image,
         cooking_time,
         grade,
-        (select count(*) from interest_boards where board_id=boards.board_id) as favorite
+        (select count(*) from interest_boards where board_id=boards.board_id and user_id=(select user_id from users
+        where email=#{email})) as favorite
         from boards join users on boards.user_id = users.user_id
         where temporary = 0
     </select>
+
+    <select id="isExistFavorite" resultType="int">
+        select count(*) from interest_boards where user_id=(select user_id from users where email = #{email}) and
+        board_id=#{boardId}
+    </select>
+
+    <delete id="deleteFavorite">
+        delete from interest_boards where user_id =(select user_id from users where email =#{email}) and board_id
+        =#{boardId}
+    </delete>
+
+    <insert id="insertFavorite">
+        insert into interest_boards(user_id,board_id) values ((select user_id from users where email =
+        #{email}),#{boardId});
+    </insert>
 
     <select id="searchAllByFood" resultType="boardsimple">
         select board_id,
@@ -38,11 +54,12 @@
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
         select *,(select nickname from users where user_id=boards.user_id) as nickname,
-        (select count(*) from hardeasy where grade = 2) as easyCount,(select count(*) from hardeasy where grade = 1) as difficultyCount
+        (select count(*) from hardeasy where grade = 2) as easyCount,(select count(*) from hardeasy where grade = 1) as
+        difficultyCount
         from boards
         where board_id=#{boardId} and temporary = 0
 
-        
+
     </select>
 
     <select id="selectStepsInBoardByBoardId" parameterType="int" resultType="step">

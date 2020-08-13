@@ -11,7 +11,6 @@
       </div>
       <div>
         <input type="file" @change="onFileSelected($event)" />
-        <!-- <button @click="onUpload">Upload</button> -->
       </div>
 
       <div class="introduce">
@@ -89,17 +88,23 @@
     </div>
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
-      <p>연어 킹의 연어 덮밥</p>
-      <p>진주새럼의 진주비빔밥</p>
+      <li v-for="interest in userData.interestBoards" :key="interest">
+        {{ interest.boardId }} : {{ interest.title }}
+        {{ interest.createAt }}
+      </li>
+      <div v-if="emptyHeartRecipe">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
     <hr />
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
-      <!-- <p>{{ userData.myBoards }}</p> -->
       <li v-for="board in userData.myBoards" :key="board">
         {{ board.boardId }} : {{ board.title }}
         {{ board.createAt }}
       </li>
+      <div v-if="emptyHeartRecipe">
+        작성한 레시피가 없습니다.
+        <br />레시피 작성하기 버튼을 통해 나만의 레시피를 작성해보세요.
+      </div>
     </div>
     <div class="white--text">
       <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
@@ -157,6 +162,8 @@ export default {
   name: "MyPage",
   data() {
     return {
+      emptyHeartRecipe: true,
+      emptyCreateRecipe: true,
       selectedFile: null,
       followerlist: [],
       followeelist: [],
@@ -196,6 +203,12 @@ export default {
         this.userData.myBoards = response.data.mypage.myBoards;
         this.userData.interestBoards = response.data.mypage.interestBoards;
         this.chips = this.userData.box.split(",");
+        if (this.userData.interestBoards.length > 0) {
+          this.emptyHeartRecipe = false;
+        }
+        if (this.userData.myBoards.length > 0) {
+          this.emptyCreateRecipe = false;
+        }
       });
   },
   methods: {

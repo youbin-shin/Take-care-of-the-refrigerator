@@ -10,7 +10,7 @@
         />
       </div>
       <div>
-        <input type="file" @change="onFileSelected" />
+        <input type="file" @change="onFileSelected($event)" />
         <!-- <button @click="onUpload">Upload</button> -->
       </div>
 
@@ -200,17 +200,14 @@ export default {
   },
   methods: {
     onFileSelected(event) {
-      console.log(event);
+      // console.log(event);
       this.selectedFile = event.target.files[0];
-    },
-    onUpload() {
-      // const fd = new FormData();
-      // fd.append('image', this.selectedFile, this.selectedFile.name)
+      console.log(this.selectedFile);
       axios
         .post(
           `${BACK_URL}/api/mypage/image/`,
           {
-            files: this.selectedFile,
+            file: this.selectedFile,
           },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },

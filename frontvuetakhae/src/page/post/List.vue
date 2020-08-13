@@ -3,11 +3,7 @@
     <div class="search-bar">
       <h1 class="search-bar-title">Happy cooking time</h1>
       <div class="search-input">
-        <input
-          class="search-input-text"
-          type="text"
-          placeholder="관심있는 요리를 검색하세요."
-        />
+        <input class="search-input-text" type="text" placeholder="관심있는 요리를 검색하세요." />
         <div class="search-img">
           <svg
             width="1em"
@@ -43,16 +39,16 @@
                   <v-list-item-title
                     class="headline"
                     @click="goDetail(backData.boardId)"
-                    >{{ backData.title }}</v-list-item-title
-                  >
+                  >{{ backData.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     style="text-align: right;"
                     @click="goOtherpage(backData.nickname)"
-                    >작성자 : {{ backData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align: right;">{{
+                  >작성자 : {{ backData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">
+                    {{
                     backData.createAt
-                  }}</small>
+                    }}
+                  </small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -62,12 +58,8 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(backData.boardId)"
-                style="text-align: left;"
-              >
-                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>
-                난이도
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -77,23 +69,34 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="goDetail(backData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히</v-btn
-                >
-                <v-bottom-navigation
-                  class="elevation-0"
-                  style="width: 60px;"
-                  :input-value="showNav"
-                  color="deep-purple"
-                >
-                  <v-btn>
-                    <span>즐겨찾기</span>
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                </v-bottom-navigation>
+                <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
+                <span @click="heartRecipe">
+                  <span v-if="backData.favorite">
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                      color="deep-purple"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                  <span v-else>
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="backData.favorite"
+                      style="width: 60px"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                </span>
                 <v-spacer></v-spacer>
 
                 <v-btn icon>
@@ -157,6 +160,9 @@ export default {
     Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
   },
   methods: {
+    heartRecipe() {
+      // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
+    },
     kakaoShare(title, boardId, imgUrl, nickName) {
       Kakao.Link.sendDefault({
         objectType: "feed",
@@ -201,8 +207,8 @@ export default {
             this.$router.push("/users/otherpage/" + nickname);
           }
         })
-        .catch((error) => {
-          alert(error);
+        .catch(() => {
+          alert("로그인 후 이용 가능합니다.");
         });
     },
   },

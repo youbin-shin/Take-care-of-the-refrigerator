@@ -48,12 +48,43 @@ public class BoardRestController {
             String token = req.getHeader("jwt-auth-token");
             email = jwtService.getEamil(token);
         } catch (Exception e) {
+            System.out.println("Ere"+e.getMessage());
+        }
+        try {
+            List<BoardSimpleDto> boards = null;
+            System.out.println("EEEE"+email);
+            boards = boardService.searchAll(email);
+
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("boards", boards);
+            resultMap.put("status", status.value());
+            resultMap.put("message", "성공");
+        } catch (RuntimeException | SQLException e) {
+            // body json add
+            resultMap.put("status", status.value());
+            resultMap.put("message", "실패");
+        }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @ApiOperation(value = "게시글 제목 or 글쓴이로 검색")
+    @PostMapping("/boards/search")
+    public ResponseEntity<Map<String, Object>> searchByKeyword(HttpServletRequest req, @RequestBody SearchByKeywordDto searchByKeywordDto, HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        String email = "";
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            email = jwtService.getEamil(token);
+        } catch (Exception e) {
 
         }
 
         try {
             List<BoardSimpleDto> boards = null;
-            boards = boardService.searchAll(email);
+            boards = boardService.searchByKeyword(email,searchByKeywordDto);
 
             status = HttpStatus.OK;
             // body json add

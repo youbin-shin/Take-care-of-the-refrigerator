@@ -11,6 +11,24 @@
       </div>
       <div>
         <input type="file" @change="onFileSelected($event)" />
+        <input
+          type="file"
+          id="file"
+          ref="file"
+          v-on:change="onFileSelected()"
+        />
+
+        <label>
+          File
+          <input
+            type="file"
+            id="file"
+            ref="file"
+            v-on:change="handleFileUpload()"
+          />
+        </label>
+        <button v-on:click="submitFile()">Submit</button>
+        >>>>>>> 05ffbe9e2af0ebded1c4e2bf466dfd93e951256d
       </div>
 
       <div class="introduce">
@@ -25,10 +43,14 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollowee"
-              >팔로워 {{ userData.followingCount }} 명</v-btn>
+                >팔로워 {{ userData.followingCount }} 명</v-btn
+              >
             </template>
             <v-list>
-              <v-list-item v-for="followee in followeelist" :key="followee.nickname">
+              <v-list-item
+                v-for="followee in followeelist"
+                :key="followee.nickname"
+              >
                 <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -43,10 +65,14 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollower"
-              >팔로잉 {{ userData.followerCount }} 명</v-btn>
+                >팔로잉 {{ userData.followerCount }} 명</v-btn
+              >
             </template>
             <v-list>
-              <v-list-item v-for="follower in followerlist" :key="follower.nickname">
+              <v-list-item
+                v-for="follower in followerlist"
+                :key="follower.nickname"
+              >
                 <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -83,7 +109,8 @@
         close
         @click:close="closeChip(tag)"
         :key="tag"
-      >{{ tag }}</v-chip>
+        >{{ tag }}</v-chip
+      >
       <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
@@ -107,15 +134,23 @@
       </div>
     </div>
     <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
+      <b-button class="bottom-button mr-2" @click="moveCreatePost"
+        >레시피 작성하기</b-button
+      >
       <b-button
         class="a_tag_modal bottom-button mr-2"
         @click="
           modalShow = !modalShow;
           loadData();
         "
-      >수정하기</b-button>
-      <b-button class="bottom-button mr-2" variant="danger" @click="deleteData()">탈퇴하기</b-button>
+        >수정하기</b-button
+      >
+      <b-button
+        class="bottom-button mr-2"
+        variant="danger"
+        @click="deleteData()"
+        >탈퇴하기</b-button
+      >
     </div>
 
     <!-- 개인 정보 수정하기 모달 코드 -->
@@ -132,9 +167,13 @@
               @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
-            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info"
+              >중복확인하기</b-button
+            >
           </div>
-          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">
+            사용가능한 닉네임입니다.
+          </p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -148,7 +187,9 @@
         </div>
       </div>
       <div>
-        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData"
+          >저장하기</b-button
+        >
       </div>
     </b-modal>
   </div>
@@ -164,6 +205,7 @@ export default {
     return {
       emptyHeartRecipe: true,
       emptyCreateRecipe: true,
+      file: "",
       selectedFile: null,
       followerlist: [],
       followeelist: [],
@@ -212,16 +254,20 @@ export default {
       });
   },
   methods: {
-    onFileSelected(event) {
-      // console.log(event);
+    onFileSelected() {
+      console.log(event);
       this.selectedFile = event.target.files[0];
+      // this.selectedFile = this.$refs.fileInput.files[0];
       console.log(this.selectedFile);
+      const fd = new FormData();
+      fd.append("file", this.selectedFile, this.selectedFile.name);
+      // fd.append({ "jwt-auth-token": this.$cookies.get("token") });
+      console.log(fd);
+      // JSON.stringify(fd);
       axios
         .post(
-          `${BACK_URL}/api/mypage/image/`,
-          {
-            file: this.selectedFile,
-          },
+          `${BACK_URL}/api/mypage/image`,
+          { file: this.selectedFile },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }
@@ -229,6 +275,25 @@ export default {
         .then((response) => {
           console.log(response);
         });
+    },
+    submitFile() {
+      let formData = new FormData();
+      formData.append("file", this.file);
+      console.log(formData);
+      axios
+        .post(
+          `${BACK_URL}/api/mypage/image/${this.userData.nickname}`,
+          formData
+        )
+        .then(function() {
+          console.log("SUCCESS!!");
+        })
+        .catch(function() {
+          console.log("FAILURE!!");
+        });
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
     },
     checkfollower() {
       axios

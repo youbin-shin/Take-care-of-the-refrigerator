@@ -387,15 +387,6 @@ export default {
 </script>
 
 <style>
-@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
-
-@font-face {
-  font-family: naBrush;
-  src: url("NanumBarunpenB.ttf");
-}
-* {
-  font-family: "NanumSquare", sans-serif;
-}
 .titles {
   float: left;
 }

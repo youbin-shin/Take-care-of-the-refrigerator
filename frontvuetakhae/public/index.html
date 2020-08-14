@@ -38,4 +38,27 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.18.0/firebase-analytics.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyC6FZ6OLcBQrFBB-572PeWyeNLUMi0_J8U",
+      authDomain: "vue-upload-1951e.firebaseapp.com",
+      databaseURL: "https://vue-upload-1951e.firebaseio.com",
+      projectId: "vue-upload-1951e",
+      storageBucket: "vue-upload-1951e.appspot.com",
+      messagingSenderId: "230308073226",
+      appId: "1:230308073226:web:246ad47b46cc5d286d34f3",
+      measurementId: "G-ZRNR87EZ41",
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 </html>

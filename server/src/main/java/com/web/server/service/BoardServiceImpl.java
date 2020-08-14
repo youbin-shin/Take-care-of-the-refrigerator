@@ -148,4 +148,10 @@ public class BoardServiceImpl implements BoardService {
         }
         return result;
     }
+
+    @Override
+    public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
+
+        return boardDao.searchByKeyword(email,searchByKeywordDto);
+    }
 }

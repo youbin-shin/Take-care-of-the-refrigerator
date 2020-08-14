@@ -1,95 +1,88 @@
 <template>
   <div class="container" style="margin-top: 30px;">
     <h1>{{ userData.nickname }}님의 마이페이지</h1>
-
-    <div class="header">
-      <div class="box" style="background: #bdbdbd;">
-        <img
-          class="profile"
-          src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
-        />
-      </div>
-      <div>
-        <input type="file" @change="onFileSelected($event)" />
-        <input
-          type="file"
-          id="file"
-          ref="file"
-          v-on:change="onFileSelected()"
-        />
-
-        <label>
-          File
-          <input
-            type="file"
-            id="file"
-            ref="file"
-            v-on:change="handleFileUpload()"
+    <v-row no-gutters>
+      <v-col cols="5" md="3">
+        <v-card>
+          <img
+            class="profile"
+            src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
           />
-        </label>
-        <button v-on:click="submitFile()">Submit</button>
-        >>>>>>> 05ffbe9e2af0ebded1c4e2bf466dfd93e951256d
-      </div>
+          <div>
+            <input type="file" @change="previewImage" accept="image/*" />
+          </div>
+          <div>
+            <p>
+              미리보기 : {{ uploadValue.toFixed() + "%" }}
+              <progress
+                id="progress"
+                :value="uploadValue"
+                max="100"
+              ></progress>
+            </p>
+          </div>
+          <!-- <div v-if="imageData != null"> -->
+          <img class="preview" :src="picture" />
+          <br />
+          <button @click="onUpload">Upload |</button>
+          <button @click="submitFile()">Submit</button>
+          <!-- </div> -->
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="7" md="9">
+        <div>
+          <h3 class="mb-5 ml-5" style="text-align: left;">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="ma-2"
+                  outlined
+                  color="indigo"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="checkfollowee"
+                >팔로워 {{ userData.followingCount }} 명</v-btn>
+              </template>
+              <v-list>
+                <v-list-item v-for="followee in followeelist" :key="followee.nickname">
+                  <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="ma-2"
+                  outlined
+                  color="indigo"
+                  dark
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="checkfollower"
+                >팔로잉 {{ userData.followerCount }} 명</v-btn>
+              </template>
+              <v-list>
+                <v-list-item v-for="follower in followerlist" :key="follower.nickname">
+                  <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </h3>
+          <h3 class="ml-5" style="text-align: left;">자기소개</h3>
+          <v-col cols="12">
+            <v-textarea
+              solo
+              name="input-7-4"
+              label="간단하게 자신에 대해 소개해주세요."
+              v-model="userData.introduce"
+            ></v-textarea>
+            <v-btn depressed small @click="updateIntroduce">저장</v-btn>
+          </v-col>
+        </div>
+      </v-col>
+    </v-row>
 
-      <div class="introduce">
-        <h3 class="mb-5" style="text-align: left;">
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="ma-2"
-                outlined
-                color="indigo"
-                dark
-                v-bind="attrs"
-                v-on="on"
-                @click="checkfollowee"
-                >팔로워 {{ userData.followingCount }} 명</v-btn
-              >
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="followee in followeelist"
-                :key="followee.nickname"
-              >
-                <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-menu offset-y>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="ma-2"
-                outlined
-                color="indigo"
-                dark
-                v-bind="attrs"
-                v-on="on"
-                @click="checkfollower"
-                >팔로잉 {{ userData.followerCount }} 명</v-btn
-              >
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="follower in followerlist"
-                :key="follower.nickname"
-              >
-                <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </h3>
-        <h3 style="text-align: left;">자기소개</h3>
-        <v-col cols="12">
-          <v-textarea
-            solo
-            name="input-7-4"
-            label="간단하게 자신에 대해 소개해주세요."
-            v-model="userData.introduce"
-          ></v-textarea>
-          <v-btn depressed small @click="updateIntroduce">저장</v-btn>
-        </v-col>
-      </div>
-    </div>
     <!-- 나의 냉장고 코드 -->
     <div class="middle">
       <h1>나의 냉장고</h1>
@@ -109,8 +102,7 @@
         close
         @click:close="closeChip(tag)"
         :key="tag"
-        >{{ tag }}</v-chip
-      >
+      >{{ tag }}</v-chip>
       <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
@@ -119,7 +111,7 @@
         {{ interest.boardId }} : {{ interest.title }}
         {{ interest.createAt }}
       </li>
-      <div v-if="emptyHeartRecipe">아직 즐겨찾기한 레시피가 없습니다.</div>
+      <div v-if="!userData.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
     <hr />
     <div class="interest">
@@ -128,29 +120,21 @@
         {{ board.boardId }} : {{ board.title }}
         {{ board.createAt }}
       </li>
-      <div v-if="emptyHeartRecipe">
+      <div v-if="!userData.myBoards.length">
         작성한 레시피가 없습니다.
         <br />레시피 작성하기 버튼을 통해 나만의 레시피를 작성해보세요.
       </div>
     </div>
     <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost"
-        >레시피 작성하기</b-button
-      >
+      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
       <b-button
         class="a_tag_modal bottom-button mr-2"
         @click="
           modalShow = !modalShow;
           loadData();
         "
-        >수정하기</b-button
-      >
-      <b-button
-        class="bottom-button mr-2"
-        variant="danger"
-        @click="deleteData()"
-        >탈퇴하기</b-button
-      >
+      >수정하기</b-button>
+      <b-button class="bottom-button mr-2" variant="danger" @click="deleteData()">탈퇴하기</b-button>
     </div>
 
     <!-- 개인 정보 수정하기 모달 코드 -->
@@ -167,13 +151,9 @@
               @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
-            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info"
-              >중복확인하기</b-button
-            >
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
           </div>
-          <p class="small ml-4 pl-5" v-if="nicknameCheck">
-            사용가능한 닉네임입니다.
-          </p>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -187,9 +167,7 @@
         </div>
       </div>
       <div>
-        <b-button class="mt-3 d-flex justify-content-center" @click="updateData"
-          >저장하기</b-button
-        >
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
       </div>
     </b-modal>
   </div>
@@ -197,14 +175,17 @@
 
 <script>
 import axios from "axios";
+import firebase from "firebase";
+
 const BACK_URL = "http://i3a305.p.ssafy.io:8399";
 
 export default {
   name: "MyPage",
   data() {
     return {
-      emptyHeartRecipe: true,
-      emptyCreateRecipe: true,
+      imageData: null,
+      picture: null,
+      uploadValue: 0,
       file: "",
       selectedFile: null,
       followerlist: [],
@@ -245,50 +226,50 @@ export default {
         this.userData.myBoards = response.data.mypage.myBoards;
         this.userData.interestBoards = response.data.mypage.interestBoards;
         this.chips = this.userData.box.split(",");
-        if (this.userData.interestBoards.length > 0) {
-          this.emptyHeartRecipe = false;
-        }
-        if (this.userData.myBoards.length > 0) {
-          this.emptyCreateRecipe = false;
-        }
       });
   },
   methods: {
-    onFileSelected() {
-      console.log(event);
-      this.selectedFile = event.target.files[0];
-      // this.selectedFile = this.$refs.fileInput.files[0];
-      console.log(this.selectedFile);
-      const fd = new FormData();
-      fd.append("file", this.selectedFile, this.selectedFile.name);
-      // fd.append({ "jwt-auth-token": this.$cookies.get("token") });
-      console.log(fd);
-      // JSON.stringify(fd);
+    previewImage(event) {
+      this.uploadValue = 0;
+      this.picture = null;
+      this.imageData = event.target.files[0];
+    },
+    onUpload() {
+      this.picture = null;
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        (snapshot) => {
+          this.uploadValue =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadValue = 100;
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
+            this.picture = url;
+          });
+        }
+      );
+    },
+    submitFile() {
       axios
-        .post(
-          `${BACK_URL}/api/mypage/image`,
-          { file: this.selectedFile },
+        .put(
+          `${BACK_URL}/users/mypage/image`,
+          { file: this.picture },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }
         )
-        .then((response) => {
-          console.log(response);
-        });
-    },
-    submitFile() {
-      let formData = new FormData();
-      formData.append("file", this.file);
-      console.log(formData);
-      axios
-        .post(
-          `${BACK_URL}/api/mypage/image/${this.userData.nickname}`,
-          formData
-        )
-        .then(function() {
+        .then(function () {
           console.log("SUCCESS!!");
         })
-        .catch(function() {
+        .catch(function () {
           console.log("FAILURE!!");
         });
     },
@@ -540,6 +521,9 @@ export default {
 </script>
 
 <style>
+img.preview {
+  width: 200px;
+}
 .text-intro {
   border: 1px dotted black;
   padding: 5px;
@@ -565,19 +549,6 @@ export default {
 .small {
   font-size: 0.4em;
   margin: 2px;
-}
-.box {
-  display: inline-block;
-  width: 15%;
-  height: 150px;
-  /* float: left; */
-  border-radius: 30%;
-  overflow: hidden;
-}
-.introduce {
-  display: inline-block;
-  width: 85%;
-  padding-left: 55px;
 }
 .profile {
   width: 100%;

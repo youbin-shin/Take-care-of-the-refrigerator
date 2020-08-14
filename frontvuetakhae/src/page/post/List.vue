@@ -400,7 +400,7 @@ export default {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  height: 15%;
+  height: 400px;
 }
 .search-bar-title {
   font-weight: bold;

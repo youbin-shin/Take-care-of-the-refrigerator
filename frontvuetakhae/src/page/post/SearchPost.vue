@@ -1,7 +1,7 @@
 <template>
   <div class="searchPost">
     <div class="container">
-      <v-card class="p-3" color="grey lighten-1">
+      <v-card class="p-3">
         <h2 class="m-3 0 4">나의 냉장고</h2>
         <div>
           <div class="left d-sm-inline-flex pa-2">
@@ -26,13 +26,22 @@
             </v-row>
           </div>
           <div>
-            <v-chip class="m-1" v-for="tag in chips" close @click:close="closeChip(tag)" :key="tag">{{ tag }}</v-chip>
+            <v-chip
+              class="m-1"
+              v-for="tag in chips"
+              close
+              @click:close="closeChip(tag)"
+              :key="tag"
+              >{{ tag }}</v-chip
+            >
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
-      <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+      <h3 v-if="emptyChip" class="white--text">
+        요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.
+      </h3>
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="board in searchData.boards" :key="board.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -41,23 +50,26 @@
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="headline">
-                    {{
-                    board.title
-                    }}
+                    {{ board.title }}
                   </v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ board.nickname }}</v-list-item-subtitle>
+                  <v-list-item-subtitle style="text-align:right;"
+                    >작성자 : {{ board.nickname }}</v-list-item-subtitle
+                  >
                   <small style="text-align:right;">
-                    {{
-                    board.createAt
-                    }}
+                    {{ board.createAt }}
                   </small>
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img :src="board.thumbnailImage" height="194" @click="goDetail(board.boardId)"></v-img>
+              <v-img
+                :src="board.thumbnailImage"
+                height="194"
+                @click="goDetail(board.boardId)"
+              ></v-img>
 
               <v-card-text @click="goDetail(board.boardId)">
-                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>난이도
+                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>
+                난이도
                 <v-rating
                   class="p-0"
                   small
@@ -67,7 +79,12 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="goDetail(board.boardId)" text color="deep-purple accent-4">자세히 보기</v-btn>
+                <v-btn
+                  @click="goDetail(board.boardId)"
+                  text
+                  color="deep-purple accent-4"
+                  >자세히 보기</v-btn
+                >
                 <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
                 <v-btn icon>
                   <v-icon>mdi-heart</v-icon>
@@ -76,11 +93,19 @@
                 <v-spacer></v-spacer>
                 <v-btn icon @click="changeEasy">
                   <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
+                    <b-icon
+                      icon="emoji-smile"
+                      scale="2"
+                      variant="warning"
+                    ></b-icon>
                     <p class="caption mb-0 mt-1">easy</p>
                   </div>
                   <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
+                    <b-icon
+                      icon="emoji-frown"
+                      scale="2"
+                      variant="secondary"
+                    ></b-icon>
                     <p class="caption mb-0 mt-1">hard</p>
                   </div>
                 </v-btn>

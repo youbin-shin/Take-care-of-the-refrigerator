@@ -14,16 +14,12 @@
                   <v-list-item-title
                     class="headline"
                     @click="goDetail(searchData.boardId)"
-                    >{{ searchData.title }}</v-list-item-title
-                  >
+                  >{{ searchData.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     style="text-align: right;"
                     @click="goOtherpage(searchData.nickname)"
-                    >작성자 : {{ searchData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align: right;">
-                    {{ searchData.createAt }}
-                  </small>
+                  >작성자 : {{ searchData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">{{ searchData.createAt }}</small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -33,12 +29,8 @@
                 @click="goDetail(searchData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(searchData.boardId)"
-                style="text-align: left;"
-              >
-                <p class="m-0">소요시간 {{ searchData.cookingTime }}시간</p>
-                난이도
+              <v-card-text @click="goDetail(searchData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ searchData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -48,12 +40,7 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="goDetail(searchData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히</v-btn
-                >
+                <v-btn @click="goDetail(searchData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
                 <span @click="heartRecipe(searchData.boardId)">
                   <span v-if="searchData.favorite">
                     <v-bottom-navigation
@@ -120,16 +107,12 @@
                   <v-list-item-title
                     class="headline"
                     @click="goDetail(backData.boardId)"
-                    >{{ backData.title }}</v-list-item-title
-                  >
+                  >{{ backData.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     style="text-align: right;"
                     @click="goOtherpage(backData.nickname)"
-                    >작성자 : {{ backData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align: right;">
-                    {{ backData.createAt }}
-                  </small>
+                  >작성자 : {{ backData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">{{ backData.createAt }}</small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -139,12 +122,8 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(backData.boardId)"
-                style="text-align: left;"
-              >
-                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>
-                난이도
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -154,12 +133,7 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="goDetail(backData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히</v-btn
-                >
+                <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
                 <span @click="heartRecipe(backData.boardId)">
                   <span v-if="backData.favorite">
                     <v-bottom-navigation

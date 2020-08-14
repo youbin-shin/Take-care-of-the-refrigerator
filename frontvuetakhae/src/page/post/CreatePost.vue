@@ -195,6 +195,7 @@
             id="imageFileOpenInput"
             accept="image/*"
             style="float:left"
+            @change="onFileSelected($event)"
           />
           <br />
         </v-card>
@@ -208,6 +209,7 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "CreatePost",
@@ -259,6 +261,24 @@ export default {
     };
   },
   methods: {
+    onFileSelected(event) {
+      // console.log(event);
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+      axios
+        .post(
+          `${BACK_URL}/file/`,
+          {
+            file: this.selectedFile,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
       const idx = this.postData.content.steps.findIndex(function (item) {
@@ -387,15 +407,6 @@ export default {
 </script>
 
 <style>
-@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
-
-@font-face {
-  font-family: naBrush;
-  src: url("NanumBarunpenB.ttf");
-}
-* {
-  font-family: "NanumSquare", sans-serif;
-}
 .titles {
   float: left;
 }

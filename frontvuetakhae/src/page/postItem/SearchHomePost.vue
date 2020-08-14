@@ -85,4 +85,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.search-bar-title {
+  font-family: "MapoGoldenPier";
+}
+</style>

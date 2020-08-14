@@ -14,16 +14,12 @@
                   <v-list-item-title
                     class="headline"
                     @click="goDetail(searchData.boardId)"
-                    >{{ searchData.title }}</v-list-item-title
-                  >
+                  >{{ searchData.title }}</v-list-item-title>
                   <v-list-item-subtitle
                     style="text-align: right;"
                     @click="goOtherpage(searchData.nickname)"
-                    >작성자 : {{ searchData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align: right;">
-                    {{ searchData.createAt }}
-                  </small>
+                  >작성자 : {{ searchData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">{{ searchData.createAt }}</small>
                 </v-list-item-content>
               </v-list-item>
 
@@ -33,12 +29,8 @@
                 @click="goDetail(searchData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(searchData.boardId)"
-                style="text-align: left;"
-              >
-                <p class="m-0">소요시간 {{ searchData.cookingTime }}시간</p>
-                난이도
+              <v-card-text @click="goDetail(searchData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ searchData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -48,12 +40,7 @@
                 ></v-rating>
               </v-card-text>
               <v-card-actions>
-                <v-btn
-                  @click="goDetail(searchData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히</v-btn
-                >
+                <v-btn @click="goDetail(searchData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
                 <span @click="heartRecipe(searchData.boardId)">
                   <span v-if="searchData.favorite">
                     <v-bottom-navigation
@@ -116,20 +103,39 @@
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
               <v-list-item>
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
-                <v-list-item-content>
+                <v-list-item-content class="row">
                   <v-list-item-title
-                    class="headline"
+                    class="headline text-left col-9"
                     @click="goDetail(backData.boardId)"
-                    >{{ backData.title }}</v-list-item-title
-                  >
-                  <v-list-item-subtitle
-                    style="text-align: right;"
-                    @click="goOtherpage(backData.nickname)"
-                    >작성자 : {{ backData.nickname }}</v-list-item-subtitle
-                  >
-                  <small style="text-align: right;">
-                    {{ backData.createAt }}
-                  </small>
+                  >{{ backData.title }}</v-list-item-title>
+                  <div class="col-3" @click="heartRecipe(backData.boardId)">
+                    <span v-if="backData.favorite">
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="backData.favorite"
+                        style="width: 60px"
+                        color="deep-purple"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                    <span v-else>
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="backData.favorite"
+                        style="width: 60px"
+                        color="secondary lighten-2"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                  </div>
                 </v-list-item-content>
               </v-list-item>
 
@@ -139,12 +145,17 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(backData.boardId)"
-                style="text-align: left;"
-              >
-                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>
-                난이도
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(backData.nickname)">
+                  작성자 : {{ backData.nickname }}
+                  <small style="float:right">
+                    {{
+                    backData.createAt
+                    }}
+                  </small>
+                </v-list-item-subtitle>
+
+                <p class="m-0">소요시간 {{ backData.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -152,45 +163,7 @@
                   background-color="orange lighten-3"
                   color="orange"
                 ></v-rating>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  @click="goDetail(backData.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                  >자세히</v-btn
-                >
-                <span @click="heartRecipe(backData.boardId)">
-                  <span v-if="backData.favorite">
-                    <v-bottom-navigation
-                      class="elevation-0"
-                      :value="backData.favorite"
-                      style="width: 60px"
-                      color="deep-purple"
-                    >
-                      <v-btn>
-                        <span>즐겨찾기</span>
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                    </v-bottom-navigation>
-                  </span>
-                  <span v-else>
-                    <v-bottom-navigation
-                      class="elevation-0"
-                      :value="backData.favorite"
-                      style="width: 60px"
-                      color="secondary lighten-2"
-                    >
-                      <v-btn>
-                        <span>즐겨찾기</span>
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                    </v-bottom-navigation>
-                  </span>
-                </span>
-                <v-spacer></v-spacer>
-
-                <v-btn icon>
+                <v-btn icon style="float:right">
                   <img
                     @click="
                       kakaoShare(
@@ -203,10 +176,8 @@
                     src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"
                     width="40"
                   />
-
-                  <!-- <v-icon>mdi-share-variant</v-icon> -->
                 </v-btn>
-              </v-card-actions>
+              </v-card-text>
             </v-card>
           </v-hover>
         </ul>
@@ -410,5 +381,8 @@ export default {
 }
 .search-bar-input {
   width: 100px;
+}
+.v-application .headline {
+  font-family: "TmoneyRoundWindExtraBold" !important;
 }
 </style>

@@ -9,7 +9,7 @@
           src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
         />
       </div>
-      <!-- <div>
+      <div>
         <input type="file" id="file" ref="file" v-on:change="onFileSelected()" />
 
         <label>
@@ -17,7 +17,7 @@
           <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" />
         </label>
         <button v-on:click="submitFile()">Submit</button>
-      </div>-->
+      </div>
 
       <div class="introduce">
         <h3 class="mb-5" style="text-align: left;">
@@ -94,8 +94,10 @@
     </div>
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
-      <p>연어 킹의 연어 덮밥</p>
-      <p>진주새럼의 진주비빔밥</p>
+      <li v-for="board in userData.interestBoards" :key="board">
+        {{ board.boardId }} : {{ board.title }}
+        {{ board.createAt }}
+      </li>
     </div>
     <hr />
     <div class="interest">
@@ -206,16 +208,23 @@ export default {
   },
   methods: {
     onFileSelected() {
+      console.log(event);
       this.selectedFile = event.target.files[0];
       // this.selectedFile = this.$refs.fileInput.files[0];
-
-      // console.log(this.selectedFile);
+      console.log(this.selectedFile);
       const fd = new FormData();
       fd.append("file", this.selectedFile, this.selectedFile.name);
-      fd.append({ "jwt-auth-token": this.$cookies.get("token") });
+      // fd.append({ "jwt-auth-token": this.$cookies.get("token") });
       console.log(fd);
+      // JSON.stringify(fd);
       axios
-        .post(`${BACK_URL}/api/mypage/image/${this.userData.nickname}`, fd)
+        .post(
+          `${BACK_URL}/api/mypage/image`,
+          { file: this.selectedFile },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           console.log(response);
         });

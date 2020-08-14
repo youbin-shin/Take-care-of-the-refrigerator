@@ -70,7 +70,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-btn @click="goDetail(backData.boardId)" text color="deep-purple accent-4">자세히</v-btn>
-                <span @click="heartRecipe">
+                <span @click="heartRecipe(backData.boardId)">
                   <span v-if="backData.favorite">
                     <v-bottom-navigation
                       class="elevation-0"
@@ -161,8 +161,29 @@ export default {
     Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
   },
   methods: {
-    heartRecipe() {
+    heartRecipe(boardId) {
+      console.log(boardId);
       // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
+      axios
+        .post(
+          `${BACK_URL}/boards/favorite`,
+          {
+            boardId: boardId,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            alert("관심레시피에 등록되었습니다.");
+            // this.$router.go();
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     kakaoShare(title, boardId, imgUrl, nickName) {
       Kakao.Link.sendDefault({

@@ -12,6 +12,8 @@ import CreatePost from "../page/post/CreatePost.vue";
 import DetailPost from "../page/post/DetailPost.vue";
 import SearchPost from "../page/post/SearchPost.vue";
 import NoticePost from "../page/post/NoticePost.vue";
+// 포스트 아이템
+import SearchHomePost from "../page/postItem/SearchHomePost.vue";
 
 Vue.use(Router);
 
@@ -52,6 +54,12 @@ export default new Router({
       path: "/notice",
       name: constants.URL_TYPE.POST.NOTICEPOST,
       component: NoticePost,
+    },
+    // 포스트 아이템
+    {
+      path: "/",
+      name: "SearchHomePost",
+      component: SearchHomePost,
     },
   ],
 });

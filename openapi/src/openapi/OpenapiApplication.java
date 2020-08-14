@@ -3,19 +3,25 @@ package openapi;
 import java.io.BufferedInputStream;
 import java.net.URL;
 
+import model.dto.FoodSafeManualDto;
+import model.dto.FoodSafeRecipeDto;
+import model.service.FoodSafeService;
+import model.service.FoodSafeServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class OpenapiApplication {
-	
+
 	private static final String BASE_URL = "http://openapi.foodsafetykorea.go.kr/api/";
 	private static final String BASE_KEY = "87bbd3eb96fa4636a4fb";
 	static int START_INDEX = 1;
-	static int END_INDEX = 5; // 1000;
-	
+	static int END_INDEX = 1000;
+
+	private FoodSafeService foodSafeService;
 	
 	public OpenapiApplication() throws Exception {
+		foodSafeService = new FoodSafeServiceImpl();
 		JSONParser jsonparser = new JSONParser();
 	    JSONObject jsonobject = (JSONObject)jsonparser.parse(readUrl());
 	    JSONObject json =  (JSONObject) jsonobject.get("COOKRCP01");
@@ -26,31 +32,33 @@ public class OpenapiApplication {
 	    String manual = "MANUAL";
 	    String manualImg = "MANUAL_IMG";
 
+		FoodSafeRecipeDto foodSafeRecipeDto = null;
+		FoodSafeManualDto foodSafeManualDto = null;
+
 		// successFlag 값을 기준으로 실행해야함...
 	    JSONArray array = (JSONArray)json.get("row");
 		for(int i = 0 ; i < array.size(); i++){
 
 			JSONObject entity = (JSONObject)array.get(i);
-			String recipeName = (String) entity.get("RCP_NM");
-			System.out.println(recipeName);
+			// 확인 출력
+			foodSafeRecipeDto = new FoodSafeRecipeDto(entity);
+			foodSafeService.insertRecipe(foodSafeRecipeDto);
 
-			// MANUAL01 ~ MANUAL99 까지 있는거 확인해야하는데...
 			int j = 1;
-
 			for(; j < 20; j++) {
 				String manualText = (String) entity.get(manual + String.format("%02d",j));
 				String manualImagePath = (String) entity.get(manualImg + String.format("%02d",j));
 				if(manualText.isEmpty()) {
 					break;
 				}
-
-				System.out.println(manualText);				// 확인 출력
+				foodSafeManualDto = new FoodSafeManualDto(j, foodSafeRecipeDto.getRcpSeq()); // j: manualId, i: recipeSeq
+				foodSafeManualDto.setManualText(manualText);
 				if(!manualImagePath.isEmpty()) {
-					System.out.println(manualImagePath);	// 확인 출력
+					foodSafeManualDto.setManualImg(manualImagePath);
 				}
+				foodSafeService.insertManual(foodSafeManualDto);
 			}
 	    }
-		System.out.println();
 	}
 	
 	
@@ -80,8 +88,6 @@ public class OpenapiApplication {
         }
     }
 	
-	
-
 	public static void main(String[] args) {
 		try {
 			new OpenapiApplication();

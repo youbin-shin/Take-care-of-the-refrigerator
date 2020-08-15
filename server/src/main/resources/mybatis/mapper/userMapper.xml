@@ -31,6 +31,7 @@
     	select nickname,
                introduce,
                box,
+               image,
                count(case when followee=#{userId} then #{userId} end) as following_count,
 	           count(case when follower=#{userId} then #{userId} end) as follower_count
         from users, follow

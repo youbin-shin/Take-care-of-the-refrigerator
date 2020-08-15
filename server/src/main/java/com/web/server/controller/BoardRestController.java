@@ -5,6 +5,7 @@ import com.web.server.dto.Board;
 import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
+import com.web.server.dto.FoodSafeRecipeDto;
 import com.web.server.service.BoardService;
 import com.web.server.service.JwtService;
 import io.swagger.annotations.ApiOperation;
@@ -284,5 +285,58 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 레시피 전체 조회
+     * 
+     * @return
+     */
+    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 전체 조회")
+    @GetMapping("/boards/foodsafe/recipes")
+    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes() {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<FoodSafeRecipeDto> recipes = null;
+    		recipes = boardService.searchAllFoodSafeRecipes();
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", recipes);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+		}
+    	
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 레시피 데이터 레시피 번호로 조회
+     * 
+     * @return
+     */
+    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 번호로 조회")
+    @GetMapping("/boards/foodsafe/recipes/{rcpSeq}")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeSeq(@PathVariable("rcpSeq") int rcpSeq) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<FoodSafeRecipeDto> recipes = null;
+    		recipes = boardService.searchFoodSafeRecipesByRecipeSeq(rcpSeq);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", recipes);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
 
+    
+    
 }

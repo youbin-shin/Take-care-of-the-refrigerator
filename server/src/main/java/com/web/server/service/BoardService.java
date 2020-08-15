@@ -4,6 +4,7 @@ import com.web.server.dto.Board;
 import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
+import com.web.server.dto.FoodSafeRecipeDto;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,4 +29,8 @@ public interface BoardService {
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
     public void updateViewCnt(Integer boardId) throws SQLException;
+    
+    public List<FoodSafeRecipeDto> searchAllFoodSafeRecipes() throws SQLException;
+    
+    public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
 }

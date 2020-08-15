@@ -99,13 +99,25 @@
                         ></v-overflow-btn>
                       </v-col>
                       <v-col>
+                        <!-- color="rgba(191, 32, 59, 1.0)" -->
+                        <v-chip
+                          class="mr-2 mb-2"
+                          v-for="hash in tag.hashtag"
+                          :key="hash"
+                          close
+                          @click:close="closeHashtag(tag.hashtag, hash)"
+                        >#{{ hash }}</v-chip>
+
                         <div class="input-tag">
-                          <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
+                          <v-text-field
+                            v-model="tempHashtag"
+                            v-on:keyup.enter="plusTag(tag.hashtag)"
+                            placeholder="해시태그 입력"
+                          ></v-text-field>
                         </div>
                       </v-col>
                       <v-col>
                         <div class="d-flex flex-column">
-                          {{ tag.description }}
                           <i aria-hidden="true"></i>
                           <div class>
                             <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
@@ -183,6 +195,7 @@
             id="imageFileOpenInput"
             accept="image/*"
             style="float:left"
+            @change="onFileSelected($event)"
           />
           <br />
         </v-card>
@@ -196,6 +209,7 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "CreatePost",
@@ -204,6 +218,10 @@ export default {
   },
   data() {
     return {
+      tempHashtag: "",
+      chips: [],
+      items: [],
+
       typeList: [
         // 요리 과정 단계에서 타입을 선택할 리스트
         {
@@ -243,6 +261,24 @@ export default {
     };
   },
   methods: {
+    onFileSelected(event) {
+      // console.log(event);
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+      axios
+        .post(
+          `${BACK_URL}/file/`,
+          {
+            file: this.selectedFile,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
       const idx = this.postData.content.steps.findIndex(function (item) {
@@ -251,6 +287,7 @@ export default {
       this.postData.content.steps.splice(idx, 1);
       this.se.splice(idx, 1);
     },
+
     plusFood() {
       // 재료 단계에서 재료를 추가할 때 필요한 메서드
       // 빈값일 경우 추가 안되도록 한다.
@@ -268,12 +305,29 @@ export default {
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
     },
+    plusTag(tagHashtag) {
+      if (this.tempHashtag === "") {
+        return;
+      }
+      // 중복되는 데이터일 경우 추가 안되도록 한다.
+      for (var i = 0; i < tagHashtag.length; i++) {
+        if (this.tempHashtag === tagHashtag[i]) {
+          this.tempHashtag = "";
+          return;
+        }
+      }
+      tagHashtag.push(this.tempHashtag);
+      this.tempHashtag = "";
+    },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
       this.postData.content.ingredients.splice(
         this.postData.content.ingredients.indexOf(tag),
         1
       );
+    },
+    closeHashtag(tagHashtag, hashtag) {
+      tagHashtag.splice(tagHashtag.indexOf(hashtag), 1);
     },
     plusStep() {
       // 요리 과정 단계에서 과정을 추가할 때 작동하는 메서드
@@ -284,7 +338,7 @@ export default {
         description: this.postData.content.process,
         image: "no image",
         type: "",
-        hashtag: "",
+        hashtag: ["dk", "an", "rj"],
       });
       this.postData.content.process = "";
     },
@@ -353,15 +407,6 @@ export default {
 </script>
 
 <style>
-@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
-
-@font-face {
-  font-family: naBrush;
-  src: url("NanumBarunpenB.ttf");
-}
-* {
-  font-family: "NanumSquare", sans-serif;
-}
 .titles {
   float: left;
 }

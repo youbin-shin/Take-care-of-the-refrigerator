@@ -28,8 +28,8 @@ public class BoardServiceImpl implements BoardService {
     OpenApiDao openapiDao;
 
     @Override
-    public List<BoardSimpleDto> searchAll() throws SQLException {
-        return boardDao.searchAll();
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException {
+        return boardDao.searchAll(email);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updateViewCnt(Integer BoardId) throws  SQLException{
+    public void updateViewCnt(Integer BoardId) throws SQLException {
         boardDao.updateViewCnt(BoardId);
     }
 
@@ -147,4 +147,29 @@ public class BoardServiceImpl implements BoardService {
 		recipes = openapiDao.selectByRecipeSeq(rcpSeq);
 		return recipes;
 	}
+	
+    @Override
+    public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException{
+        int cnt = boardDao.isExistFavorite(email, boardId);
+        System.out.println("cnt : " + cnt);
+        int result = 0;
+        if (cnt == 1) {
+             result = boardDao.deleteFavorite(email, boardId);
+             if(result==1){
+                 result = -1;
+             }
+        } else {
+             result = boardDao.insertFavorite(email, boardId);
+             if(result==1){
+                 result = 1;
+             }
+        }
+        return result;
+    }
+
+    @Override
+    public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
+
+        return boardDao.searchByKeyword(email,searchByKeywordDto);
+    }
 }

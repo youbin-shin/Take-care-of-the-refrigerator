@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BoardDao {
     // 게시글 전체 조회
-    public List<BoardSimpleDto> searchAll() throws SQLException;
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException;
 
     // 게시글 번호로 조회
     public Board searchByBoardId(int boardId) throws SQLException;
@@ -41,6 +41,14 @@ public interface BoardDao {
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
     // 조회수 갱신
-    void updateViewCnt(Integer boardId) throws  SQLException;
+    void updateViewCnt(Integer boardId) throws SQLException;
+
+    int isExistFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
+
+    int deleteFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
+
+    int insertFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
+
+    List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
 }
 

@@ -14,6 +14,7 @@ public class UserProfileDto {
     private String nickname;
     private String introduce;
     private String box;
+    private String image;
     // follow table
     private String followingCount; // 내가 follow
     private String followerCount;  // 남이 나를 follow

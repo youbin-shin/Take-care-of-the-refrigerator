@@ -3,6 +3,7 @@ package com.web.server.service;
 import com.web.server.dto.*;
 import com.web.server.repo.BoardDao;
 import com.web.server.repo.CommentDao;
+import com.web.server.repo.OpenApiDao;
 import com.web.server.repo.UserinfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     CommentDao commentDao;
+    
+    @Autowired
+    OpenApiDao openapiDao;
 
     @Override
     public List<BoardSimpleDto> searchAll(String email) throws SQLException {
@@ -130,6 +134,20 @@ public class BoardServiceImpl implements BoardService {
         boardDao.updateViewCnt(BoardId);
     }
 
+	@Override
+	public List<FoodSafeRecipeDto> searchAllFoodSafeRecipes() throws SQLException {
+		List<FoodSafeRecipeDto> recipes = null;
+		recipes = openapiDao.selectAll();
+		return recipes;
+	}
+
+	@Override
+	public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException {
+		List<FoodSafeRecipeDto> recipes = null;
+		recipes = openapiDao.selectByRecipeSeq(rcpSeq);
+		return recipes;
+	}
+	
     @Override
     public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException{
         int cnt = boardDao.isExistFavorite(email, boardId);

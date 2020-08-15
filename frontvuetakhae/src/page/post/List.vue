@@ -182,7 +182,88 @@
           </v-hover>
         </ul>
       </div>
+      <!-- {{apiDatas}} -->
+      <div class="row row-cols-3">
+        <ul v-for="apiData in apiDatas" :key="apiData.rcpSeq">
+          <v-hover v-slot:default="{ hover }" open-delay="200">
+            <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
+              <v-list-item>
+                <v-list-item-avatar color="grey"></v-list-item-avatar>
+                <v-list-item-content class="row">
+                  <v-list-item-title
+                    class="headline text-left col-9"
+                    @click="goDetail(apiData.boardId)"
+                  >{{ apiData.title }}</v-list-item-title>
+                  <div class="col-3" @click="heartRecipe(apiData.boardId)">
+                    <span v-if="apiData.favorite">
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="apiData.favorite"
+                        style="width: 60px"
+                        color="deep-purple"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                    <span v-else>
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="apiData.favorite"
+                        style="width: 60px"
+                        color="secondary lighten-2"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                  </div>
+                </v-list-item-content>
+              </v-list-item>
 
+              <v-img :src="apiData.thumbnailImage" height="194" @click="goDetail(apiData.boardId)"></v-img>
+
+              <v-card-text @click="goDetail(apiData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(apiData.nickname)">
+                  작성자 : {{ apiData.nickname }}
+                  <small style="float:right">
+                    {{
+                    apiData.createAt
+                    }}
+                  </small>
+                </v-list-item-subtitle>
+
+                <p class="m-0">소요시간 {{ apiData.cookingTime }}시간</p>난이도
+                <v-rating
+                  class="d-inline-flex pa-2"
+                  small
+                  v-model="apiData.grade"
+                  background-color="orange lighten-3"
+                  color="orange"
+                ></v-rating>
+                <v-btn icon style="float:right">
+                  <img
+                    @click="
+                      kakaoShare(
+                        apiData.title,
+                        apiData.boardId,
+                        apiData.thumbnailImage,
+                        apiData.nickname
+                      )
+                    "
+                    src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"
+                    width="40"
+                  />
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </ul>
+      </div>
       <!-- <div class="tag-list-wrap">
         <h4>인기태그</h4>
         <ul class="tag-list">
@@ -211,6 +292,7 @@ export default {
     return {
       limit: 0,
       backDatas: [],
+      apiDatas: [],
       userData: {
         nickname: "",
       },
@@ -230,6 +312,10 @@ export default {
         this.backDatas = response.data.boards;
       });
     Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
+    axios.get(`${BACK_URL}/boards/foodsafe/recipes/`).then((response) => {
+      console.log(response);
+      this.apiDatas = response.data.recipes;
+    });
   },
   methods: {
     searchInput(input, typeNum) {

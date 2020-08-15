@@ -3,10 +3,7 @@
     <h1>{{ mypage.nickname }}님의 마이페이지</h1>
     <div class="header">
       <div class="box" style="background: #bdbdbd;">
-        <img
-          class="profile"
-          src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
-        />
+        <img class="profile" :src="mypage.image" />
       </div>
       <div class="introduce">
         <h3 class="mb-5" style="text-align: left;">
@@ -110,6 +107,7 @@ export default {
         followerCount: "",
         myBoards: [],
         interestBoards: [],
+        image: "",
       },
       nicknameCheck: false,
     };
@@ -129,6 +127,7 @@ export default {
         this.mypage.followerCount = response.data.mypage.followerCount;
         this.mypage.myBoards = response.data.mypage.myBoards;
         this.mypage.interestBoards = response.data.mypage.interestBoards;
+        this.mypage.image = response.data.mypage.image;
       });
     axios
       .get(`${BACK_URL}/users/follow/other/${nicknameurl}`, {

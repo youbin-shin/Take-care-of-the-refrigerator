@@ -15,6 +15,6 @@ public interface FoodSafeDao {
 
     public boolean checkRecipe(Connection con, int rcpSeq) throws SQLException;
 
-    public boolean checkManual(Connection con, int manualId) throws SQLException;
+    public boolean checkManual(Connection con, int manualId, int rcpSeq) throws SQLException;
 
 }

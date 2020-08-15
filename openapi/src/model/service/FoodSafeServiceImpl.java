@@ -31,6 +31,8 @@ public class FoodSafeServiceImpl implements FoodSafeService{
             result = foodSafeDao.insertFoodSafeRecipe(con, recipeDto);
             con.commit();
         } catch (SQLException e) {
+        	e.printStackTrace();
+        	System.out.println("insertRecipe() ERROR : " + recipeDto.toString());
             DBUtil.rollback(con);
         } finally {
             DBUtil.close(con);
@@ -44,7 +46,7 @@ public class FoodSafeServiceImpl implements FoodSafeService{
         int result = -1;
         try {
             con = DBUtil.getConnection();
-            if(foodSafeDao.checkManual(con, manualDto.getManualId())) return result;
+            if(foodSafeDao.checkManual(con, manualDto.getManualId(), manualDto.getRcpSeq())) return result;
             con.setAutoCommit(false);
             result = foodSafeDao.insertFoodSafeManual(con, manualDto);
             con.commit();

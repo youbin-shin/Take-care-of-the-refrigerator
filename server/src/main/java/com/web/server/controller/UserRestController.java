@@ -404,7 +404,7 @@ public class UserRestController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
         try {
-            if(columnName.equals("introduce") || columnName.equals("box")) {
+            if(columnName.equals("introduce") || columnName.equals("box") || columnName.contentEquals("image")) {
                 user.setEmail(jwtService.getEamil(req.getHeader("jwt-auth-token")));
                 userService.modify(user);
                 status = HttpStatus.ACCEPTED; // status code : 202

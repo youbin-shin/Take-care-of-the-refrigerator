@@ -53,8 +53,6 @@ public class FoodSafeDaoImpl implements FoodSafeDao {
         }
 
         try {
-            System.out.println(sb.toString());
-            System.out.println(manualDto.toString());
             pstmt = con.prepareStatement(sb.toString());
             pstmt.setInt(1, manualDto.getManualId());
             pstmt.setInt(2, manualDto.getRcpSeq());
@@ -112,15 +110,16 @@ public class FoodSafeDaoImpl implements FoodSafeDao {
      * @throws SQLException
      */
     @Override
-    public boolean checkManual(Connection con, int manualId) throws SQLException {
+    public boolean checkManual(Connection con, int manualId, int rcpSeq) throws SQLException {
         PreparedStatement pstmt = null;
         ResultSet rset = null;
         int result = 0;
-        String sql = "select count(*) as count from manuals where manual_id = ?";
+        String sql = "select count(*) as count from manuals where manual_id = ? and rcp_seq = ?";
 
         try {
             pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, manualId);
+            pstmt.setInt(2, rcpSeq);
 
             rset = pstmt.executeQuery();
             rset.next();

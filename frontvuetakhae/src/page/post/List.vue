@@ -370,7 +370,7 @@ export default {
 }
 .search-input {
   width: 600px;
-  height: 50px;
+  height: 70px;
   border: 1px solid black;
   border-radius: 100px;
   background-color: white;
@@ -378,7 +378,7 @@ export default {
 .search-input-text {
   width: 300px;
   size: 30px;
-  font-size: 20px;
+  font-size: 30px;
   border: none;
   margin-right: 100px;
   letter-spacing: 2px;

@@ -19,11 +19,11 @@
           v-on:keyup.enter="searchInput()"
         />
       </v-col>
-      <v-col>
-        <div class="search-img" @click="searchInput">
+      <v-col cols="4">
+        <div class="search-img mt-2" @click="searchInput">
           <svg
-            width="1em"
-            height="1em"
+            width="1.5em"
+            height="1.5em"
             viewBox="0 0 16 16"
             class="bi bi-search"
             fill="currentColor"

@@ -4,10 +4,7 @@
     <v-row no-gutters>
       <v-col cols="5" md="3">
         <v-card>
-          <img
-            class="profile"
-            src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
-          />
+          <img class="profile" :src="userData.image" />
           <div>
             <input type="file" @change="previewImage" accept="image/*" />
           </div>
@@ -202,6 +199,7 @@ export default {
         followerCount: "",
         myBoards: [],
         interestBoards: [],
+        image: "",
       },
       userupdateData: {
         // 개인정보 수정할 때 필요한 정보
@@ -225,6 +223,7 @@ export default {
         this.userData.followerCount = response.data.mypage.followerCount;
         this.userData.myBoards = response.data.mypage.myBoards;
         this.userData.interestBoards = response.data.mypage.interestBoards;
+        this.userData.image = response.data.mypage.image;
         this.chips = this.userData.box.split(",");
       });
   },
@@ -260,8 +259,8 @@ export default {
     submitFile() {
       axios
         .put(
-          `${BACK_URL}/users/mypage/image`,
-          { file: this.picture },
+          `${BACK_URL}/api/users/mypage/image`,
+          { image: this.picture },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }

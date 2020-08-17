@@ -331,11 +331,11 @@
                   </small>
                 </v-list-item-subtitle>
 
-                <p class="m-0">소요시간 {{ apiData.cookingTime }}시간</p>난이도
+                <p class="m-0">소요시간 1.5시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
-                  v-model="apiData.grade"
+                  v-model="numList[1]"
                   background-color="orange lighten-3"
                   color="orange"
                 ></v-rating>
@@ -358,14 +358,7 @@
           </v-hover>
         </ul>
       </div>
-      <!-- <div class="tag-list-wrap">
-        <h4>인기태그</h4>
-        <ul class="tag-list">
-          <li>#태그1 (8)</li>
-          <li>#태그2 (5)</li>
-          <li>#태그3 (2)</li>
-        </ul>
-      </div>-->
+
       <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
         <div
           slot="no-more"
@@ -392,6 +385,8 @@ export default {
   data: () => {
     return {
       limit: 0,
+      numList: [1, 2, 3, 4, 5],
+      timeList: [1.5, 1, 0.5, 2],
       backDatas: [],
       limit: 1, // 무한스크롤 되면서 갱신될 페이지 또는 글 번호를 저장하는 변수
       apiDatas: [],

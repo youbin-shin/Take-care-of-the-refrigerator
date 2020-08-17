@@ -215,6 +215,16 @@ export default {
   components: {
     draggable,
   },
+  created() {
+    axios
+      .get(`${BACK_URL}/users/mypage/box`, {
+        headers: { "jwt-auth-token": this.$cookies.get("token") },
+      })
+      .then((response) => {
+        console.log(response.data);
+        this.list = response.data.box;
+      });
+  },
   data() {
     return {
       tempHashtag: "",

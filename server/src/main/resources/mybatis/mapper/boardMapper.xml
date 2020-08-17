@@ -52,13 +52,13 @@
         thumbnail_image,
         cooking_time,
         grade,
-        ,(select count(*) from interest_boards where board_id=boards.board_id) as favorite
+        (select count(*) from interest_boards where board_id=boards.board_id) as favorite
         from boards join users on boards.user_id = users.user_id
         where
         <foreach collection="foodList" item="food" open="(" close=")" separator="and">
             ingredient LIKE CONCAT('%', #{food}, '%')
         </foreach>
-        temporary = 0
+        and temporary = 0
     </select>
 
     <!--  게시글 번호로 조회  -->

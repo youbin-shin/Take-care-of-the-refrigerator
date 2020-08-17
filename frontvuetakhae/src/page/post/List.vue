@@ -272,6 +272,12 @@
           <li>#태그3 (2)</li>
         </ul>
       </div>-->
+      <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+        <div
+          slot="no-more"
+          style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+        >목록의 끝입니다 :)</div>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -280,6 +286,7 @@
   src="https://developers.kakao.com/sdk/js/kakao.min.js"
 ></script>
 <script>
+import InfiniteLoading from "vue-infinite-loading";
 import axios from "axios";
 import SearchHomePost from "@/page/postItem/SearchHomePost.vue";
 
@@ -292,6 +299,7 @@ export default {
     return {
       limit: 0,
       backDatas: [],
+      limit: 1, // 무한스크롤 되면서 갱신될 페이지 또는 글 번호를 저장하는 변수
       apiDatas: [],
       userData: {
         nickname: "",
@@ -301,6 +309,7 @@ export default {
   },
   components: {
     SearchHomePost,
+    InfiniteLoading,
   },
   created() {
     axios
@@ -312,12 +321,40 @@ export default {
         this.backDatas = response.data.boards;
       });
     Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
-    axios.get(`${BACK_URL}/boards/foodsafe/recipes/`).then((response) => {
-      console.log(response);
-      this.apiDatas = response.data.recipes;
-    });
+    axios
+      .get(`${BACK_URL}/boards/foodsafe/recipes/pages/0`)
+      .then((response) => {
+        console.log(response);
+        this.apiDatas = response.data.recipes;
+      });
   },
   methods: {
+    infiniteHandler($state) {
+      axios
+        .get(`${BACK_URL}/boards/foodsafe/recipes/pages/` + this.limit)
+        .then((response) => {
+          console.log(response.data.recipes);
+          setTimeout(() => {
+            if (response.data.recipes.length) {
+              this.apiDatas = this.apiDatas.concat(response.data.recipes);
+              $state.loaded();
+              this.limit += 1;
+              console.log("after", this.apiDatas.length, this.limit);
+              // const EACH_LEN = 12;
+              // 끝 지정(No more data) - 데이터가 EACH_LEN개 미만이면
+              //   if (resp.length / EACH_LEN < 1) {
+              //     $state.complete();
+              //   }
+              // } else {
+              //   // 끝 지정(No more data)
+              //   $state.complete();
+            }
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
     searchInput(input, typeNum) {
       console.log(input, typeNum);
       axios

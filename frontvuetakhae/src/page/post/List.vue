@@ -91,6 +91,96 @@
             </v-card>
           </v-hover>
         </ul>
+        <ul v-for="searchApiData in searchApiDatas" :key="searchApiData.title">
+          <v-hover v-slot:default="{ hover }" open-delay="200">
+            <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
+              <v-list-item>
+                <v-list-item-avatar color="grey"></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title
+                    class="headline"
+                    @click="goApiDetail(searchApiData.boardId)"
+                  >{{ searchApiData.title }}</v-list-item-title>
+                  <v-list-item-subtitle
+                    style="text-align: right;"
+                    @click="goOtherpage(searchApiData.nickname)"
+                  >작성자 : {{ searchApiData.nickname }}</v-list-item-subtitle>
+                  <small style="text-align: right;">{{ searchApiData.createAt }}</small>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-img
+                :src="searchApiData.thumbnailImage"
+                height="194"
+                @click="goApiDetail(searchApiData.boardId)"
+              ></v-img>
+
+              <v-card-text @click="goApiDetail(searchApiData.boardId)" style="text-align: left;">
+                <p class="m-0">소요시간 {{ searchApiData.cookingTime }}시간</p>난이도
+                <v-rating
+                  class="d-inline-flex pa-2"
+                  small
+                  v-model="searchApiData.grade"
+                  background-color="orange lighten-3"
+                  color="orange"
+                ></v-rating>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="goApiDetail(searchApiData.boardId)"
+                  text
+                  color="deep-purple accent-4"
+                >자세히</v-btn>
+                <span @click="heartRecipe(searchApiData.boardId)">
+                  <span v-if="searchApiData.favorite">
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="searchApiData.favorite"
+                      style="width: 60px"
+                      color="deep-purple"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                  <span v-else>
+                    <v-bottom-navigation
+                      class="elevation-0"
+                      :value="searchApiData.favorite"
+                      style="width: 60px"
+                      color="secondary lighten-2"
+                    >
+                      <v-btn>
+                        <span>즐겨찾기</span>
+                        <v-icon>mdi-heart</v-icon>
+                      </v-btn>
+                    </v-bottom-navigation>
+                  </span>
+                </span>
+                <v-spacer></v-spacer>
+
+                <v-btn icon>
+                  <img
+                    @click="
+                      kakaoShare(
+                        searchApiData.title,
+                        searchApiData.boardId,
+                        searchApiData.thumbnailImage,
+                        searchApiData.nickname
+                      )
+                    "
+                    src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"
+                    width="40"
+                  />
+
+                  <!-- <v-icon>mdi-share-variant</v-icon> -->
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-hover>
+        </ul>
       </div>
     </div>
 
@@ -192,7 +282,7 @@
                 <v-list-item-content class="row">
                   <v-list-item-title
                     class="headline text-left col-9"
-                    @click="goDetail(apiData.boardId)"
+                    @click="goApiDetail(apiData.boardId)"
                   >{{ apiData.title }}</v-list-item-title>
                   <div class="col-3" @click="heartRecipe(apiData.boardId)">
                     <span v-if="apiData.favorite">
@@ -225,9 +315,13 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img :src="apiData.thumbnailImage" height="194" @click="goDetail(apiData.boardId)"></v-img>
+              <v-img
+                :src="apiData.thumbnailImage"
+                height="194"
+                @click="goApiDetail(apiData.boardId)"
+              ></v-img>
 
-              <v-card-text @click="goDetail(apiData.boardId)" style="text-align: left;">
+              <v-card-text @click="goApiDetail(apiData.boardId)" style="text-align: left;">
                 <v-list-item-subtitle class="mb-2" @click="goOtherpage(apiData.nickname)">
                   작성자 : {{ apiData.nickname }}
                   <small style="float:right">
@@ -305,6 +399,7 @@ export default {
         nickname: "",
       },
       searchDatas: null,
+      searchApiDatas: null,
     };
   },
   components: {
@@ -340,14 +435,13 @@ export default {
               $state.loaded();
               this.limit += 1;
               console.log("after", this.apiDatas.length, this.limit);
-              // const EACH_LEN = 12;
-              // 끝 지정(No more data) - 데이터가 EACH_LEN개 미만이면
-              //   if (resp.length / EACH_LEN < 1) {
-              //     $state.complete();
-              //   }
-              // } else {
-              //   // 끝 지정(No more data)
-              //   $state.complete();
+              const EACH_LEN = 12;
+              if (resp.length / EACH_LEN < 1) {
+                $state.complete();
+              }
+            } else {
+              // 끝 지정(No more data)
+              $state.complete();
             }
           }, 1000);
         })
@@ -356,7 +450,19 @@ export default {
         });
     },
     searchInput(input, typeNum) {
-      console.log(input, typeNum);
+      axios
+        .get(`${BACK_URL}/boards/foodsafe/recipes/title/${input}`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            this.searchApiDatas = response.data.recipes;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
       axios
         .post(
           `${BACK_URL}/boards/search`,
@@ -432,6 +538,9 @@ export default {
     },
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
+    },
+    goApiDetail(boardId) {
+      this.$router.push("/foodsafe/detail/" + boardId);
     },
     goOtherpage(nickname) {
       axios

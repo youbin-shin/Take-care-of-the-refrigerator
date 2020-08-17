@@ -12,6 +12,7 @@ import CreatePost from "../page/post/CreatePost.vue";
 import DetailPost from "../page/post/DetailPost.vue";
 import SearchPost from "../page/post/SearchPost.vue";
 import NoticePost from "../page/post/NoticePost.vue";
+import ApiDetailPost from "../page/post/ApiDetailPost.vue";
 
 Vue.use(Router);
 
@@ -42,6 +43,11 @@ export default new Router({
       path: "/detail/:no",
       name: constants.URL_TYPE.POST.DETAILPOST,
       component: DetailPost,
+    },
+    {
+      path: "/foodsafe/detail/:no",
+      name: ApiDetailPost,
+      component: ApiDetailPost,
     },
     {
       path: "/search",

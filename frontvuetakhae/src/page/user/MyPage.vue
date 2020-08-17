@@ -105,8 +105,8 @@
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
       <li v-for="interest in userData.interestBoards" :key="interest">
-        {{ interest.boardId }} : {{ interest.title }}
-        {{ interest.createAt }}
+        {{ interest.title }}
+        <small>{{ interest.createAt }}</small>
       </li>
       <div v-if="!userData.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
@@ -114,8 +114,8 @@
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
       <li v-for="board in userData.myBoards" :key="board">
-        {{ board.boardId }} : {{ board.title }}
-        {{ board.createAt }}
+        {{ board.title }}
+        <small>{{ board.createAt }}</small>
       </li>
       <div v-if="!userData.myBoards.length">
         작성한 레시피가 없습니다.

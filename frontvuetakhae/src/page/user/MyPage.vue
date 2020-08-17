@@ -21,8 +21,8 @@
           <!-- <div v-if="imageData != null"> -->
           <img class="preview" :src="picture" />
           <br />
-          <button @click="onUpload">Upload |</button>
-          <button @click="submitFile()">Submit</button>
+          <!-- <button @click="onUpload">Upload |</button> -->
+          <button @click="submitFile">Submit</button>
           <!-- </div> -->
         </v-card>
       </v-col>
@@ -232,6 +232,7 @@ export default {
       this.uploadValue = 0;
       this.picture = null;
       this.imageData = event.target.files[0];
+      this.onUpload();
     },
     onUpload() {
       this.picture = null;
@@ -257,6 +258,7 @@ export default {
       );
     },
     submitFile() {
+      console.log(this.picture);
       axios
         .put(
           `${BACK_URL}/api/users/mypage/image`,

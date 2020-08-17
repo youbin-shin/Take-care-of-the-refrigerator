@@ -290,6 +290,15 @@ export default {
       // close 버튼 누를 경우 실행되는 메소드 (리스트에서 삭제)
       this.chips.splice(this.chips.indexOf(tag), 1);
       axios
+        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+          ingredient: this.chips,
+        })
+        .then((response) => {
+          console.log(response);
+          this.searchData.apiboards = response.data.recipes;
+          // console.log(this.searchData.boards);
+        });
+      axios
         .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
         .then((response) => {
           this.searchData.boards = response.data.boards;

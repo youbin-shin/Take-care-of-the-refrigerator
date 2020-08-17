@@ -1,11 +1,7 @@
 package com.web.server.service;
 
-import com.web.server.dto.Board;
-import com.web.server.dto.BoardSearchByFoodList;
-import com.web.server.dto.BoardSimpleDto;
-import com.web.server.dto.CommentDto;
-import com.web.server.dto.FoodSafeRecipeDto;
 import com.web.server.dto.*;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -34,8 +30,11 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
     
-    public List<FoodSafeRecipeDto> searchAllFoodSafeRecipes() throws SQLException;
+    public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException;
     
     public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
     
+    public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
+
+    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException;
 }

@@ -135,17 +135,29 @@ public class BoardServiceImpl implements BoardService {
     }
 
 	@Override
-	public List<FoodSafeRecipeDto> searchAllFoodSafeRecipes() throws SQLException {
-		List<FoodSafeRecipeDto> recipes = null;
-		recipes = openapiDao.selectAll();
-		return recipes;
+	public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
+		List<Board> boards = null;
+		boards = openapiDao.selectAllFormBoards(page);
+		return boards;
 	}
+
+    @Override
+    public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException {
+    	return openapiDao.selectByRecipeNameFormBoards(rcpNm);
+    }
 
 	@Override
 	public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException {
 		List<FoodSafeRecipeDto> recipes = null;
 		recipes = openapiDao.selectByRecipeSeq(rcpSeq);
 		return recipes;
+	}
+	
+	@Override
+	public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException {
+		List<Board> boards = null;
+		boards = openapiDao.selectByRecipePartsDtlsFormBoards(rcpPartsDtls);
+		return boards;
 	}
 	
     @Override
@@ -169,7 +181,6 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
-
         return boardDao.searchByKeyword(email,searchByKeywordDto);
     }
 }

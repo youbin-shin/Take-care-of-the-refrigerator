@@ -3,6 +3,8 @@
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
         <h2 class="m-3 0 4">나의 냉장고</h2>
+        <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+
         <div>
           <div class="left d-sm-inline-flex pa-2">
             <v-row class="m-2 inputBlank" variant="danger">
@@ -37,7 +39,73 @@
         </div>
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
-      <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+      <div class="row row-cols-3 searchPostContent">
+        <ul v-for="apiboard in searchData.apiboards" :key="apiboard.title">
+          <v-hover v-slot:default="{ hover }" open-delay="200">
+            <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
+              <v-list-item @click="goApiDetail(apiboard.boardId)">
+                <v-list-item-avatar color="grey"></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="headline">
+                    {{
+                    apiboard.title
+                    }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
+                  <small style="text-align:right;">
+                    {{
+                    apiboard.createAt
+                    }}
+                  </small>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-img
+                :src="apiboard.thumbnailImage"
+                height="194"
+                @click="goApiDetail(apiboard.boardId)"
+              ></v-img>
+
+              <v-card-text @click="goApiDetail(apiboard.boardId)">
+                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
+                <v-rating
+                  class="p-0"
+                  small
+                  v-model="apiboard.grade"
+                  background-color="orange lighten-3"
+                  color="orange"
+                ></v-rating>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="goApiDetail(apiboard.boardId)"
+                  text
+                  color="deep-purple accent-4"
+                >자세히 보기</v-btn>
+                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-heart</v-icon>
+                </v-btn>
+
+                <v-spacer></v-spacer>
+                <v-btn icon @click="changeEasy">
+                  <div v-if="easy">
+                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
+                    <p class="caption mb-0 mt-1">easy</p>
+                  </div>
+                  <div v-else>
+                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
+                    <p class="caption mb-0 mt-1">hard</p>
+                  </div>
+                </v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-share-variant</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-hover>
+        </ul>
+      </div>
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="board in searchData.boards" :key="board.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -198,6 +266,9 @@ export default {
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
+    goApiDetail(boardId) {
+      this.$router.push("/foodsafe/detail/" + boardId);
+    },
     plusFood() {
       // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
@@ -235,6 +306,15 @@ export default {
         .then((response) => {
           this.searchData.boards = response.data.boards;
           console.log(this.searchData.boards);
+        });
+      axios
+        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+          ingredient: this.chips,
+        })
+        .then((response) => {
+          console.log(response);
+          this.searchData.apiboards = response.data.recipes;
+          // console.log(this.searchData.boards);
         });
       if (this.chips.length === 0) {
         this.emptyChip = true;

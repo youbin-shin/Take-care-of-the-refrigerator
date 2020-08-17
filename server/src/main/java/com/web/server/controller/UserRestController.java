@@ -348,6 +348,41 @@ public class UserRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
     
+    
+    /**
+     * 회원 냉장고 식자재 목록 조회
+     * 
+     * @param req
+     * @return
+     */
+    @ApiOperation(value = "회원 냉장고 식자재 목록 조회")
+    @GetMapping("/users/mypage/box")
+    public ResponseEntity<Map<String, Object>> getUserProfileBox(final HttpServletRequest req) {
+    	Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        UserProfileDto userProfileDto = null;
+        String[] boxs = null;
+        try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            userProfileDto = userService.searchUserProfileByEmail(email);
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("success", true);
+            if(!userProfileDto.getBox().isEmpty()) {
+            	String boxStr = userProfileDto.getBox();
+            	boxs = boxStr.split(",");
+            	resultMap.put("box", boxs);
+            } else {
+            	resultMap.put("box", null);
+            }
+        } catch (RuntimeException | SQLException e) {
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("success", false);
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+    
+    
     /**
     * 다른 유저 마페이지 조회
     * 성공 : 200

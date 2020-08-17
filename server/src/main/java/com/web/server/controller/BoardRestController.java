@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -352,20 +353,20 @@ public class BoardRestController {
 
     
     /**
-     * 공공 API (조리식품의 레시피 DB) 레시피 전체 조회
+     * 공공 API (조리식품의 레시피 DB) 레시피 목록 조회
      * 
-     * @return
+     * @return List<Board>
      */
-    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 전체 조회")
-    @GetMapping("/boards/foodsafe/recipes")
-    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes() {
+    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 목록 조회")
+    @GetMapping("/boards/foodsafe/recipes/pages/{page}")
+    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes(@PathVariable("page") int page) {
     	Map<String, Object> resultMap = new HashMap<>();
     	HttpStatus status = null;
     	try {
-    		List<FoodSafeRecipeDto> recipes = null;
-    		recipes = boardService.searchAllFoodSafeRecipes();
+    		List<Board> boards = null;
+    		boards = boardService.searchAllFoodSafeRecipes(page * 12);
     		resultMap.put("success", true);
-    		resultMap.put("recipes", recipes);
+    		resultMap.put("recipes", boards);
     		status = HttpStatus.OK;
     	} catch (Exception e) {
     		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
@@ -399,6 +400,61 @@ public class BoardRestController {
     		status = HttpStatus.BAD_REQUEST;
     	}
     	
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 제목으로 레시피 조회
+     * 
+     * @param rcpNm
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 제목으로 레시피 조회")
+    @GetMapping("/boards/foodsafe/recipes/title/{rcpNm}")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeName(@PathVariable("rcpNm") String rcpNm) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<Board> boards = null;
+    		boards = boardService.searchFoodSafeRecipesByRecipeName(rcpNm);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", boards);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    	
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 재료로 레시피 조회
+     * 
+     * @param ingredient List<String> eg. ["스파게티", "바나나"]
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 재료로 레시피 조회")
+    @PostMapping("/boards/foodsafe/recipes/ingredient")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeParts(@RequestBody Map<String, Object> map) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<Board> boards = null;
+    		List<String> ingredients = null;
+    		ingredients = (List<String>) map.get("ingredient");
+    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredients);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", boards);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
     	return new ResponseEntity<Map<String,Object>> (resultMap, status);
     }
 

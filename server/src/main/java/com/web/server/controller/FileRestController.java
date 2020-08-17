@@ -87,7 +87,7 @@ public class FileRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
-    @PostMapping("/api/file")
+    @PostMapping("/file")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file) {
 

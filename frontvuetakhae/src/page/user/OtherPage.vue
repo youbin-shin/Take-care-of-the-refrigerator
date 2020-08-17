@@ -3,10 +3,7 @@
     <h1>{{ mypage.nickname }}님의 마이페이지</h1>
     <div class="header">
       <div class="box" style="background: #bdbdbd;">
-        <img
-          class="profile"
-          src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
-        />
+        <img class="profile" :src="mypage.image" />
       </div>
       <div class="introduce">
         <h3 class="mb-5" style="text-align: left;">
@@ -20,7 +17,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollowee"
-              >팔로잉 {{ mypage.followingCount }} 명</v-btn>
+              >팔로워 {{ mypage.followingCount }} 명</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="followee in followeelist" :key="followee.nickname">
@@ -38,7 +35,7 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="checkfollower"
-              >팔로우 {{ mypage.followerCount }} 명</v-btn>
+              >팔로잉 {{ mypage.followerCount }} 명</v-btn>
             </template>
             <v-list>
               <v-list-item v-for="follower in followerlist" :key="follower.nickname">
@@ -73,7 +70,7 @@
       <div>{{ mypage.box }}</div>
     </div>
     <div class="interest">
-      <h1>관심 레시피</h1>
+      <h1>즐겨찾기한 레시피</h1>
       <p>연어 킹의 연어 덮밥</p>
       <p>진주새럼의 진주비빔밥</p>
     </div>
@@ -110,6 +107,7 @@ export default {
         followerCount: "",
         myBoards: [],
         interestBoards: [],
+        image: "",
       },
       nicknameCheck: false,
     };
@@ -129,6 +127,7 @@ export default {
         this.mypage.followerCount = response.data.mypage.followerCount;
         this.mypage.myBoards = response.data.mypage.myBoards;
         this.mypage.interestBoards = response.data.mypage.interestBoards;
+        this.mypage.image = response.data.mypage.image;
       });
     axios
       .get(`${BACK_URL}/users/follow/other/${nicknameurl}`, {

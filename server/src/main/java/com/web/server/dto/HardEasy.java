@@ -11,10 +11,9 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HardEasy{
-    private int userId;             // 사용자 번호
+    private String email;             // 사용자 번호
     private int boardId;
-    private int boardLikeId;
-    private int hardEasy;
+    private int grade;
     private int boardHardCnt;
     private int boardEasyCnt;
 

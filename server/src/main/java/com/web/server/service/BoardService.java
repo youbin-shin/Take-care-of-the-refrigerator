@@ -1,15 +1,11 @@
 package com.web.server.service;
 
-<<<<<<< server/src/main/java/com/web/server/service/BoardService.java
 import com.web.server.dto.Board;
 import com.web.server.dto.BoardSearchByFoodList;
 import com.web.server.dto.BoardSimpleDto;
 import com.web.server.dto.CommentDto;
 import com.web.server.dto.FoodSafeRecipeDto;
-=======
 import com.web.server.dto.*;
->>>>>>> server/src/main/java/com/web/server/service/BoardService.java
-
 import java.sql.SQLException;
 import java.util.List;
 

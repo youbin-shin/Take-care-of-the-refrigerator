@@ -3,6 +3,8 @@
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
         <h2 class="m-3 0 4">나의 냉장고</h2>
+        <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+
         <div>
           <div class="left d-sm-inline-flex pa-2">
             <v-row class="m-2 inputBlank" variant="danger">
@@ -37,7 +39,8 @@
         </div>
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
-      <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+
+      {{searchData.apiboards}}
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="board in searchData.boards" :key="board.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -97,7 +100,6 @@
           </v-hover>
         </ul>
       </div>
-      {{searchData.apiboards}}
     </div>
   </div>
 </template>
@@ -168,6 +170,9 @@ export default {
     goDetail(boardId) {
       this.$router.push("/detail/" + boardId);
     },
+    goApiDetail(boardId) {
+      this.$router.push("/foodsafe/detail/" + boardId);
+    },
     plusFood() {
       // 빈값일 경우 추가 안되도록 한다.
       if (this.addText === "") {
@@ -205,6 +210,15 @@ export default {
         .then((response) => {
           this.searchData.boards = response.data.boards;
           console.log(this.searchData.boards);
+        });
+      axios
+        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+          ingredient: this.chips,
+        })
+        .then((response) => {
+          console.log(response);
+          this.searchData.apiboards = response.data.recipes;
+          // console.log(this.searchData.boards);
         });
       if (this.chips.length === 0) {
         this.emptyChip = true;

@@ -342,13 +342,31 @@ export default {
       this.postData.content.process = "";
     },
     createPost() {
+      console.log(this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
-        tags.push(this.postData.content.steps[i].hashtag);
+        let temptags = "";
+        for (
+          let j = 0;
+          j < this.postData.content.steps[i].hashtag.length;
+          j++
+        ) {
+          console.log(temptags);
+          if (j == this.postData.content.steps[i].hashtag.length - 1) {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j]
+            );
+          } else {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j],
+              ","
+            );
+          }
+        }
+        tags.push(temptags);
         delete this.postData.content.steps[i].hashtag;
       }
-      console.log(tags);
       console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {
@@ -357,7 +375,6 @@ export default {
       };
       let ingreString = this.postData.content.ingredients.join(" ");
       console.log(ingreString);
-
       axios
         .post(
           "http://i3a305.p.ssafy.io:8399/api/boards/",
@@ -369,7 +386,7 @@ export default {
             thumbnailImage: "no image",
             ingredient: ingreString,
             steps: this.postData.content.steps,
-            tags: tags[0],
+            tags: tags,
           },
           requestHeader
         )

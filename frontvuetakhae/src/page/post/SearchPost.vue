@@ -97,6 +97,7 @@
           </v-hover>
         </ul>
       </div>
+      {{searchData.apiboards}}
     </div>
   </div>
 </template>
@@ -111,6 +112,7 @@ export default {
     return {
       searchData: {
         boards: [],
+        apiboards: [],
       },
       easy: true,
       limit: 0,
@@ -120,22 +122,36 @@ export default {
       frag: 0,
       chips: [
         // 마이페이지에 입력한 나의 냉장고 데이터를 넣기
-        "김치",
       ],
     };
   },
 
   created() {
     axios
+      .get(`${BACK_URL}/users/mypage/box`, {
+        headers: { "jwt-auth-token": this.$cookies.get("token") },
+      })
+      .then((response) => {
+        console.log(response.data);
+        this.chips = response.data.box;
+        if (this.chips.length === 0) {
+          this.emptyChip = true;
+        }
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            ingredient: this.chips,
+          })
+          .then((response) => {
+            console.log(response);
+            this.searchData.apiboards = response.data.recipes;
+            // console.log(this.searchData.boards);
+          });
+      });
+    axios
       .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
       .then((response) => {
-        console.log(response);
         this.searchData.boards = response.data.boards;
-        // console.log(this.searchData.boards);
       });
-    if (this.chips.length === 0) {
-      this.emptyChip = true;
-    }
   },
   methods: {
     changeEasy() {

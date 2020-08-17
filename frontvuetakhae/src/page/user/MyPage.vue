@@ -4,10 +4,7 @@
     <v-row no-gutters>
       <v-col cols="5" md="3">
         <v-card>
-          <img
-            class="profile"
-            src="https://img1.daumcdn.net/thumb/R720x0/?fname=https://t1.daumcdn.net/news/201904/19/moneytoday/20190419141606693hahz.jpg"
-          />
+          <img class="profile" :src="userData.image" />
           <div>
             <input type="file" @change="previewImage" accept="image/*" />
           </div>
@@ -24,8 +21,8 @@
           <!-- <div v-if="imageData != null"> -->
           <img class="preview" :src="picture" />
           <br />
-          <button @click="onUpload">Upload |</button>
-          <button @click="submitFile()">Submit</button>
+          <!-- <button @click="onUpload">Upload |</button> -->
+          <button @click="submitFile">Submit</button>
           <!-- </div> -->
         </v-card>
       </v-col>
@@ -108,8 +105,8 @@
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
       <li v-for="interest in userData.interestBoards" :key="interest">
-        {{ interest.boardId }} : {{ interest.title }}
-        {{ interest.createAt }}
+        {{ interest.title }}
+        <small>{{ interest.createAt }}</small>
       </li>
       <div v-if="!userData.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
@@ -117,8 +114,8 @@
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
       <li v-for="board in userData.myBoards" :key="board">
-        {{ board.boardId }} : {{ board.title }}
-        {{ board.createAt }}
+        {{ board.title }}
+        <small>{{ board.createAt }}</small>
       </li>
       <div v-if="!userData.myBoards.length">
         작성한 레시피가 없습니다.
@@ -202,6 +199,7 @@ export default {
         followerCount: "",
         myBoards: [],
         interestBoards: [],
+        image: "",
       },
       userupdateData: {
         // 개인정보 수정할 때 필요한 정보
@@ -225,6 +223,7 @@ export default {
         this.userData.followerCount = response.data.mypage.followerCount;
         this.userData.myBoards = response.data.mypage.myBoards;
         this.userData.interestBoards = response.data.mypage.interestBoards;
+        this.userData.image = response.data.mypage.image;
         this.chips = this.userData.box.split(",");
       });
   },
@@ -233,6 +232,7 @@ export default {
       this.uploadValue = 0;
       this.picture = null;
       this.imageData = event.target.files[0];
+      this.onUpload();
     },
     onUpload() {
       this.picture = null;
@@ -258,10 +258,11 @@ export default {
       );
     },
     submitFile() {
+      console.log(this.picture);
       axios
         .put(
-          `${BACK_URL}/users/mypage/image`,
-          { file: this.picture },
+          `${BACK_URL}/api/users/mypage/image`,
+          { image: this.picture },
           {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }

@@ -3,14 +3,12 @@
     <h1 class="search-bar-title">{{ introduceTitle }}</h1>
     <v-row class="search-input m-auto">
       <v-col cols="4" sm="2" style="padding: 0px;">
-        <v-overflow-btn
-          :items="searchType"
-          label="제목"
-          v-model="searchSelectNum"
-          target="#dropdown-example"
-        ></v-overflow-btn>
+        <select v-model="searchSelectNum" class="form-control search-slt" label="제목">
+          <option selected value="1">제목</option>
+          <option value="2">작성자</option>
+        </select>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="6" class="p-2">
         <input
           class="search-input-text"
           type="text"
@@ -67,10 +65,6 @@ export default {
         "새로운 요리의 발견이 새로운 별의 발견보다 인간을 더욱 행복하게 만든다.",
       ],
       searchBar: "",
-      searchType: [
-        { text: "제목", value: 1 },
-        { text: "작성자", value: 2 },
-      ],
       searchSelectNum: 1,
     };
   },
@@ -88,5 +82,12 @@ export default {
 <style scoped>
 .search-bar-title {
   font-family: "MapoGoldenPier";
+}
+.search-slt {
+  background-color: rgb(0, 0, 0, 0);
+  border-color: rgb(0, 0, 0, 0);
+  height: 48px;
+  border-radius: 10px 0 0 10px;
+  border-inline-end-color: black;
 }
 </style>

@@ -112,6 +112,7 @@
         </b-modal>
       </div>
       <div class="right" v-if="this.$cookies.get('token') != null">
+        <!-- <small>{{}}님 환영합니다. </small> -->
         <a @click="logout" class="a_tag_modal">로그아웃</a>
         <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal">마이페이지</a>
       </div>

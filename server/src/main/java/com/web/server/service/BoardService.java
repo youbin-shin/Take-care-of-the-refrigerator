@@ -30,8 +30,11 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
     
-    public List<FoodSafeRecipeDto> searchAllFoodSafeRecipes() throws SQLException;
+    public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException;
     
     public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
     
+    public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
+
+    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException;
 }

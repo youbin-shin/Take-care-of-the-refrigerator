@@ -75,78 +75,77 @@
       <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
       <v-stepper-content step="2">
         <v-card class="mb-12">
-          <b-container class="bv-example-row">
-            <div class="bg-my-step">
-              <h5>과정 순서</h5>
-              <draggable
-                class="list-group"
-                tag="ul"
-                v-model="postData.content.steps"
-                v-bind="dragOptions"
-                @start="drag = true"
-                @end="drag = false"
-              >
-                <transition-group type="transition" :name="'flip-list'">
-                  <li v-for="tag in postData.content.steps" :key="tag.description">
-                    <v-row>
-                      <v-col>
-                        <v-overflow-btn
-                          class="type-button mt-0"
-                          :items="typeList"
-                          v-model="tag.type"
-                          label="타입 선택"
-                          segmented
-                        ></v-overflow-btn>
-                      </v-col>
-                      <v-col>
-                        <!-- color="rgba(191, 32, 59, 1.0)" -->
-                        <v-chip
-                          class="mr-2 mb-2"
-                          v-for="hash in tag.hashtag"
-                          :key="hash"
-                          close
-                          @click:close="closeHashtag(tag.hashtag, hash)"
-                        >#{{ hash }}</v-chip>
+          <div class="bg-my-step">
+            <h5>과정 순서</h5>
+            <draggable
+              class="list-group"
+              tag="ul"
+              v-model="postData.content.steps"
+              v-bind="dragOptions"
+              @start="drag = true"
+              @end="drag = false"
+            >
+              <transition-group type="transition" :name="'flip-list'">
+                <li v-for="tag in postData.content.steps" :key="tag.description">
+                  <v-row>
+                    <v-col cols="3">
+                      <v-overflow-btn
+                        class="type-button mt-0"
+                        :items="typeList"
+                        v-model="tag.type"
+                        label="타입 선택"
+                        segmented
+                      ></v-overflow-btn>
+                    </v-col>
+                    <v-col cols="6">
+                      <!-- color="rgba(191, 32, 59, 1.0)" -->
+                      <v-chip
+                        class="mr-2 mb-2"
+                        v-for="hash in tag.hashtag"
+                        :key="hash"
+                        close
+                        @click:close="closeHashtag(tag.hashtag, hash)"
+                      >#{{ hash }}</v-chip>
 
-                        <div class="input-tag">
-                          <v-text-field
-                            v-model="tempHashtag"
-                            v-on:keyup.enter="plusTag(tag.hashtag)"
-                            placeholder="해시태그 입력"
-                          ></v-text-field>
+                      <div class="input-tag">
+                        <v-text-field
+                          v-model="tempHashtag"
+                          v-on:keyup.enter="plusTag(tag.hashtag)"
+                          placeholder="해시태그 입력"
+                        ></v-text-field>
+                      </div>
+                    </v-col>
+                    <v-col cols="3">
+                      {{ tag.description }}
+                      <div class="d-flex flex-column">
+                        <i aria-hidden="true"></i>
+                        <div class>
+                          <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                          <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
-                      </v-col>
-                      <v-col>
-                        <div class="d-flex flex-column">
-                          <i aria-hidden="true"></i>
-                          <div class>
-                            <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
-                            <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
-                          </div>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </li>
-                </transition-group>
-              </draggable>
-            </div>
-            <div class="bg-plus-step">
-              <h5 class="mb-3">과정 입력</h5>
-              <v-row no-gutters justify="center">
-                <v-col md="5">
-                  <v-card>
-                    <b-form-input
-                      type="text"
-                      placeholder="요리 과정을 입력해주세요."
-                      v-model="postData.content.process"
-                      v-on:keyup.enter="plusStep"
-                    />
-                  </v-card>
-                </v-col>
-                <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
-              </v-row>
-            </div>
-          </b-container>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </li>
+              </transition-group>
+            </draggable>
+          </div>
+          <div class="bg-plus-step">
+            <h5 class="mb-3">과정 입력</h5>
+            <v-row no-gutters justify="center">
+              <v-col md="5">
+                <v-card>
+                  <b-form-input
+                    type="text"
+                    placeholder="요리 과정을 입력해주세요."
+                    v-model="postData.content.process"
+                    v-on:keyup.enter="plusStep"
+                  />
+                </v-card>
+              </v-col>
+              <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
+            </v-row>
+          </div>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 3">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
@@ -338,7 +337,7 @@ export default {
         description: this.postData.content.process,
         image: "no image",
         type: "",
-        hashtag: ["dk", "an", "rj"],
+        hashtag: [],
       });
       this.postData.content.process = "";
     },
@@ -370,7 +369,7 @@ export default {
             thumbnailImage: "no image",
             ingredient: ingreString,
             steps: this.postData.content.steps,
-            tags: tags,
+            tags: tags[0],
           },
           requestHeader
         )

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -438,12 +439,14 @@ public class BoardRestController {
      */
     @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 재료로 레시피 조회")
     @PostMapping("/boards/foodsafe/recipes/ingredient")
-    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeParts(@RequestBody List<String> ingredient) {
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeParts(@RequestBody Map<String, Object> map) {
     	Map<String, Object> resultMap = new HashMap<>();
     	HttpStatus status = null;
     	try {
     		List<Board> boards = null;
-    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredient);
+    		List<String> ingredients = null;
+    		ingredients = (List<String>) map.get("ingredient");
+    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredients);
     		resultMap.put("success", true);
     		resultMap.put("recipes", boards);
     		status = HttpStatus.OK;

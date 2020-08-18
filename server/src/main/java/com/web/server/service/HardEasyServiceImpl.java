@@ -15,10 +15,10 @@ public class HardEasyServiceImpl implements HardEasyService{
     @Autowired
     HardEasyDao hardEasyDao;
 
-//    @Override
-//    public HardEasy checkChoice(HardEasy hardEasy) throws SQLException {
-//        return hardEasyDao.checkChoice(hardEasy);
-//    }
+    @Override
+    public HardEasy checkChoice(HardEasy hardEasy) throws SQLException {
+        return hardEasyDao.checkChoice(hardEasy);
+    }
 
     @Override
     @Transactional
@@ -31,34 +31,4 @@ public class HardEasyServiceImpl implements HardEasyService{
         }
 
     }
-
-//    @Override
-//    public void createHardChoice(HardEasy hardEasy) throws SQLException {
-//        hardEasyDao.createHardChoice(hardEasy);;
-//    }
-//
-//    @Override
-//    public void deleteChoice(HardEasy hardEasy) throws SQLException {
-//        hardEasyDao.deleteChoice(hardEasy);
-//    }
-//
-//    @Override
-//    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
-//        hardEasyDao.hardToEasyChange(hardEasy);
-//    }
-//
-//    @Override
-//    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
-//        hardEasyDao.easyToHardChange(hardEasy);
-//    }
-//
-//    @Override
-//    public int updateHardChoice(int boardId) throws SQLException{
-//        return hardEasyDao.updateHardChoice(boardId);
-//    }
-//
-//    @Override
-//    public int updateEasyChoice(int boardId) throws SQLException{
-//        return hardEasyDao.updateEasyChoice(boardId);
-//    }
 }

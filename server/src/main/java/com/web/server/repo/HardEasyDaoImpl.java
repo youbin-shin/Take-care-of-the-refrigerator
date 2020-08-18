@@ -31,29 +31,4 @@ class HardEasyDaoImpl implements HardEasyDao{
     public void hardEasyChoice(HardEasy hardEasy) throws SQLException {
         template.selectOne(ns+"hardEasyChoice",hardEasy);
     }
-//
-//    @Override
-//    public void deleteChoice(HardEasy hardEasy) throws SQLException{
-//        template.delete(ns+"deleteChoice",hardEasy);
-//    }
-//
-//    @Override
-//    public int updateHardChoice(int boardId) throws SQLException{
-//        return template.selectOne(ns+"updateHardChoice",boardId);
-//    }
-//
-//    @Override
-//    public int updateEasyChoice(int boardId) throws SQLException{
-//        return template.selectOne(ns+"updateEasyChoice",boardId);
-//    }
-//
-//    @Override
-//    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
-//        template.update(ns+"hardToEasyChangeChoice",hardEasy);
-//    }
-//
-//    @Override
-//    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
-//        template.update(ns+"easyToHardChangeChoice",hardEasy);
-//    }
 }

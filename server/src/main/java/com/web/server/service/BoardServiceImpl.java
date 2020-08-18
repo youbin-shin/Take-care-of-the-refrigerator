@@ -135,9 +135,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
 	@Override
-	public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
-		List<Board> boards = null;
-		boards = openapiDao.selectAllFormBoards(page);
+	public List<BoardSimpleDto> searchAllFoodSafeRecipes(String email, int page) throws SQLException {
+		List<BoardSimpleDto> boards = null;
+		try {
+			boards = openapiDao.selectAllFormBoards(email, page);
+		} catch (SQLException e) {
+			throw new SQLException("ERROR BoardServiceImpl.searchAllFoodSafeRecipes !!!\n" + e.getMessage());
+		}
 		return boards;
 	}
 
@@ -154,9 +158,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
-	public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException {
+	public List<Board> searchFoodSafeRecipesByRcpPartsDtls(Map<String, Object> map) throws SQLException {
 		List<Board> boards = null;
-		boards = openapiDao.selectByRecipePartsDtlsFormBoards(rcpPartsDtls);
+		boards = openapiDao.selectByRecipePartsDtlsFormBoards(map);
 		return boards;
 	}
 	
@@ -183,4 +187,23 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
         return boardDao.searchByKeyword(email,searchByKeywordDto);
     }
+
+    // 관심 (공공데이터)레시피 관련 함수
+	@Override
+	public int insertInterestingRecipe(String email, int boardId) throws SQLException{
+		
+		return openapiDao.insertInterestingRecipe(email, boardId);
+	}
+
+	@Override
+	public int deleteInterestedRecipe(String email, int boardId) throws SQLException{
+
+		return openapiDao.deleteInterestedRecipe(email, boardId);
+	}
+
+	@Override
+	public boolean checkInterestingRecipe(String email, int boardId) throws SQLException{
+		
+		return openapiDao.checkInterestingRecipe(email, boardId);
+	}
 }

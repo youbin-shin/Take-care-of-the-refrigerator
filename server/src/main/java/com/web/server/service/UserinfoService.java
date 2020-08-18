@@ -1,5 +1,6 @@
 package com.web.server.service;
 
+import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
@@ -43,4 +44,6 @@ public interface UserinfoService {
     public int deleteUser(String email) throws SQLException;
 
     public int deleteFollow(String email, String nickname) throws SQLException;
+
+	public List<Board> searchAllInterestedFoodSafeRecipesFormBoard(String email) throws SQLException;
 }

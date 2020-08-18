@@ -29,17 +29,18 @@
         </if>
     </select>
 
-    <select id="isExistFavorite" resultType="int">
+	<!-- 관심 게시글 -->
+    <select id="isExistFavorite" parameterType="hashMap" resultType="int">
         select count(*) from interest_boards where user_id=(select user_id from users where email = #{email}) and
         board_id=#{boardId}
     </select>
 
-    <delete id="deleteFavorite">
+    <delete id="deleteFavorite" parameterType="hashMap">
         delete from interest_boards where user_id =(select user_id from users where email =#{email}) and board_id
         =#{boardId}
     </delete>
 
-    <insert id="insertFavorite">
+    <insert id="insertFavorite" parameterType="hashMap">
         insert into interest_boards(user_id,board_id) values ((select user_id from users where email =
         #{email}),#{boardId});
     </insert>
@@ -89,6 +90,7 @@
     <!--  관심 게시글들 유저 아이디로 조회  -->
     <select id="selectInterestBoardsByUserId" parameterType="int" resultType="board">
         select boards.user_id as user_id,
+        boards.board_id as board_id,
         boards.title as title,
         title,
         ingredient,
@@ -160,6 +162,4 @@
         set views= views + 1
         WHERE board_id=#{boardId}
     </update>
-
-
 </mapper>

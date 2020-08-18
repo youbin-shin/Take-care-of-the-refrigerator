@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.spi.http.HttpHandler;
+
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -359,12 +361,20 @@ public class BoardRestController {
      */
     @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 목록 조회")
     @GetMapping("/boards/foodsafe/recipes/pages/{page}")
-    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes(@PathVariable("page") int page) {
+    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes(HttpServletRequest req, 
+    																	@PathVariable("page") int page) {
     	Map<String, Object> resultMap = new HashMap<>();
     	HttpStatus status = null;
+    	String email = "";
     	try {
-    		List<Board> boards = null;
-    		boards = boardService.searchAllFoodSafeRecipes(page * 12);
+    		if(req.getHeader("jwt-auth-token") == null
+    				|| req.getHeader("jwt-auth-token").isEmpty()) {
+    			// pass
+    		} else {
+    			email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+    		}
+    		List<BoardSimpleDto> boards = null;
+    		boards = boardService.searchAllFoodSafeRecipes(email, page * 12);
     		resultMap.put("success", true);
     		resultMap.put("recipes", boards);
     		status = HttpStatus.OK;
@@ -443,10 +453,14 @@ public class BoardRestController {
     	Map<String, Object> resultMap = new HashMap<>();
     	HttpStatus status = null;
     	try {
-    		List<Board> boards = null;
+    		Map<String, Object> ingredientAndPage = new HashMap<>();	// service param
+    		List<Board> boards = null;									// service return
     		List<String> ingredients = null;
-    		ingredients = (List<String>) map.get("ingredient");
-    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredients);
+    		int page = 0;
+    		if(map.containsKey("ingredient")) ingredientAndPage.put("rcpPartsDtls", (List<String>) map.get("ingredient"));
+    		if(map.containsKey("page")) page = (int) map.get("page");
+    		ingredientAndPage.put("page", page * 12);
+    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredientAndPage);
     		resultMap.put("success", true);
     		resultMap.put("recipes", boards);
     		status = HttpStatus.OK;
@@ -457,7 +471,95 @@ public class BoardRestController {
     	}
     	return new ResponseEntity<Map<String,Object>> (resultMap, status);
     }
-
     
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 즐겨찾기 여부 확인
+     * 
+     * @param req 토큰 획득
+     * @param reqBody 레시피 번호 획득
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 즐겨찾기 여부 확인")
+    @GetMapping("/boards/foodsafe/recipes/interest/{boardId}")
+    public ResponseEntity<Map<String, Object>> checkInterestingRecipe(HttpServletRequest req, 
+    		@RequestBody Map<String, Object> reqBody) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	
+    	try {
+    		boolean regist = true;
+    		String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+    		int boardId = (int) reqBody.get("boardId");
+    		regist = boardService.checkInterestingRecipe(email, boardId);
+    		
+    		status = HttpStatus.OK;
+    		resultMap.put("success", true);
+    		if(regist) {							// 등록중
+    			resultMap.put("regist", true);
+    		} else {								// 미등록
+    			resultMap.put("regist", false);
+    		}
+    	} catch (Exception e) {
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+
+
+    /**
+     * 공공 API (조리식품의 레시피 DB) 즐겨찾기 등록
+     * 
+     * @param req 토큰 획득
+     * @param reqBody 레시피 번호 획득
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 즐겨찾기 등록")
+    @PostMapping("/boards/foodsafe/recipes/interest")
+    public ResponseEntity<Map<String, Object>> clickInterestingRecipe(HttpServletRequest req, 
+    																@RequestBody Map<String, Object> reqBody) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	
+    	try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            int boardId = (int) reqBody.get("boardId");
+            boardService.insertInterestingRecipe(email, boardId);
+            
+            status = HttpStatus.OK;
+    		resultMap.put("success", true);
+    	} catch (Exception e) {
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 즐겨찾기 취소
+     * 
+     * @param req 토큰 획득
+     * @param reqBody 레시피 번호 획득
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 즐겨찾기 취소")
+    @DeleteMapping("/boards/foodsafe/recipes/interest")
+    public ResponseEntity<Map<String, Object>> cancelInterestedRecipe(HttpServletRequest req, 
+    																@RequestBody Map<String, Object> reqBody) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	
+    	try {
+            String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            int boardId = (int) reqBody.get("boardId");
+            boardService.deleteInterestedRecipe(email, boardId);
+            
+            status = HttpStatus.OK;
+    		resultMap.put("success", true);
+    	} catch (Exception e) {
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
     
 }

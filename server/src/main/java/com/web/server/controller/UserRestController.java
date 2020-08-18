@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
 import com.web.server.dto.UserProfileDto;
 import org.slf4j.Logger;
@@ -333,11 +334,16 @@ public class UserRestController {
         UserProfileDto userProfileDto = null;
         try {
             String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+            List<Board> interestFoodSafeRecipes = null;
+            
             userProfileDto = userService.searchUserProfileByEmail(email);
+            interestFoodSafeRecipes = userService.searchAllInterestedFoodSafeRecipesFormBoard(email);
+            
             status = HttpStatus.OK;
             // body json add
             resultMap.put("success", true);
             resultMap.put("mypage", userProfileDto);
+            resultMap.put("interstRecipe", interestFoodSafeRecipes);
             logger.info("회원 마이페이지 조회 성공 : {}", userProfileDto.toString());
         } catch (RuntimeException | SQLException e) {
             logger.info("회원 마이페이지 조회 실패 에러 메세지 : {}", e.getMessage());

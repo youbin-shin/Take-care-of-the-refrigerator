@@ -4,6 +4,7 @@ import com.web.server.dto.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface BoardService {
     List<BoardSimpleDto> searchAll(String email) throws SQLException;
@@ -30,11 +31,17 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
     
-    public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException;
+    public List<BoardSimpleDto> searchAllFoodSafeRecipes(String email, int page) throws SQLException;
     
     public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
     
     public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
 
-    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException;
+    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(Map<String, Object> map) throws SQLException;
+
+	public int insertInterestingRecipe(String email, int boardId) throws SQLException;
+
+	public int deleteInterestedRecipe(String email, int boardId) throws SQLException;
+
+	public boolean checkInterestingRecipe(String email, int boardId) throws SQLException;
 }

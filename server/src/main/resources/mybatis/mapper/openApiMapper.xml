@@ -4,11 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.web.server.repo.OpenApiDao">
 
-	<select id="selectAllFormBoards" resultType="board">
-		select rcp_seq as boardId, 
-				rcp_nm as title, 
-				att_file_no_main as thumbnailImage,
-				"식품안전나라" as nickname
+	<select id="selectAllFormBoards" parameterType="hashMap" resultType="boardsimple">
+		select 
+		rcp_seq as board_id, 
+		rcp_nm as title, 
+		att_file_no_main as thumbnail_image, 
+		"식품안전나라" as nickname,
+		(select count(*) from interest_recipes 
+			where rcp_seq=recipes.rcp_seq 
+			and user_id=(select user_id from users 
+				where email=#{email}))
+		as favorite
 		from ssafy_open.recipes limit #{page}, 12
 	</select>
 
@@ -61,7 +67,40 @@
 		        </foreach>
 			</if>
 		</where>
+		limit #{page}, 12
 	</select>
+	
+	<!-- 관심 레시피 -->
+    <!-- 관심 레시피 여부 확인 -->
+    <select id="isExistInterestingRecipes" parameterType="hashMap" resultType="int">
+        select count(*)
+        from interest_recipes
+        where user_id=(select user_id from users where email = #{email})
+        and rcp_seq=#{boardId}
+    </select>
+   	<!-- 관심 레시피 조회 -->
+   	<select id="selectAllInterestedRecipesByEamilFormBoard" resultType="boardsimple">
+   		select `recipes`.`rcp_seq` as board_id,
+        `recipes`.`rcp_nm` as title,
+        "식품안전나라" as nickname,
+        `recipes`.`att_file_no_main` as thumbnail_image
+        from `ssafy_sk`.`interest_recipes` as `interest_recipes`
+		join `ssafy_open`.`recipes` as `recipes` 
+		on `interest_recipes`.`rcp_seq` = `recipes`.`rcp_seq`
+		where `interest_recipes`.`user_id` = (select user_id from users where email = #{email})
+   	</select>
+   	<!-- 관심 레시피 등록 -->
+   	<insert id="insertInterestingRecipes" parameterType="hashMap">
+   		insert into interest_recipes(user_id, rcp_seq)
+   		values ((select user_id from users where email = #{email}), #{boardId});
+   	</insert>
+   	<!-- 관심 레시피 취소 -->
+   	<delete id="deleteInterestedRecipe" parameterType="hashMap">
+   		delete from interest_recipes
+   		where user_id =(select user_id from users where email =#{email})
+   		and rcp_seq=#{boardId}
+   	</delete>
+	
 	
 	<resultMap type="com.web.server.dto.FoodSafeRecipeDto" id="foodSafeRecipe">
 		<id column="rcp_seq" property="rcpSeq"/>

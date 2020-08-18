@@ -1,10 +1,12 @@
 package com.web.server.service;
 
+import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 import com.web.server.repo.BoardDao;
 import com.web.server.repo.FollowDao;
+import com.web.server.repo.OpenApiDao;
 import com.web.server.repo.UserinfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 @Service
@@ -25,6 +28,9 @@ public class UserinfoServiceImpl implements UserinfoService {
 
     @Autowired
     FollowDao fDao;
+    
+    @Autowired
+    OpenApiDao oDao;
 
     @Override
     public User login(String email, String password) {
@@ -154,4 +160,16 @@ public class UserinfoServiceImpl implements UserinfoService {
     public int updateUser(User user) throws SQLException{
         return uDao.updateUser(user);
     }
+
+	@Override
+	public List<Board> searchAllInterestedFoodSafeRecipesFormBoard(String email) throws SQLException {
+		List<Board> boards = null;
+		try {
+			boards = oDao.selectAllInterestedRecipesByEamilFormBoard(email);
+			
+		} catch (SQLException e) {
+			throw new SQLException("ERROR : UserinfoServiceImpl.searchAllInterestedFoodSafeRecipesFormBoard !!\n" + e.getMessage());
+		}
+		return boards;
+	}
 }

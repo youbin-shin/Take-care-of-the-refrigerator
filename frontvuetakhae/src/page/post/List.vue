@@ -647,10 +647,4 @@ export default {
 .v-application .headline {
   font-family: "TmoneyRoundWindExtraBold" !important;
 }
-.upper {
-  position: fixed;
-  left: 90%;
-  top: 90%;
-  cursor: pointer;
-}
 </style>

@@ -44,19 +44,40 @@
           <v-hover v-slot:default="{ hover }" open-delay="200">
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
               <v-list-item @click="goApiDetail(apiboard.boardId)">
-                <v-list-item-avatar color="grey"></v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="headline">
+                <v-list-item-content class="row">
+                  <v-list-item-title class="headline text-center col-9">
                     {{
                     apiboard.title
                     }}
                   </v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
-                  <small style="text-align:right;">
-                    {{
-                    apiboard.createAt
-                    }}
-                  </small>
+                  <div class="col-3" @click="heartRecipe(searchData.boardId)">
+                    <span v-if="searchData.favorite">
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="searchData.favorite"
+                        style="width: 60px"
+                        color="deep-purple"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                    <span v-else>
+                      <v-bottom-navigation
+                        class="elevation-0"
+                        :value="searchData.favorite"
+                        style="width: 60px"
+                        color="secondary lighten-2"
+                      >
+                        <v-btn>
+                          <span>즐겨찾기</span>
+                          <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                      </v-bottom-navigation>
+                    </span>
+                  </div>
                 </v-list-item-content>
               </v-list-item>
 
@@ -66,42 +87,36 @@
                 @click="goApiDetail(apiboard.boardId)"
               ></v-img>
 
-              <v-card-text @click="goApiDetail(apiboard.boardId)">
-                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
+              <v-card-text @click="goApiDetail(apiboard.boardId)" style="text-align: left">
+                <v-list-item-subtitle class="mb-2">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
+                <small style="float:right">
+                  {{
+                  apiboard.createAt
+                  }}
+                </small>
+                <p class="m-0">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
                 <v-rating
-                  class="p-0"
+                  class="d-inline-flex pa-2"
                   small
                   v-model="apiboard.grade"
                   background-color="orange lighten-3"
                   color="orange"
                 ></v-rating>
+                <v-btn icon style="float:right">
+                  <img
+                    @click="
+                      kakaoShare(
+                        apiData.title,
+                        apiData.boardId,
+                        apiData.thumbnailImage,
+                        apiData.nickname
+                      )
+                    "
+                    src="//developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png"
+                    width="40"
+                  />
+                </v-btn>
               </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  @click="goApiDetail(apiboard.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                >자세히 보기</v-btn>
-                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-
-                <v-spacer></v-spacer>
-                <v-btn icon @click="changeEasy">
-                  <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-                    <p class="caption mb-0 mt-1">easy</p>
-                  </div>
-                  <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-                    <p class="caption mb-0 mt-1">hard</p>
-                  </div>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
-                </v-btn>
-              </v-card-actions>
             </v-card>
           </v-hover>
         </ul>
@@ -185,7 +200,6 @@
           </v-hover>
         </ul>
       </div>
-      {{searchData.apiboards}}
     </div>
   </div>
 </template>

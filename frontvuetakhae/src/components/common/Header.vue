@@ -54,50 +54,83 @@
         <b-modal v-model="signUpShow" hide-footer hide-header>
           <h1 class="text-center">회원가입</h1>
           <div class>
-            <div class="div_item">
-              <span class="item_100px">아이디</span>
-              <input
-                class="item_200px pl-2"
-                type="text"
-                id="signUpEmail"
-                ref="signUpEmail"
-                v-model="signUpEmail"
-                placeholder="이메일을 입력해주세요"
-              />
+            <div class="div_item row">
+              <span class="item_100px col-3 p-0">아이디</span>
+              <div class="col-8 p-0">
+                <input
+                  class="item_200px pl-2"
+                  type="text"
+                  id="email"
+                  ref="email"
+                  name="email"
+                  v-validate="'required|email'"
+                  v-model="email"
+                  placeholder="이메일을 입력해주세요"
+                />
+                <div
+                  class="signupCheck alert alert-danger"
+                  v-if="errors.has('email')"
+                >{{ errors.first('email') }}</div>
+              </div>
             </div>
 
-            <div class="div_item">
-              <span class="item_100px">비밀번호</span>
-              <input
-                class="item_200px pl-2"
-                type="password"
-                ref="signUpPassword"
-                id="signUpPassword"
-                v-model="signUpPassword"
-                placeholder="영문, 숫자 혼용 8자 이상 사용해주세요."
-              />
+            <div class="div_item row">
+              <span class="item_100px col-3 p-0">비밀번호</span>
+              <div class="col-8 p-0">
+                <input
+                  class="item_200px pl-2"
+                  name="password"
+                  type="password"
+                  ref="password"
+                  v-model="password"
+                  v-validate="'required|min:8'"
+                  placeholder="영문, 숫자 혼용 8자 이상 사용해주세요."
+                />
+
+                <div
+                  class="passwordCheck alert alert-danger"
+                  v-if="errors.has('password')"
+                >{{ errors.first('password') }}</div>
+              </div>
             </div>
-            <div class="div_item">
-              <span class="item_100px">비밀번호 확인</span>
-              <input
-                class="item_200px pl-2"
-                type="password"
-                ref="signUpPasswordconfirm"
-                id="signUpPasswordconfirm"
-                v-model="signUpPasswordconfirm"
-                placeholder="비밀번호를 한번 더 입력해주세요."
-              />
+
+            <div class="div_item row">
+              <span class="item_100px col-3 p-0">비밀번호 확인</span>
+              <div class="col-8 p-0">
+                <input
+                  class="item_200px pl-2"
+                  type="password"
+                  ref="passwordConfirm"
+                  id="passwordConfirm"
+                  v-model="passwordConfirm"
+                  name="password_confirmation"
+                  v-validate="'required|confirmed:password'"
+                  placeholder="비밀번호를 한번 더 입력해주세요."
+                />
+                <div
+                  class="passwordConfirmCheck alert alert-danger"
+                  v-if="errors.has('password_confirmation')"
+                >{{ errors.first('password_confirmation') }}</div>
+              </div>
             </div>
-            <div class="div_item">
-              <span class="item_100px">닉네임</span>
-              <input
-                class="item_200px pl-2"
-                type="text"
-                ref="signUpNickname"
-                id="signUpNickname"
-                v-model="signUpNickname"
-                placeholder="10자 이내로 입력해주세요."
-              />
+            <div class="div_item row">
+              <span class="item_100px col-3 p-0">닉네임</span>
+              <div class="col-8 p-0">
+                <input
+                  class="item_200px pl-2"
+                  type="text"
+                  name="nickname"
+                  ref="nickname"
+                  id="nickname"
+                  v-model="nickname"
+                  v-validate="'required|min:3|max:20'"
+                  placeholder="10자 이내로 입력해주세요."
+                />
+                <div
+                  class="nicknameCheck alert alert-danger"
+                  v-if="errors.has('nickname')"
+                >{{ errors.first('nickname') }}</div>
+              </div>
             </div>
           </div>
 
@@ -175,31 +208,31 @@ export default {
     },
     signUp() {
       var exptext = /^[A-Za-z0-9+]{8,}$/;
-      if (this.signUpEmail.indexOf("@") === -1) {
+      if (this.email.indexOf("@") === -1) {
         alert("이메일 양식을 지켜주세요!");
-        this.$refs.signUpEmail.focus();
+        this.$refs.email.focus();
         return;
       }
-      if (exptext.test(this.signUpPassword) === false) {
+      if (exptext.test(this.password) === false) {
         alert("비밀번호 양식을 지켜주세요!");
-        this.$refs.signUpPassword.focus();
+        this.$refs.password.focus();
         return;
       }
-      if (this.signUpPassword != this.signUpPasswordconfirm) {
+      if (this.password != this.passwordConfirm) {
         alert("비밀번호를 통일시켜주세요!");
-        this.$refs.signUpPasswordconfirm.focus();
+        this.$refs.passwordConfirm.focus();
         return;
       }
-      if (this.signUpNickname === "") {
+      if (this.nickname === "") {
         alert("닉네임을 입력해주세요!");
-        this.$refs.signUpNickname.focus();
+        this.$refs.nickname.focus();
         return;
       }
       axios
         .post("http://i3a305.p.ssafy.io:8399/api/users/signup/", {
-          email: this.signUpEmail,
-          nickname: this.signUpNickname,
-          password: this.signUpPassword,
+          email: this.email,
+          nickname: this.nickname,
+          password: this.password,
         })
         .then((response) => {
           if (response.status === 201) {
@@ -230,10 +263,10 @@ export default {
       signUpShow: false,
       loginEmail: "",
       loginPassword: "",
-      signUpEmail: "",
-      signUpPassword: "",
-      signUpPasswordconfirm: "",
-      signUpNickname: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      nickname: "",
       mypage: "/user/mypage",
     };
   },
@@ -274,11 +307,13 @@ export default {
 
 .item_100px {
   display: inline-block;
+  text-align: left;
   width: 100px;
 }
 .item_200px {
   width: 270px;
   border: 1px solid gray;
+  border-radius: 5px;
 }
 .right {
   margin-top: 20px;
@@ -293,5 +328,41 @@ input[type="password"] {
   padding: 8px;
   color: black;
   font-size: 0.7em;
+}
+.signupCheck {
+  margin: 0px;
+  height: 25px;
+  font-size: 11px;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.passwordCheck {
+  margin: 0px;
+  height: 25px;
+  font-size: 11px;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.passwordConfirmCheck {
+  margin: 0px;
+  height: 25px;
+  font-size: 11px;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.nicknameCheck {
+  margin: 0px;
+  height: 25px;
+  font-size: 11px;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

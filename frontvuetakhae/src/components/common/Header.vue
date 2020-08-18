@@ -7,7 +7,6 @@
       <div class="right" v-if="this.$cookies.get('token') == null">
         <a @click="modalShow = !modalShow" class="a_tag_modal">로그인</a>
         <a style="margin:0px 20px" @click="signUpShow = !signUpShow" class="a_tag_modal">회원가입</a>
-
         <b-modal v-model="modalShow" hide-footer hide-header>
           <h2 class="text-center">로그인</h2>
 
@@ -113,6 +112,7 @@
         </b-modal>
       </div>
       <div class="right" v-if="this.$cookies.get('token') != null">
+        <!-- <small>{{}}님 환영합니다. </small> -->
         <a @click="logout" class="a_tag_modal">로그아웃</a>
         <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal">마이페이지</a>
       </div>
@@ -244,6 +244,7 @@ export default {
 .a_tag_modal {
   margin: 5px;
   vertical-align: middle;
+  color: black;
 }
 .logoImage {
   height: 60px;
@@ -280,7 +281,7 @@ export default {
   border: 1px solid gray;
 }
 .right {
-  margin-top: 15px;
+  margin-top: 20px;
 }
 .text-center {
   text-align: center;

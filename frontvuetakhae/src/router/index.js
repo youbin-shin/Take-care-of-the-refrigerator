@@ -12,6 +12,14 @@ import CreatePost from "../page/post/CreatePost.vue";
 import DetailPost from "../page/post/DetailPost.vue";
 import SearchPost from "../page/post/SearchPost.vue";
 import NoticePost from "../page/post/NoticePost.vue";
+import ApiDetailPost from "../page/post/ApiDetailPost.vue";
+// 에디터
+// import VMdEditor from "@kangc/v-md-editor";
+// import "@kangc/v-md-editor/lib/style/base-editor.css";
+// import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
+// VMdEditor.use(githubTheme);
+
+// Vue.use(VMdEditor);
 
 Vue.use(Router);
 
@@ -42,6 +50,11 @@ export default new Router({
       path: "/detail/:no",
       name: constants.URL_TYPE.POST.DETAILPOST,
       component: DetailPost,
+    },
+    {
+      path: "/foodsafe/detail/:no",
+      name: ApiDetailPost,
+      component: ApiDetailPost,
     },
     {
       path: "/search",

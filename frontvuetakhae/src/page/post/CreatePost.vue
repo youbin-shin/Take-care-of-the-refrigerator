@@ -75,66 +75,77 @@
       <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
       <v-stepper-content step="2">
         <v-card class="mb-12">
-          <b-container class="bv-example-row">
-            <div class="bg-my-step">
-              <h5>과정 순서</h5>
-              <draggable
-                class="list-group"
-                tag="ul"
-                v-model="postData.content.steps"
-                v-bind="dragOptions"
-                @start="drag = true"
-                @end="drag = false"
-              >
-                <transition-group type="transition" :name="'flip-list'">
-                  <li v-for="tag in postData.content.steps" :key="tag.description">
-                    <v-row>
-                      <v-col>
-                        <v-overflow-btn
-                          class="type-button mt-0"
-                          :items="typeList"
-                          v-model="tag.type"
-                          label="타입 선택"
-                          segmented
-                        ></v-overflow-btn>
-                      </v-col>
-                      <v-col>
-                        <div class="input-tag">
-                          <b-form-input v-model="tag.hashtag" placeholder="해시태그 입력"></b-form-input>
+          <div class="bg-my-step">
+            <h5>과정 순서</h5>
+            <draggable
+              class="list-group"
+              tag="ul"
+              v-model="postData.content.steps"
+              v-bind="dragOptions"
+              @start="drag = true"
+              @end="drag = false"
+            >
+              <transition-group type="transition" :name="'flip-list'">
+                <li v-for="tag in postData.content.steps" :key="tag.description">
+                  <v-row>
+                    <v-col cols="3">
+                      <v-overflow-btn
+                        class="type-button mt-0"
+                        :items="typeList"
+                        v-model="tag.type"
+                        label="타입 선택"
+                        segmented
+                      ></v-overflow-btn>
+                    </v-col>
+                    <v-col cols="6">
+                      <!-- color="rgba(191, 32, 59, 1.0)" -->
+                      <v-chip
+                        class="mr-2 mb-2"
+                        v-for="hash in tag.hashtag"
+                        :key="hash"
+                        close
+                        @click:close="closeHashtag(tag.hashtag, hash)"
+                      >#{{ hash }}</v-chip>
+
+                      <div class="input-tag">
+                        <v-text-field
+                          v-model="tempHashtag"
+                          v-on:keyup.enter="plusTag(tag.hashtag)"
+                          placeholder="해시태그 입력"
+                        ></v-text-field>
+                      </div>
+                    </v-col>
+                    <v-col cols="3">
+                      {{ tag.description }}
+                      <div class="d-flex flex-column">
+                        <i aria-hidden="true"></i>
+                        <div class>
+                          <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                          <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
-                      </v-col>
-                      <v-col>
-                        <div class="d-flex flex-column">
-                          {{ tag.description }}
-                          <i aria-hidden="true"></i>
-                          <div class>
-                            <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
-                            <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
-                          </div>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </li>
-                </transition-group>
-              </draggable>
-            </div>
-            <div class="bg-plus-step">
-              <h5 class="mb-3">과정 입력</h5>
-              <v-row no-gutters justify="center">
-                <v-col md="5">
-                  <v-card>
-                    <b-form-input
-                      type="text"
-                      placeholder="요리 과정을 입력해주세요."
-                      v-model="postData.content.process"
-                      v-on:keyup.enter="plusStep"
-                    />
-                  </v-card>
-                </v-col>
-                <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
-              </v-row>
-            </div>
-          </b-container>
+                      </div>
+                    </v-col>
+                  </v-row>
+                </li>
+              </transition-group>
+            </draggable>
+          </div>
+          <div class="bg-plus-step">
+            <h5 class="mb-3">과정 입력</h5>
+            <v-row no-gutters justify="center">
+              <v-col md="5">
+                <v-card>
+                  <b-form-input
+                    type="text"
+                    placeholder="요리 과정을 입력해주세요."
+                    v-model="postData.content.process"
+                    v-on:keyup.enter="plusStep"
+                  />
+                </v-card>
+              </v-col>
+              <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
+            </v-row>
+          </div>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 3">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
@@ -154,12 +165,16 @@
             ></v-rating>
           </div>
           <hr />소요 시간
-          <b-form-input
-            class="timeinput"
-            type="text"
-            v-model="postData.time"
-            style="width:100px;height:40px;font-size:12px"
-          />
+          <v-row class="container">
+            <!-- <div class="timeinput"> -->
+            <b-form-input
+              type="text"
+              v-model="postData.time"
+              style="width:100px;height:40px;font-size:12px"
+            />
+            <span>시간</span>
+            <!-- </div> -->
+          </v-row>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
@@ -183,6 +198,7 @@
             id="imageFileOpenInput"
             accept="image/*"
             style="float:left"
+            @change="onFileSelected($event)"
           />
           <br />
         </v-card>
@@ -196,14 +212,29 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "CreatePost",
   components: {
     draggable,
   },
+  created() {
+    axios
+      .get(`${BACK_URL}/users/mypage/box`, {
+        headers: { "jwt-auth-token": this.$cookies.get("token") },
+      })
+      .then((response) => {
+        console.log(response.data);
+        this.list = response.data.box;
+      });
+  },
   data() {
     return {
+      tempHashtag: "",
+      chips: [],
+      items: [],
+
       typeList: [
         // 요리 과정 단계에서 타입을 선택할 리스트
         {
@@ -220,7 +251,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 3, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -243,6 +274,24 @@ export default {
     };
   },
   methods: {
+    onFileSelected(event) {
+      // console.log(event);
+      this.selectedFile = event.target.files[0];
+      console.log(this.selectedFile);
+      axios
+        .post(
+          `${BACK_URL}/file/`,
+          {
+            file: this.selectedFile,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
       const idx = this.postData.content.steps.findIndex(function (item) {
@@ -251,6 +300,7 @@ export default {
       this.postData.content.steps.splice(idx, 1);
       this.se.splice(idx, 1);
     },
+
     plusFood() {
       // 재료 단계에서 재료를 추가할 때 필요한 메서드
       // 빈값일 경우 추가 안되도록 한다.
@@ -268,12 +318,29 @@ export default {
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
     },
+    plusTag(tagHashtag) {
+      if (this.tempHashtag === "") {
+        return;
+      }
+      // 중복되는 데이터일 경우 추가 안되도록 한다.
+      for (var i = 0; i < tagHashtag.length; i++) {
+        if (this.tempHashtag === tagHashtag[i]) {
+          this.tempHashtag = "";
+          return;
+        }
+      }
+      tagHashtag.push(this.tempHashtag);
+      this.tempHashtag = "";
+    },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
       this.postData.content.ingredients.splice(
         this.postData.content.ingredients.indexOf(tag),
         1
       );
+    },
+    closeHashtag(tagHashtag, hashtag) {
+      tagHashtag.splice(tagHashtag.indexOf(hashtag), 1);
     },
     plusStep() {
       // 요리 과정 단계에서 과정을 추가할 때 작동하는 메서드
@@ -284,19 +351,37 @@ export default {
         description: this.postData.content.process,
         image: "no image",
         type: "",
-        hashtag: "",
+        hashtag: [],
       });
       this.postData.content.process = "";
     },
     createPost() {
+      console.log(this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
-        tags.push(this.postData.content.steps[i].hashtag);
+        let temptags = "";
+        for (
+          let j = 0;
+          j < this.postData.content.steps[i].hashtag.length;
+          j++
+        ) {
+          console.log(temptags);
+          if (j == this.postData.content.steps[i].hashtag.length - 1) {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j]
+            );
+          } else {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j],
+              ","
+            );
+          }
+        }
+        tags.push(temptags);
         delete this.postData.content.steps[i].hashtag;
       }
-      // console.log(tags);
-      // console.log(this.postData.content.steps);
+      console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),
@@ -304,7 +389,6 @@ export default {
       };
       let ingreString = this.postData.content.ingredients.join(" ");
       console.log(ingreString);
-
       axios
         .post(
           "http://i3a305.p.ssafy.io:8399/api/boards/",
@@ -353,15 +437,6 @@ export default {
 </script>
 
 <style>
-@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css);
-
-@font-face {
-  font-family: naBrush;
-  src: url("NanumBarunpenB.ttf");
-}
-* {
-  font-family: "NanumSquare", sans-serif;
-}
 .titles {
   float: left;
 }
@@ -403,7 +478,7 @@ export default {
   width: 150px;
   height: 25px;
 }
-.timeinput {
-  margin: 0 auto;
-}
+/* .timeinput {
+  margin-left: 10%;
+} */
 </style>

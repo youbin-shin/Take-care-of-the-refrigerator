@@ -29,5 +29,6 @@
         <mapper resource="mybatis/mapper/boardMapper.xml"/>
         <mapper resource="mybatis/mapper/commentMapper.xml"/>
         <mapper resource="mybatis/mapper/boardHardEasyMapper.xml"/>
+        <mapper resource="mybatis/mapper/openApiMapper.xml"/>
     </mappers>
 </configuration>

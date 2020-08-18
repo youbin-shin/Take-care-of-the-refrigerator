@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +41,51 @@ public class BoardRestController {
      */
     @ApiOperation(value = "게시글 전체 조회")
     @GetMapping("/boards")
-    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletResponse res) {
+    public ResponseEntity<Map<String, Object>> searchAllBoards(HttpServletRequest req, HttpServletResponse res) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
+        String email = "";
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            email = jwtService.getEamil(token);
+        } catch (Exception e) {
+            System.out.println("Ere"+e.getMessage());
+        }
+        try {
+            List<BoardSimpleDto> boards = null;
+            System.out.println("EEEE"+email);
+            boards = boardService.searchAll(email);
+
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("boards", boards);
+            resultMap.put("status", status.value());
+            resultMap.put("message", "성공");
+        } catch (RuntimeException | SQLException e) {
+            // body json add
+            resultMap.put("status", status.value());
+            resultMap.put("message", "실패");
+        }
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
+    @ApiOperation(value = "게시글 제목 or 글쓴이로 검색")
+    @PostMapping("/boards/search")
+    public ResponseEntity<Map<String, Object>> searchByKeyword(HttpServletRequest req, @RequestBody SearchByKeywordDto searchByKeywordDto, HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        String email = "";
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            email = jwtService.getEamil(token);
+        } catch (Exception e) {
+
+        }
 
         try {
             List<BoardSimpleDto> boards = null;
-            boards = boardService.searchAll();
+            boards = boardService.searchByKeyword(email,searchByKeywordDto);
 
             status = HttpStatus.OK;
             // body json add
@@ -104,7 +143,7 @@ public class BoardRestController {
             // 서비스
             board = boardService.searchByBoardId(Integer.parseInt(boardId));
             boardService.updateViewCnt(Integer.parseInt(boardId));
-            board.setViews(board.getViews()+1);
+            board.setViews(board.getViews() + 1);
             status = HttpStatus.OK;
             // body json add
             resultMap.put("board", board);
@@ -121,6 +160,37 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+
+    @ApiOperation(value = "유저가 게시글을 즐겨찾기 등록/취소")
+    @PostMapping("/boards/favorite")
+    public ResponseEntity<Map<String, Object>> postFavorite(HttpServletRequest req, @RequestBody final FavoriteRequestBody favoriteRequestBody,
+                                                            HttpServletResponse res) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+
+        try {
+            String token = req.getHeader("jwt-auth-token");
+            String email = jwtService.getEamil(token);
+            int result = boardService.postFavorite(email, favoriteRequestBody);
+            status = HttpStatus.OK;
+            // body json add
+            resultMap.put("status", status.value());
+            String message = "성공";
+            if (result == 1) {
+                message = "즐겨찾기 등록에 성공하셨습니다.";
+            } else if (result == -1) {
+                message = "즐겨찾기 취소에 성공하셨습니다.";
+            }
+            resultMap.put("message", message);
+        } catch (RuntimeException | SQLException e) {
+            status = HttpStatus.BAD_REQUEST;
+            // body json add
+            resultMap.put("status", status.value());
+            resultMap.put("message", "실패");
+
+        }
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 
     /**
      * 게스글 작성
@@ -281,6 +351,7 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+
     @RequestMapping(value = "/boards/scroll", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> scroll(Board board, @RequestBody ScrollDto scrollDto){
         ResponseEntity<Map<String, Object>> entity = null;
@@ -301,4 +372,114 @@ public class BoardRestController {
 
         }return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 레시피 목록 조회
+     * 
+     * @return List<Board>
+     */
+    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 목록 조회")
+    @GetMapping("/boards/foodsafe/recipes/pages/{page}")
+    public ResponseEntity<Map<String, Object>> searchAllFoodSafeRecipes(@PathVariable("page") int page) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<Board> boards = null;
+    		boards = boardService.searchAllFoodSafeRecipes(page * 12);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", boards);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+		}
+    	
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 레시피 데이터 레시피 번호로 조회
+     * 
+     * @return
+     */
+    @ApiOperation(value = "공공API(조리식품 레시피 DB) 레시피 번호로 조회")
+    @GetMapping("/boards/foodsafe/recipes/{rcpSeq}")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeSeq(@PathVariable("rcpSeq") int rcpSeq) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<FoodSafeRecipeDto> recipes = null;
+    		recipes = boardService.searchFoodSafeRecipesByRecipeSeq(rcpSeq);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", recipes);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 제목으로 레시피 조회
+     * 
+     * @param rcpNm
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 제목으로 레시피 조회")
+    @GetMapping("/boards/foodsafe/recipes/title/{rcpNm}")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeName(@PathVariable("rcpNm") String rcpNm) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<Board> boards = null;
+    		boards = boardService.searchFoodSafeRecipesByRecipeName(rcpNm);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", boards);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    	
+    }
+    
+    
+    /**
+     * 공공 API (조리식품의 레시피 DB) 재료로 레시피 조회
+     * 
+     * @param ingredient List<String> eg. ["스파게티", "바나나"]
+     * @return
+     */
+    @ApiOperation(value = "공공 API (조리식품의 레시피 DB) 재료로 레시피 조회")
+    @PostMapping("/boards/foodsafe/recipes/ingredient")
+    public ResponseEntity<Map<String, Object>> searchFoodSafeRecipesByRecipeParts(@RequestBody Map<String, Object> map) {
+    	Map<String, Object> resultMap = new HashMap<>();
+    	HttpStatus status = null;
+    	try {
+    		List<Board> boards = null;
+    		List<String> ingredients = null;
+    		ingredients = (List<String>) map.get("ingredient");
+    		boards = boardService.searchFoodSafeRecipesByRcpPartsDtls(ingredients);
+    		resultMap.put("success", true);
+    		resultMap.put("recipes", boards);
+    		status = HttpStatus.OK;
+    	} catch (Exception e) {
+    		logger.info("ERROR searchFoodSafeRecipesAll() : {}", e.getMessage());
+    		resultMap.put("success", false);
+    		status = HttpStatus.BAD_REQUEST;
+    	}
+    	return new ResponseEntity<Map<String,Object>> (resultMap, status);
+    }
+
+    
+
 }

@@ -6,25 +6,38 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BoardService {
-    public List<BoardSimpleDto> searchAll() throws SQLException;
+    List<BoardSimpleDto> searchAll(String email) throws SQLException;
 
-    public Board searchByBoardId(int boardId) throws SQLException;
+    Board searchByBoardId(int boardId) throws SQLException;
 
-    public boolean write(String email, Board board) throws SQLException;
+    boolean write(String email, Board board) throws SQLException;
 
     int deleteBoard(int boardId) throws SQLException;
 
-    public void writeComment(CommentDto comment) throws SQLException;
+    void writeComment(CommentDto comment) throws SQLException;
 
-    public void updateComment(CommentDto comment) throws SQLException;
+    void updateComment(CommentDto comment) throws SQLException;
 
-    public int deleteComment(Integer commentId) throws SQLException;
+    int deleteComment(Integer commentId) throws SQLException;
 
     List<CommentDto> selectCommentByBoardId(int boardId);
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
-    public void updateViewCnt(Integer boardId) throws SQLException;
-
     List<Board> scrollList(ScrollDto scrollDto) throws  SQLException;
+
+    void updateViewCnt(Integer boardId) throws SQLException;
+
+    int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException;
+
+    List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
+    
+    public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException;
+    
+    public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
+    
+    public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
+
+    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException;
+
 }

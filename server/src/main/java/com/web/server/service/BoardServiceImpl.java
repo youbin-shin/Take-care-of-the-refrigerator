@@ -3,6 +3,7 @@ package com.web.server.service;
 import com.web.server.dto.*;
 import com.web.server.repo.BoardDao;
 import com.web.server.repo.CommentDao;
+import com.web.server.repo.OpenApiDao;
 import com.web.server.repo.UserinfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     CommentDao commentDao;
+    
+    @Autowired
+    OpenApiDao openapiDao;
 
     @Override
-    public List<BoardSimpleDto> searchAll() throws SQLException {
-        return boardDao.searchAll();
+    public List<BoardSimpleDto> searchAll(String email) throws SQLException {
+        return boardDao.searchAll(email);
     }
 
     @Override
@@ -126,12 +130,63 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void updateViewCnt(Integer BoardId) throws  SQLException{
+    public void updateViewCnt(Integer BoardId) throws SQLException {
         boardDao.updateViewCnt(BoardId);
     }
 
+
     @Override
-    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException{
+    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException {
         return boardDao.scrollList(scrollDto);
+    }
+
+	@Override
+	public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
+		List<Board> boards = null;
+		boards = openapiDao.selectAllFormBoards(page);
+		return boards;
+	}
+
+    @Override
+    public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException {
+    	return openapiDao.selectByRecipeNameFormBoards(rcpNm);
+    }
+
+	@Override
+	public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException {
+		List<FoodSafeRecipeDto> recipes = null;
+		recipes = openapiDao.selectByRecipeSeq(rcpSeq);
+		return recipes;
+	}
+	
+	@Override
+	public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException {
+		List<Board> boards = null;
+		boards = openapiDao.selectByRecipePartsDtlsFormBoards(rcpPartsDtls);
+		return boards;
+	}
+	
+    @Override
+    public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException{
+        int cnt = boardDao.isExistFavorite(email, boardId);
+        System.out.println("cnt : " + cnt);
+        int result = 0;
+        if (cnt == 1) {
+             result = boardDao.deleteFavorite(email, boardId);
+             if(result==1){
+                 result = -1;
+             }
+        } else {
+             result = boardDao.insertFavorite(email, boardId);
+             if(result==1){
+                 result = 1;
+             }
+        }
+        return result;
+    }
+
+    @Override
+    public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
+        return boardDao.searchByKeyword(email,searchByKeywordDto);
     }
 }

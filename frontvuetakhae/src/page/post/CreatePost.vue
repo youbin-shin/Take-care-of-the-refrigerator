@@ -1,5 +1,9 @@
 <template>
   <div class="container" style="margin-top: 30px;">
+    <div class="writerButton">
+      <v-btn small color="warning">임시 저장하기</v-btn>
+      <hr />
+    </div>
     <b-form-group
       label-cols="4"
       label-cols-lg="2"
@@ -8,14 +12,20 @@
       label-for="input-lg"
       autofocus
     >
-      <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
+      <b-form-input
+        v-model="postData.title"
+        id="input-lg"
+        size="lg"
+      ></b-form-input>
     </b-form-group>
 
     <v-stepper v-model="e6" vertical>
       <!-- 1. 재료 입력 단계 -->
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
-        <small class="mt-2">드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small>
+        <small class="mt-2"
+          >드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small
+        >
       </v-stepper-step>
       <v-stepper-content step="1">
         <v-card class="mb-12">
@@ -37,7 +47,8 @@
                       :key="tag"
                       close
                       @click:close="closeChip(tag)"
-                    >{{ tag }}</v-chip>
+                      >{{ tag }}</v-chip
+                    >
                   </draggable>
                 </div>
               </b-col>
@@ -61,7 +72,9 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{
+                        tag
+                      }}</v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -72,7 +85,9 @@
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
       <!-- 2. 요리 과정 단계 -->
-      <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
+      <v-stepper-step color="red" :complete="e6 > 2" step="2"
+        >요리 과정</v-stepper-step
+      >
       <v-stepper-content step="2">
         <v-card class="mb-12">
           <div class="bg-my-step">
@@ -86,7 +101,10 @@
               @end="drag = false"
             >
               <transition-group type="transition" :name="'flip-list'">
-                <li v-for="tag in postData.content.steps" :key="tag.description">
+                <li
+                  v-for="tag in postData.content.steps"
+                  :key="tag.description"
+                >
                   <v-row>
                     <v-col cols="3">
                       <v-overflow-btn
@@ -105,7 +123,8 @@
                         :key="hash"
                         close
                         @click:close="closeHashtag(tag.hashtag, hash)"
-                      >#{{ hash }}</v-chip>
+                        >#{{ hash }}</v-chip
+                      >
 
                       <div class="input-tag">
                         <v-text-field
@@ -120,8 +139,12 @@
                       <div class="d-flex flex-column">
                         <i aria-hidden="true"></i>
                         <div class>
-                          <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
-                          <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
+                          <v-btn small @click="deleleStep(tag.description)"
+                            >삭제</v-btn
+                          >
+                          <v-btn small color="primary" class="ml-1"
+                            >내 저장소</v-btn
+                          >
                         </div>
                       </div>
                     </v-col>
@@ -151,7 +174,9 @@
         <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
       </v-stepper-content>
       <!-- 3. 난이도 & 소요시간 단계 -->
-      <v-stepper-step color="red" :complete="e6 > 3" step="3">난이도 & 소요시간</v-stepper-step>
+      <v-stepper-step color="red" :complete="e6 > 3" step="3"
+        >난이도 & 소요시간</v-stepper-step
+      >
       <v-stepper-content step="3">
         <v-card class="mb-12" height="200px">
           난이도
@@ -164,13 +189,18 @@
               medium
             ></v-rating>
           </div>
-          <hr />소요 시간
-          <b-form-input
-            class="timeinput"
-            type="text"
-            v-model="postData.time"
-            style="width:100px;height:40px;font-size:12px"
-          />
+          <hr />
+          소요 시간
+          <v-row class="container">
+            <!-- <div class="timeinput"> -->
+            <b-form-input
+              type="text"
+              v-model="postData.time"
+              style="width:100px;height:40px;font-size:12px"
+            />
+            <span>시간</span>
+            <!-- </div> -->
+          </v-row>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
@@ -247,7 +277,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 2, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -290,7 +320,7 @@ export default {
     },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
-      const idx = this.postData.content.steps.findIndex(function (item) {
+      const idx = this.postData.content.steps.findIndex(function(item) {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);
@@ -474,7 +504,7 @@ export default {
   width: 150px;
   height: 25px;
 }
-.timeinput {
-  margin: 0 auto;
-}
+/* .timeinput {
+  margin-left: 10%;
+} */
 </style>

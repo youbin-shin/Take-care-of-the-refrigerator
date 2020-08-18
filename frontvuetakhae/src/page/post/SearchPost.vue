@@ -3,7 +3,9 @@
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
         <h2 class="m-3 0 4">나의 냉장고</h2>
-        <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+        <h3 v-if="emptyChip" class="white--text">
+          요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.
+        </h3>
 
         <div>
           <div class="left d-sm-inline-flex pa-2">
@@ -23,7 +25,8 @@
                   plusFood();
                   check();
                 "
-              >mdi-plus</v-icon>
+                >mdi-plus</v-icon
+              >
             </v-row>
           </div>
           <div>
@@ -33,7 +36,8 @@
               close
               @click:close="closeChip(tag)"
               :key="tag"
-            >{{ tag }}</v-chip>
+              >{{ tag }}</v-chip
+            >
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
@@ -128,9 +132,7 @@
               <v-list-item @click="goDetail(board.boardId)">
                 <v-list-item-content class="row">
                   <v-list-item-title class="headline text-center col-9">
-                    {{
-                    board.title
-                    }}
+                    {{ board.title }}
                   </v-list-item-title>
                   <div class="col-3" @click="heartRecipe(board.boardId)">
                     <span v-if="searchData.favorite">
@@ -163,17 +165,23 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img :src="board.thumbnailImage" height="194" @click="goDetail(board.boardId)"></v-img>
-              <v-card-text @click="goDetail(board.boardId)" style="text-align: left;">
+              <v-img
+                :src="board.thumbnailImage"
+                height="194"
+                @click="goDetail(board.boardId)"
+              ></v-img>
+              <v-card-text
+                @click="goDetail(board.boardId)"
+                style="text-align: left;"
+              >
                 <v-list-item-subtitle class="mb-2">
                   작성자 : {{ board.nickname }}
                   <small style="float:right">
-                    {{
-                    board.createAt
-                    }}
+                    {{ board.createAt }}
                   </small>
                 </v-list-item-subtitle>
-                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>난이도
+                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>
+                난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -208,6 +216,7 @@
   src="https://developers.kakao.com/sdk/js/kakao.min.js"
 ></script>
 <script>
+import InfiniteLoading from "vue-infinite-loading";
 import axios from "axios";
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
@@ -215,12 +224,12 @@ export default {
   name: "SearchPost",
   data() {
     return {
+      limit: 1,
       searchData: {
         boards: [],
         apiboards: [],
       },
       easy: true,
-      limit: 0,
       addText: "",
       emptyChip: false,
       showDatas: [],
@@ -230,7 +239,9 @@ export default {
       ],
     };
   },
-
+  components: {
+    InfiniteLoading,
+  },
   created() {
     axios
       .get(`${BACK_URL}/users/mypage/box`, {
@@ -239,33 +250,89 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.chips = response.data.box;
+        axios
+          .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
+          .then((response) => {
+            this.searchData.boards = response.data.boards;
+          });
         if (this.chips.length === 0) {
           this.emptyChip = true;
         }
+        if (this.chips) {
+          console.log(response.data.recipes);
+          axios
+            .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+              ingredient: this.chips,
+              page: 0,
+            })
+            .then((response) => {
+              console.log(response);
+              this.searchData.apiboards = response.data.recipes;
+            });
+        } else {
+          axios
+            .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+              page: 0,
+            })
+            .then((response) => {
+              console.log(response);
+              this.searchData.apiboards = response.data.recipes;
+            });
+        }
+      });
+
+    Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
+  },
+  methods: {
+    infiniteHandler($state) {
+      console.log("마지막");
+      if (this.chips) {
         axios
           .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
             ingredient: this.chips,
+            page: this.limit,
+          })
+          .then((response) => {
+            console.log(this.limit);
+
+            console.log(response.data.recipes);
+
+            setTimeout(() => {
+              if (response.data.recipes.length) {
+                this.searchData.apiboards = this.searchData.apiboards.concat(
+                  response.data.recipes
+                );
+                $state.loaded();
+                this.limit += 1;
+                console.log(
+                  "after",
+                  this.searchData.apiboards.length,
+                  this.limit
+                );
+                const EACH_LEN = 12;
+                if (response.data.recipes.length / EACH_LEN < 1) {
+                  $state.complete();
+                }
+              } else {
+                // 끝 지정(No more data)
+                $state.complete();
+              }
+            }, 1000);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: this.limit,
           })
           .then((response) => {
             console.log(response);
             this.searchData.apiboards = response.data.recipes;
-            // console.log(this.searchData.boards);
           });
-      });
-    axios
-      .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
-      .then((response) => {
-        this.searchData.boards = response.data.boards;
-      });
-    Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
-    axios
-      .get(`${BACK_URL}/boards/foodsafe/recipes/pages/0`)
-      .then((response) => {
-        console.log(response);
-        this.apiDatas = response.data.recipes;
-      });
-  },
-  methods: {
+      }
+    },
     changeEasy() {
       if (this.easy) {
         this.easy = false;
@@ -304,20 +371,32 @@ export default {
       // close 버튼 누를 경우 실행되는 메소드 (리스트에서 삭제)
       this.chips.splice(this.chips.indexOf(tag), 1);
       axios
-        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
-          ingredient: this.chips,
-        })
-        .then((response) => {
-          console.log(response);
-          this.searchData.apiboards = response.data.recipes;
-          // console.log(this.searchData.boards);
-        });
-      axios
         .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
         .then((response) => {
           this.searchData.boards = response.data.boards;
-          console.log(this.searchData.boards);
         });
+      if (this.chips) {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            ingredient: this.chips,
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      }
       if (this.chips.length === 0) {
         this.emptyChip = true;
         this.searchData.boards = [];
@@ -330,15 +409,29 @@ export default {
           this.searchData.boards = response.data.boards;
           console.log(this.searchData.boards);
         });
-      axios
-        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
-          ingredient: this.chips,
-        })
-        .then((response) => {
-          console.log(response);
-          this.searchData.apiboards = response.data.recipes;
-          // console.log(this.searchData.boards);
-        });
+      if (this.chips) {
+        console.log(response.data.recipes);
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            ingredient: this.chips,
+            page: 0,
+          })
+          .then((response) => {
+            this.limit = 1;
+            console.log(response);
+            this.searchData.apiboards = response.data.recipes;
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      }
       if (this.chips.length === 0) {
         this.emptyChip = true;
       }

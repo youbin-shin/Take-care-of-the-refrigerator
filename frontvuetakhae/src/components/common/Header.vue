@@ -1,12 +1,20 @@
 <template>
   <div id="header" v-if="isHeader">
     <div class="upperHead d-flex justify-content-between">
-      <router-link class="ml-4" v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }">
+      <router-link
+        class="ml-4"
+        v-bind:to="{ name: constants.URL_TYPE.POST.MAIN }"
+      >
         <img class="logoImage" src="../../assets/img/logo.png" />
       </router-link>
       <div class="right" v-if="this.$cookies.get('token') == null">
         <a @click="modalShow = !modalShow" class="a_tag_modal">로그인</a>
-        <a style="margin:0px 20px" @click="signUpShow = !signUpShow" class="a_tag_modal">회원가입</a>
+        <a
+          style="margin:0px 20px"
+          @click="signUpShow = !signUpShow"
+          class="a_tag_modal"
+          >회원가입</a
+        >
         <b-modal v-model="modalShow" hide-footer hide-header>
           <h2 class="text-center">로그인</h2>
 
@@ -37,7 +45,14 @@
             </div>
           </div>
           <div>
-            <b-button class="mt-3" block variant="danger" size="lg" @click="login">로그인 하기</b-button>
+            <b-button
+              class="mt-3"
+              block
+              variant="danger"
+              size="lg"
+              @click="login"
+              >로그인 하기</b-button
+            >
 
             <p class="go_signup" style="color:gray">
               아직 회원이 아니신가요?
@@ -46,7 +61,8 @@
                 size="sm"
                 variant="outline-danger"
                 @click="switchModal"
-              >회원가입 하러 가기</b-button>
+                >회원가입 하러 가기</b-button
+              >
             </p>
           </div>
         </b-modal>
@@ -134,7 +150,9 @@
             </div>
           </div>
 
-          <b-button class="mt-3" block variant="danger" @click="signUp">회원가입 하기</b-button>
+          <b-button class="mt-3" block variant="danger" @click="signUp"
+            >회원가입 하기</b-button
+          >
 
           <p class="go_signup ml-4" @click="switchModal">
             로그인으로 돌아가기
@@ -147,7 +165,9 @@
       <div class="right" v-if="this.$cookies.get('token') != null">
         <!-- <small>{{}}님 환영합니다. </small> -->
         <a @click="logout" class="a_tag_modal">로그아웃</a>
-        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal">마이페이지</a>
+        <a style="margin:0px 20px" @click="goMyPage" class="a_tag_modal"
+          >마이페이지</a
+        >
       </div>
     </div>
 
@@ -157,17 +177,25 @@
         <router-link class="text-white" to="/">홈</router-link>
       </div>
       <div>
-        <router-link class="text-white" to="/search">냉장고를 Vue탁해</router-link>
+        <router-link class="text-white" to="/search"
+          >냉장고를 Vue탁해</router-link
+        >
       </div>
       <div>
         <router-link
           v-bind:to="{ name: constants.URL_TYPE.POST.CREATEPOST }"
           class="login-btn text-white"
           v-if="this.$cookies.get('token') != null"
-        >Recipe 작성하기</router-link>
+          >Recipe 작성하기</router-link
+        >
       </div>
       <div>
-        <router-link class="text-white" v-if="this.$cookies.get('token') != null" to="/notice">공지사항</router-link>
+        <router-link
+          class="text-white"
+          v-if="this.$cookies.get('token') != null"
+          to="/notice"
+          >공지사항</router-link
+        >
       </div>
     </div>
   </div>
@@ -176,6 +204,7 @@
 <script>
 import constants from "../../lib/constants";
 import axios from "axios";
+const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
   name: "Header",
@@ -201,6 +230,10 @@ export default {
           this.modalShow = !this.modalShow;
           alert("로그인이 완료됐습니다!");
           this.$router.push("/");
+          axios.get(`${BACK_URL}/boards`, {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          });
+          this.$router.go();
         })
         .catch((error) => {
           alert(error);
@@ -254,7 +287,7 @@ export default {
       this.$router.push("/user/mypage");
     },
   },
-  data: function () {
+  data: function() {
     return {
       constants,
       keyword: "",

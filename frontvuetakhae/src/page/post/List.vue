@@ -186,7 +186,12 @@
         </ul>
       </div>
     </div>
-
+    <img
+      @click="goUp"
+      class="upper"
+      src="https://user-images.githubusercontent.com/60081201/90482034-a1c5c880-e16d-11ea-986a-0469e187f948.png"
+      alt=""
+    />
     <br />
     <div class="container">
       <h2 class="m-5 0 4">인기순 레시피</h2>
@@ -433,7 +438,15 @@ export default {
         this.apiDatas = response.data.recipes;
       });
   },
+  watch() {
+    if ($cookies.get("token")) {
+      this.$router.go();
+    }
+  },
   methods: {
+    goUp() {
+      window.scrollTo(0, 0);
+    },
     infiniteHandler($state) {
       axios
         .get(`${BACK_URL}/boards/foodsafe/recipes/pages/` + this.limit)
@@ -510,8 +523,15 @@ export default {
         .then((response) => {
           console.log(response);
           if (response.status === 200) {
-            alert("관심레시피에 등록되었습니다.");
             // this.$router.go();
+            axios
+              .get(`${BACK_URL}/boards`, {
+                headers: { "jwt-auth-token": this.$cookies.get("token") },
+              })
+              .then((response) => {
+                console.log(response.data);
+                this.backDatas = response.data.boards;
+              });
           }
         })
         .catch((error) => {

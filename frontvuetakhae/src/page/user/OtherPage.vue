@@ -70,17 +70,25 @@
       <div>{{ mypage.box }}</div>
     </div>
     <div class="interest">
-      <h1>즐겨찾기한 레시피</h1>
-      <p>연어 킹의 연어 덮밥</p>
-      <p>진주새럼의 진주비빔밥</p>
+      <h1>{{ mypage.nickname }}님이 작성한 즐겨찾기한 목록</h1>
+
+      <li v-for="interest in mypage.interestBoards" :key="interest" class="boardList">
+        <span @click="goDetail(interest.boardId)">{{ interest.title }}</span>
+        <small>{{ interest.createAt }}</small>
+      </li>
+      <div v-if="!mypage.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
     <hr />
     <div class="interest">
       <h1>{{ mypage.nickname }}님이 작성한 레시피 목록</h1>
-      <li v-for="board in mypage.myBoards" :key="board">
-        {{ board.boardId }} : {{ board.title }}
-        {{ board.createAt }}
+      <li v-for="board in mypage.myBoards" :key="board" class="boardList">
+        <span @click="goDetail(board.boardId)">{{ board.title }}</span>
+        <small>{{ board.createAt }}</small>
       </li>
+      <div v-if="!mypage.myBoards.length">
+        작성한 레시피가 없습니다.
+        <br />레시피 작성하기 버튼을 통해 나만의 레시피를 작성해보세요.
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +156,9 @@ export default {
       });
   },
   methods: {
+    goDetail(boardId) {
+      this.$router.push("/detail/" + boardId);
+    },
     doFollow() {
       axios
         .post(
@@ -283,5 +294,8 @@ input[type="password"] {
 }
 input[value="mypage.nickname"] {
   margin-left: 2px;
+}
+.boardList {
+  cursor: pointer;
 }
 </style>

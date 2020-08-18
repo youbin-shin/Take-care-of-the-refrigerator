@@ -165,12 +165,16 @@
             ></v-rating>
           </div>
           <hr />소요 시간
-          <b-form-input
-            class="timeinput"
-            type="text"
-            v-model="postData.time"
-            style="width:100px;height:40px;font-size:12px"
-          />
+          <v-row class="container">
+            <!-- <div class="timeinput"> -->
+            <b-form-input
+              type="text"
+              v-model="postData.time"
+              style="width:100px;height:40px;font-size:12px"
+            />
+            <span>시간</span>
+            <!-- </div> -->
+          </v-row>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
@@ -215,6 +219,16 @@ export default {
   components: {
     draggable,
   },
+  created() {
+    axios
+      .get(`${BACK_URL}/users/mypage/box`, {
+        headers: { "jwt-auth-token": this.$cookies.get("token") },
+      })
+      .then((response) => {
+        console.log(response.data);
+        this.list = response.data.box;
+      });
+  },
   data() {
     return {
       tempHashtag: "",
@@ -237,7 +251,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 3, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -342,13 +356,31 @@ export default {
       this.postData.content.process = "";
     },
     createPost() {
+      console.log(this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
-        tags.push(this.postData.content.steps[i].hashtag);
+        let temptags = "";
+        for (
+          let j = 0;
+          j < this.postData.content.steps[i].hashtag.length;
+          j++
+        ) {
+          console.log(temptags);
+          if (j == this.postData.content.steps[i].hashtag.length - 1) {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j]
+            );
+          } else {
+            temptags = temptags.concat(
+              this.postData.content.steps[i].hashtag[j],
+              ","
+            );
+          }
+        }
+        tags.push(temptags);
         delete this.postData.content.steps[i].hashtag;
       }
-      console.log(tags);
       console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {
@@ -357,7 +389,6 @@ export default {
       };
       let ingreString = this.postData.content.ingredients.join(" ");
       console.log(ingreString);
-
       axios
         .post(
           "http://i3a305.p.ssafy.io:8399/api/boards/",
@@ -369,7 +400,7 @@ export default {
             thumbnailImage: "no image",
             ingredient: ingreString,
             steps: this.postData.content.steps,
-            tags: tags[0],
+            tags: tags,
           },
           requestHeader
         )
@@ -447,7 +478,7 @@ export default {
   width: 150px;
   height: 25px;
 }
-.timeinput {
-  margin: 0 auto;
-}
+/* .timeinput {
+  margin-left: 10%;
+} */
 </style>

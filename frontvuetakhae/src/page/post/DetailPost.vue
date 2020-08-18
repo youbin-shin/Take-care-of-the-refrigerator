@@ -2,6 +2,7 @@
   <!-- <div> -->
   <div class="container">
     <div class="writerButton" v-if="userData.nickname==detailData.nickname">
+      <v-btn small class="mr-2">수정</v-btn>
       <v-btn small color="error" @click="deletePost">삭제</v-btn>
       <hr />
     </div>

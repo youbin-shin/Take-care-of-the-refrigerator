@@ -9,8 +9,9 @@
             <input type="file" @change="previewImage" accept="image/*" />
           </div>
           <div>
+            <v-btn class="m-2" @click="submitFile">업로드하기</v-btn>
             <p>
-              미리보기 : {{ uploadValue.toFixed() + "%" }}
+              업로드 : {{ uploadValue.toFixed() + "%" }}
               <progress
                 id="progress"
                 :value="uploadValue"
@@ -18,12 +19,7 @@
               ></progress>
             </p>
           </div>
-          <!-- <div v-if="imageData != null"> -->
-          <img class="preview" :src="picture" />
-          <br />
-          <!-- <button @click="onUpload">Upload |</button> -->
-          <button @click="submitFile">Submit</button>
-          <!-- </div> -->
+          <!-- <img class="preview" :src="picture" /> -->
         </v-card>
       </v-col>
       <v-col cols="12" sm="7" md="9">
@@ -104,17 +100,21 @@
     </div>
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
-      <li v-for="interest in userData.interestBoards" :key="interest">
-        {{ interest.title }}
-        <small>{{ interest.createAt }}</small>
+      <li v-for="interest in userData.interestBoards" :key="interest" class="boardList">
+        <span @click="goDetail(interest.boardId)">
+          {{ interest.title }}
+          <small>{{ interest.createAt }}</small>
+        </span>
       </li>
       <div v-if="!userData.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
     </div>
     <hr />
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
-      <li v-for="board in userData.myBoards" :key="board">
-        {{ board.title }}
+      <li v-for="board in userData.myBoards" :key="board" class="boardList">
+        <v-btn small class="mr-2">수정</v-btn>
+        <v-btn small color="error" @click="deletePost(board.boardId)" class="mr-2">삭제</v-btn>
+        <span @click="goDetail(board.boardId)">{{ board.title }}</span>
         <small>{{ board.createAt }}</small>
       </li>
       <div v-if="!userData.myBoards.length">
@@ -122,6 +122,8 @@
         <br />레시피 작성하기 버튼을 통해 나만의 레시피를 작성해보세요.
       </div>
     </div>
+    <hr />
+
     <div class="white--text">
       <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
       <b-button
@@ -228,6 +230,24 @@ export default {
       });
   },
   methods: {
+    deletePost(boardId) {
+      axios
+        .delete(`${BACK_URL}/boards/${boardId}`, {
+          headers: { "jwt-auth-token": this.$cookies.get("token") },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            alert("삭제되었습니다.");
+            this.$router.push("/");
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    },
+    goDetail(boardId) {
+      this.$router.push("/detail/" + boardId);
+    },
     previewImage(event) {
       this.uploadValue = 0;
       this.picture = null;
@@ -569,5 +589,8 @@ input[type="password"] {
 }
 input[value="userData.nickname"] {
   margin-left: 2px;
+}
+.boardList {
+  cursor: pointer;
 }
 </style>

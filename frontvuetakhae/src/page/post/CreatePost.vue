@@ -165,12 +165,16 @@
             ></v-rating>
           </div>
           <hr />소요 시간
-          <b-form-input
-            class="timeinput"
-            type="text"
-            v-model="postData.time"
-            style="width:100px;height:40px;font-size:12px"
-          />
+          <v-row class="container">
+            <!-- <div class="timeinput"> -->
+            <b-form-input
+              type="text"
+              v-model="postData.time"
+              style="width:100px;height:40px;font-size:12px"
+            />
+            <span>시간</span>
+            <!-- </div> -->
+          </v-row>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>
         <v-btn color="secondary" @click="e6 = 2">뒤로 가기</v-btn>
@@ -247,7 +251,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 3, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -474,7 +478,7 @@ export default {
   width: 150px;
   height: 25px;
 }
-.timeinput {
-  margin: 0 auto;
-}
+/* .timeinput {
+  margin-left: 10%;
+} */
 </style>

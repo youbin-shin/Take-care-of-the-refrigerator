@@ -40,73 +40,6 @@
       </v-card>
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
       <div class="row row-cols-3 searchPostContent">
-        <ul v-for="apiboard in searchData.apiboards" :key="apiboard.title">
-          <v-hover v-slot:default="{ hover }" open-delay="200">
-            <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
-              <v-list-item @click="goApiDetail(apiboard.boardId)">
-                <v-list-item-avatar color="grey"></v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title class="headline">
-                    {{
-                    apiboard.title
-                    }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
-                  <small style="text-align:right;">
-                    {{
-                    apiboard.createAt
-                    }}
-                  </small>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-img
-                :src="apiboard.thumbnailImage"
-                height="194"
-                @click="goApiDetail(apiboard.boardId)"
-              ></v-img>
-
-              <v-card-text @click="goApiDetail(apiboard.boardId)">
-                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
-                <v-rating
-                  class="p-0"
-                  small
-                  v-model="apiboard.grade"
-                  background-color="orange lighten-3"
-                  color="orange"
-                ></v-rating>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn
-                  @click="goApiDetail(apiboard.boardId)"
-                  text
-                  color="deep-purple accent-4"
-                >자세히 보기</v-btn>
-                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-
-                <v-spacer></v-spacer>
-                <v-btn icon @click="changeEasy">
-                  <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-                    <p class="caption mb-0 mt-1">easy</p>
-                  </div>
-                  <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-                    <p class="caption mb-0 mt-1">hard</p>
-                  </div>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-share-variant</v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-hover>
-        </ul>
-      </div>
-      <div class="row row-cols-3 searchPostContent">
         <ul v-for="board in searchData.boards" :key="board.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
@@ -185,7 +118,80 @@
           </v-hover>
         </ul>
       </div>
-      {{searchData.apiboards}}
+      <div class="row row-cols-3 searchPostContent">
+        <ul v-for="apiboard in searchData.apiboards" :key="apiboard.title">
+          <v-hover v-slot:default="{ hover }" open-delay="200">
+            <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
+              <v-list-item @click="goApiDetail(apiboard.boardId)">
+                <v-list-item-avatar color="grey"></v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title class="headline">
+                    {{
+                    apiboard.title
+                    }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
+                  <small style="text-align:right;">
+                    {{
+                    apiboard.createAt
+                    }}
+                  </small>
+                </v-list-item-content>
+              </v-list-item>
+
+              <v-img
+                :src="apiboard.thumbnailImage"
+                height="194"
+                @click="goApiDetail(apiboard.boardId)"
+              ></v-img>
+
+              <v-card-text @click="goApiDetail(apiboard.boardId)">
+                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
+                <v-rating
+                  class="p-0"
+                  small
+                  v-model="apiboard.grade"
+                  background-color="orange lighten-3"
+                  color="orange"
+                ></v-rating>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="goApiDetail(apiboard.boardId)"
+                  text
+                  color="deep-purple accent-4"
+                >자세히 보기</v-btn>
+                <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-heart</v-icon>
+                </v-btn>
+
+                <v-spacer></v-spacer>
+                <v-btn icon @click="changeEasy">
+                  <div v-if="easy">
+                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
+                    <p class="caption mb-0 mt-1">easy</p>
+                  </div>
+                  <div v-else>
+                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
+                    <p class="caption mb-0 mt-1">hard</p>
+                  </div>
+                </v-btn>
+                <v-btn icon>
+                  <v-icon>mdi-share-variant</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-hover>
+        </ul>
+      </div>
+      <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+        <div
+          slot="no-more"
+          style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
+          class="white--text"
+        >목록의 끝입니다 :)</div>
+      </infinite-loading>
     </div>
   </div>
 </template>
@@ -194,6 +200,7 @@
   src="https://developers.kakao.com/sdk/js/kakao.min.js"
 ></script>
 <script>
+import InfiniteLoading from "vue-infinite-loading";
 import axios from "axios";
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
@@ -201,12 +208,12 @@ export default {
   name: "SearchPost",
   data() {
     return {
+      limit: 1,
       searchData: {
         boards: [],
         apiboards: [],
       },
       easy: true,
-      limit: 0,
       addText: "",
       emptyChip: false,
       showDatas: [],
@@ -216,7 +223,9 @@ export default {
       ],
     };
   },
-
+  components: {
+    InfiniteLoading,
+  },
   created() {
     axios
       .get(`${BACK_URL}/users/mypage/box`, {
@@ -225,33 +234,89 @@ export default {
       .then((response) => {
         console.log(response.data);
         this.chips = response.data.box;
+        axios
+          .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
+          .then((response) => {
+            this.searchData.boards = response.data.boards;
+          });
         if (this.chips.length === 0) {
           this.emptyChip = true;
         }
+        if (this.chips) {
+          console.log(response.data.recipes);
+          axios
+            .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+              ingredient: this.chips,
+              page: 0,
+            })
+            .then((response) => {
+              console.log(response);
+              this.searchData.apiboards = response.data.recipes;
+            });
+        } else {
+          axios
+            .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+              page: 0,
+            })
+            .then((response) => {
+              console.log(response);
+              this.searchData.apiboards = response.data.recipes;
+            });
+        }
+      });
+
+    Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
+  },
+  methods: {
+    infiniteHandler($state) {
+      console.log("마지막");
+      if (this.chips) {
         axios
           .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
             ingredient: this.chips,
+            page: this.limit,
+          })
+          .then((response) => {
+            console.log(this.limit);
+
+            console.log(response.data.recipes);
+
+            setTimeout(() => {
+              if (response.data.recipes.length) {
+                this.searchData.apiboards = this.searchData.apiboards.concat(
+                  response.data.recipes
+                );
+                $state.loaded();
+                this.limit += 1;
+                console.log(
+                  "after",
+                  this.searchData.apiboards.length,
+                  this.limit
+                );
+                const EACH_LEN = 12;
+                if (response.data.recipes.length / EACH_LEN < 1) {
+                  $state.complete();
+                }
+              } else {
+                // 끝 지정(No more data)
+                $state.complete();
+              }
+            }, 1000);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: this.limit,
           })
           .then((response) => {
             console.log(response);
             this.searchData.apiboards = response.data.recipes;
-            // console.log(this.searchData.boards);
           });
-      });
-    axios
-      .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
-      .then((response) => {
-        this.searchData.boards = response.data.boards;
-      });
-    Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
-    axios
-      .get(`${BACK_URL}/boards/foodsafe/recipes/pages/0`)
-      .then((response) => {
-        console.log(response);
-        this.apiDatas = response.data.recipes;
-      });
-  },
-  methods: {
+      }
+    },
     changeEasy() {
       if (this.easy) {
         this.easy = false;
@@ -290,20 +355,32 @@ export default {
       // close 버튼 누를 경우 실행되는 메소드 (리스트에서 삭제)
       this.chips.splice(this.chips.indexOf(tag), 1);
       axios
-        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
-          ingredient: this.chips,
-        })
-        .then((response) => {
-          console.log(response);
-          this.searchData.apiboards = response.data.recipes;
-          // console.log(this.searchData.boards);
-        });
-      axios
         .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
         .then((response) => {
           this.searchData.boards = response.data.boards;
-          console.log(this.searchData.boards);
         });
+      if (this.chips) {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            ingredient: this.chips,
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      }
       if (this.chips.length === 0) {
         this.emptyChip = true;
         this.searchData.boards = [];
@@ -316,15 +393,29 @@ export default {
           this.searchData.boards = response.data.boards;
           console.log(this.searchData.boards);
         });
-      axios
-        .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
-          ingredient: this.chips,
-        })
-        .then((response) => {
-          console.log(response);
-          this.searchData.apiboards = response.data.recipes;
-          // console.log(this.searchData.boards);
-        });
+      if (this.chips) {
+        console.log(response.data.recipes);
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            ingredient: this.chips,
+            page: 0,
+          })
+          .then((response) => {
+            this.limit = 1;
+            console.log(response);
+            this.searchData.apiboards = response.data.recipes;
+          });
+      } else {
+        axios
+          .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
+            page: 0,
+          })
+          .then((response) => {
+            console.log(response);
+            this.limit = 1;
+            this.searchData.apiboards = response.data.recipes;
+          });
+      }
       if (this.chips.length === 0) {
         this.emptyChip = true;
       }

@@ -134,6 +134,12 @@ public class BoardServiceImpl implements BoardService {
         boardDao.updateViewCnt(BoardId);
     }
 
+
+    @Override
+    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException {
+        return boardDao.scrollList(scrollDto);
+    }
+
 	@Override
 	public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
 		List<Board> boards = null;

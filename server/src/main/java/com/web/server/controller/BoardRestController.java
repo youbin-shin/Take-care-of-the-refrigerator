@@ -1,10 +1,7 @@
 package com.web.server.controller;
 
 
-import com.web.server.dto.Board;
-import com.web.server.dto.BoardSearchByFoodList;
-import com.web.server.dto.BoardSimpleDto;
-import com.web.server.dto.CommentDto;
+import com.web.server.dto.*;
 import com.web.server.service.BoardService;
 import com.web.server.service.JwtService;
 import io.swagger.annotations.ApiOperation;
@@ -284,5 +281,24 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+    @RequestMapping(value = "/boards/scroll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> scroll(Board board, @RequestBody ScrollDto scrollDto){
+        ResponseEntity<Map<String, Object>> entity = null;
+        HttpStatus status = null;
+        Map<String, Object> resultMap = new HashMap<>();
+        try{
+            status = HttpStatus.OK;
+            List<Board> boardList = null;
+//            board.setScrollNumber(scrollDto);
+            boardList = boardService.scrollList(scrollDto);
+            resultMap.put("board", boardList);
+            resultMap.put("message","리스트 불러오기 성공");
+        } catch (Exception e) {
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
 
+        }return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 }

@@ -23,37 +23,37 @@ class HardEasyDaoImpl implements HardEasyDao{
     }
 
     @Override
-    public void createEasyChoice(HardEasy hardEasy) throws SQLException {
-        template.selectOne(ns+"easyChoice",hardEasy);
+    public void firstChoice(HardEasy hardEasy) throws SQLException {
+        template.selectOne(ns+"firstChoice",hardEasy);
     }
 
     @Override
-    public void createHardChoice(HardEasy hardEasy) throws SQLException {
-        template.selectOne(ns+"hardChoice",hardEasy);
+    public void hardEasyChoice(HardEasy hardEasy) throws SQLException {
+        template.selectOne(ns+"hardEasyChoice",hardEasy);
     }
-
-    @Override
-    public void deleteChoice(HardEasy hardEasy) throws SQLException{
-        template.delete(ns+"deleteChoice",hardEasy);
-    }
-
-    @Override
-    public int updateHardChoice(HardEasy hardEasy) throws SQLException{
-        return template.selectOne(ns+"updateHardChoice",hardEasy);
-    }
-
-    @Override
-    public int updateEasyChoice(HardEasy hardEasy) throws SQLException{
-        return template.selectOne(ns+"updateEasyChoice",hardEasy);
-    }
-
-    @Override
-    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
-        template.update(ns+"hardToEasyChangeChoice",hardEasy);
-    }
-
-    @Override
-    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
-        template.update(ns+"easyToHardChangeChoice",hardEasy);
-    }
+//
+//    @Override
+//    public void deleteChoice(HardEasy hardEasy) throws SQLException{
+//        template.delete(ns+"deleteChoice",hardEasy);
+//    }
+//
+//    @Override
+//    public int updateHardChoice(int boardId) throws SQLException{
+//        return template.selectOne(ns+"updateHardChoice",boardId);
+//    }
+//
+//    @Override
+//    public int updateEasyChoice(int boardId) throws SQLException{
+//        return template.selectOne(ns+"updateEasyChoice",boardId);
+//    }
+//
+//    @Override
+//    public void hardToEasyChange(HardEasy hardEasy) throws SQLException{
+//        template.update(ns+"hardToEasyChangeChoice",hardEasy);
+//    }
+//
+//    @Override
+//    public void easyToHardChange(HardEasy hardEasy) throws SQLException{
+//        template.update(ns+"easyToHardChangeChoice",hardEasy);
+//    }
 }

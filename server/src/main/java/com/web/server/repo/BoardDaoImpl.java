@@ -92,4 +92,9 @@ public class BoardDaoImpl implements BoardDao{
     public void updateViewCnt(Integer boardId) throws SQLException{
         template.update(ns+"addViews",boardId);
     }
+
+    @Override
+    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException{
+        return template.selectList(ns+"infiniteScroll",scrollDto);
+    }
 }

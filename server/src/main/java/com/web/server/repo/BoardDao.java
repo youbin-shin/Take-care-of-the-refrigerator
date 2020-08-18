@@ -42,5 +42,8 @@ public interface BoardDao {
 
     // 조회수 갱신
     void updateViewCnt(Integer boardId) throws  SQLException;
+
+    // 무한 스크롤
+    List<Board> scrollList(ScrollDto scrollDto) throws SQLException;
 }
 

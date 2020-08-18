@@ -129,4 +129,9 @@ public class BoardServiceImpl implements BoardService {
     public void updateViewCnt(Integer BoardId) throws  SQLException{
         boardDao.updateViewCnt(BoardId);
     }
+
+    @Override
+    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException{
+        return boardDao.scrollList(scrollDto);
+    }
 }

@@ -34,7 +34,7 @@
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
         select *,(select nickname from users where user_id=boards.user_id) as nickname,
-        (select count(*) from hardeasy where grade = 2) as easyCount,(select count(*) from hardeasy where grade = 1) as difficultyCount
+        (select count(*) from hardeasy where grade = 2 AND board_id=#{boardId}) as easyCount,(select count(*) from hardeasy where grade = 1 AND board_id=#{boardId}) as difficultyCount
         from boards
         where board_id=#{boardId}
         
@@ -129,5 +129,9 @@
         WHERE board_id=#{boardId}
     </update>
 
-
+    <!-- 무한 스크롤 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+    <select id="infiniteScroll" resultType="board">
+        <![CDATA[
+        select * from boards where board_id>0 order by board_id desc limit #{scrollNumber},3;]]>
+    </select>
 </mapper>

@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <h1>유빈 수정중</h1>
@@ -79,7 +78,7 @@
 
 <script>
 export default {
-  name: "CreateReview",
+  name: "CreateStep",
   data() {
     return {
       review: "",
@@ -102,12 +101,12 @@ export default {
     };
   },
   computed: {
-    compiledMarkdown: function () {
+    compiledMarkdown: function() {
       return marked(this.input, { sanitize: true });
     },
   },
   methods: {
-    update: _.debounce(function (e) {
+    update: _.debounce(function(e) {
       this.input = e.target.value;
     }, 300),
   },

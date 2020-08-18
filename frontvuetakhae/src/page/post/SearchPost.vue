@@ -3,7 +3,9 @@
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
         <h2 class="m-3 0 4">나의 냉장고</h2>
-        <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
+        <h3 v-if="emptyChip" class="white--text">
+          요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.
+        </h3>
 
         <div>
           <div class="left d-sm-inline-flex pa-2">
@@ -23,7 +25,8 @@
                   plusFood();
                   check();
                 "
-              >mdi-plus</v-icon>
+                >mdi-plus</v-icon
+              >
             </v-row>
           </div>
           <div>
@@ -33,7 +36,8 @@
               close
               @click:close="closeChip(tag)"
               :key="tag"
-            >{{ tag }}</v-chip>
+              >{{ tag }}</v-chip
+            >
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
@@ -46,9 +50,7 @@
               <v-list-item @click="goDetail(board.boardId)">
                 <v-list-item-content class="row">
                   <v-list-item-title class="headline text-center col-9">
-                    {{
-                    board.title
-                    }}
+                    {{ board.title }}
                   </v-list-item-title>
                   <div class="col-3" @click="heartRecipe(board.boardId)">
                     <span v-if="searchData.favorite">
@@ -81,17 +83,23 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img :src="board.thumbnailImage" height="194" @click="goDetail(board.boardId)"></v-img>
-              <v-card-text @click="goDetail(board.boardId)" style="text-align: left;">
+              <v-img
+                :src="board.thumbnailImage"
+                height="194"
+                @click="goDetail(board.boardId)"
+              ></v-img>
+              <v-card-text
+                @click="goDetail(board.boardId)"
+                style="text-align: left;"
+              >
                 <v-list-item-subtitle class="mb-2">
                   작성자 : {{ board.nickname }}
                   <small style="float:right">
-                    {{
-                    board.createAt
-                    }}
+                    {{ board.createAt }}
                   </small>
                 </v-list-item-subtitle>
-                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>난이도
+                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>
+                난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -126,15 +134,13 @@
                 <v-list-item-avatar color="grey"></v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="headline">
-                    {{
-                    apiboard.title
-                    }}
+                    {{ apiboard.title }}
                   </v-list-item-title>
-                  <v-list-item-subtitle style="text-align:right;">작성자 : {{ apiboard.nickname }}</v-list-item-subtitle>
+                  <v-list-item-subtitle style="text-align:right;"
+                    >작성자 : {{ apiboard.nickname }}</v-list-item-subtitle
+                  >
                   <small style="text-align:right;">
-                    {{
-                    apiboard.createAt
-                    }}
+                    {{ apiboard.createAt }}
                   </small>
                 </v-list-item-content>
               </v-list-item>
@@ -146,7 +152,8 @@
               ></v-img>
 
               <v-card-text @click="goApiDetail(apiboard.boardId)">
-                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>난이도
+                <p class="caption">소요시간 : {{ apiboard.cookingTime }}시간</p>
+                난이도
                 <v-rating
                   class="p-0"
                   small
@@ -160,7 +167,8 @@
                   @click="goApiDetail(apiboard.boardId)"
                   text
                   color="deep-purple accent-4"
-                >자세히 보기</v-btn>
+                  >자세히 보기</v-btn
+                >
                 <v-btn text color="deep-purple accent-4">즐겨찾기</v-btn>
                 <v-btn icon>
                   <v-icon>mdi-heart</v-icon>
@@ -169,11 +177,19 @@
                 <v-spacer></v-spacer>
                 <v-btn icon @click="changeEasy">
                   <div v-if="easy">
-                    <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
+                    <b-icon
+                      icon="emoji-smile"
+                      scale="2"
+                      variant="warning"
+                    ></b-icon>
                     <p class="caption mb-0 mt-1">easy</p>
                   </div>
                   <div v-else>
-                    <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
+                    <b-icon
+                      icon="emoji-frown"
+                      scale="2"
+                      variant="secondary"
+                    ></b-icon>
                     <p class="caption mb-0 mt-1">hard</p>
                   </div>
                 </v-btn>
@@ -190,7 +206,9 @@
           slot="no-more"
           style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
           class="white--text"
-        >목록의 끝입니다 :)</div>
+        >
+          목록의 끝입니다 :)
+        </div>
       </infinite-loading>
     </div>
   </div>

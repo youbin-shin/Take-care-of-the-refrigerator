@@ -1,24 +1,35 @@
 <template>
   <!-- <div> -->
   <div class="container">
-    <div class="writerButton" v-if="userData.nickname==detailData.nickname">
+    <div class="writerButton" v-if="userData.nickname == detailData.nickname">
       <v-btn small class="mr-2">수정</v-btn>
       <v-btn small color="error" @click="deletePost">삭제</v-btn>
       <hr />
     </div>
     <div class="detailHeader">
-      <h1 class="mt-5 mb-2">
-        {{ detailData.title }}
-        <b-badge class="mr-2" variant="success">난이도 {{ detailData.grade }}</b-badge>
-        <b-badge variant="secondary">소요시간 {{ detailData.cookingTime }}시간</b-badge>
-      </h1>
+      <div class="mt-5 mb-2">
+        <h1>
+          {{ detailData.title }}
+          <b-badge class="mr-2" variant="success"
+            >난이도 {{ detailData.grade }}</b-badge
+          >
+          <b-badge variant="secondary"
+            >소요시간 {{ detailData.cookingTime }}시간</b-badge
+          >
+        </h1>
+        <span class="d-flex justify-content-end">
+          조회 수 {{ detailData.views }}
+        </span>
+      </div>
 
       <b-row>
         <b-col col="1">
           <b-avatar class="mt-2 pl-0"></b-avatar>
         </b-col>
         <b-col cols="9" class="writerArea">
-          <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
+          <p @click="goOtherpage(detailData.nickname)">
+            {{ detailData.nickname }}
+          </p>
           <p>{{ detailData.createAt }}</p>
         </b-col>
         <b-col cols="2">
@@ -33,8 +44,7 @@
             <div class="easyhardCss" @click="plusEasy">
               <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
               <p class="caption mb-0 mt-1">
-                {{ detailData.easyCount }}명
-                <br />쉬워요
+                {{ detailData.easyCount }}명 <br />쉬워요
               </p>
             </div>
 
@@ -42,24 +52,13 @@
             <div class="easyhardCss" @click="plusHard">
               <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
               <p class="caption mb-0 mt-1">
-                {{ detailData.difficultyCount }}명
-                <br />어려워요
+                {{ detailData.difficultyCount }}명 <br />어려워요
               </p>
             </div>
           </v-row>
         </b-col>
       </b-row>
     </div>
-    <!-- <div @click="changeEasy" class="icon">
-        <div v-if="easy">
-          <b-icon icon="emoji-smile" class="mr-1" scale="2" variant="warning"></b-icon>
-          <p class="caption mb-0 mt-1">easy</p>
-        </div>
-        <div v-else>
-          <b-icon icon="emoji-frown" class="mr-1" scale="2" variant="secondary"></b-icon>
-          <p class="caption mb-0 mt-1">hard</p>
-        </div>
-    </div>-->
     <hr />
     <div class="detailContent">
       <h4 class="detailContentItem">필요한 재료</h4>
@@ -81,10 +80,16 @@
 
       <div class="comments">
         <h4>댓글</h4>
-        <p class="d-flex justify-content-end">댓글 수{{ detailData.comments.length }}</p>
+        <p class="d-flex justify-content-end">
+          댓글 수 {{ detailData.comments.length }}
+        </p>
         <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
-            <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
+            <b-avatar
+              variant="primary"
+              class="m-2 auto"
+              text="프로필"
+            ></b-avatar>
             <p>{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
@@ -102,8 +107,16 @@
             </div>
           </b-col>
           <b-col v-if="userData.nickname == comment.nickname">
-            <v-btn @click="updateComment(comment.commentId, comment.commentContent)">수정</v-btn>
-            <v-btn color="secondary" class="mt-2" @click="deleteComment(comment.commentId)">삭제</v-btn>
+            <v-btn
+              @click="updateComment(comment.commentId, comment.commentContent)"
+              >수정</v-btn
+            >
+            <v-btn
+              color="secondary"
+              class="mt-2"
+              @click="deleteComment(comment.commentId)"
+              >삭제</v-btn
+            >
           </b-col>
           <b-col v-else></b-col>
         </b-row>
@@ -139,6 +152,7 @@ export default {
       this.detailData.thumbailImage = response.data.board.crethumbailImageateAt;
       this.detailData.steps = response.data.board.steps;
       this.detailData.tags = response.data.board.tags;
+      this.detailData.views = response.data.board.views;
       this.detailData.comments = response.data.board.comments;
       console.log(this.detailData);
     });
@@ -157,6 +171,7 @@ export default {
     return {
       easy: true,
       detailData: {
+        views: 0,
         boardId: "",
         title: "",
         nickname: "",
@@ -178,13 +193,6 @@ export default {
       },
     };
   },
-  watch: {
-    comments: function () {
-      axios.get(`${BACK_URL}/users/mypage`, {
-        headers: { "jwt-auth-token": this.$cookies.get("token") },
-      });
-    },
-  },
   methods: {
     deletePost() {
       axios
@@ -203,9 +211,15 @@ export default {
     },
     plusHard() {
       axios
-        .post(`${BACK_URL}/boards/${this.detailData.boardId}/1`, null, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/boards/${this.detailData.boardId}`,
+          {
+            pressedBtn: 1,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             alert("어려워요를 클릭하였습니다.");
@@ -218,9 +232,15 @@ export default {
     },
     plusEasy() {
       axios
-        .post(`${BACK_URL}/boards/${this.detailData.boardId}/2`, null, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/boards/${this.detailData.boardId}`,
+          {
+            pressedBtn: 2,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             alert("쉬워요를 클릭하였습니다.");
@@ -264,7 +284,11 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 작성되었습니다!");
-            this.$router.go();
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
@@ -285,7 +309,11 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 삭제되었습니다.");
-            this.$router.go();
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {

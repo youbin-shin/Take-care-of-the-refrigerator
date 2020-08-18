@@ -109,7 +109,8 @@ public class HardEasyRestController {
             choiceselect.setEmail(email);
             choiceselect.setBoardId(boardId);
             choiceselect.setPressedBtn(pressedBtn);
-            System.out.println(choiceselect);
+            choiceselect.setGrade(hardEasyService.checkChoice(choiceselect).getGrade());
+//            System.out.println(choiceselect);
             hardEasyService.createChoice(choiceselect);
             status = HttpStatus.OK;
             resultMap.put("status", status.value());

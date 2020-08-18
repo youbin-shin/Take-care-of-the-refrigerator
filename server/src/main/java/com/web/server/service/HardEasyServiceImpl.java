@@ -23,6 +23,7 @@ public class HardEasyServiceImpl implements HardEasyService{
     @Override
     @Transactional
     public void createChoice(HardEasy hardEasy) throws SQLException {
+//        System.out.println(hardEasy);
         if (hardEasyDao.checkChoice(hardEasy) == null){
             hardEasyDao.firstChoice(hardEasy);
         }else{

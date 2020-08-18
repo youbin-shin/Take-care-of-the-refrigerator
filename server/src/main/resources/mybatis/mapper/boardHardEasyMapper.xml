@@ -6,24 +6,28 @@
 
     <!-- 1은  hard 2는 easy -->
     <update id="hardEasyChoice" parameterType="hardEasy">
-
---         update hardeasy set grade = 1 WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
-
+        update hardeasy
         <set>
-            <choose>
-                <when test="grade==1">
-                    grade=0
-                </when>
-                <when test="#grade==2 or grade==0">
-                    grade=#{pressedBtn}
-                </when>
-                <when test=" grade==2">
-                    grade=0
-                </when>
-                <when test="grade==1 or grade==0">
-                    grade=#{pressedBtn}
-                </when>
-            </choose>
+            <if test="pressedBtn==1">
+                <choose>
+                    <when test="grade==2 or grade==0">
+                        grade=#{pressedBtn}
+                    </when>
+                    <otherwise>
+                        grade=0
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="pressedBtn==2">
+                <choose>
+                    <when test="grade==1 or grade==0">
+                        grade=#{pressedBtn}
+                    </when>
+                    <otherwise>
+                        grade=0
+                    </otherwise>
+                </choose>
+            </if>
         </set>
         WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
     </update>

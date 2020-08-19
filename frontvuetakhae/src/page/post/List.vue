@@ -297,7 +297,7 @@
                     @click="goApiDetail(apiData.boardId)"
                     >{{ apiData.title }}</v-list-item-title
                   >
-                  <div class="col-3" @click="heartRecipe(apiData.boardId)">
+                  <div class="col-3" @click="heartApiRecipe(apiData.boardId)">
                     <span v-if="apiData.favorite">
                       <v-bottom-navigation
                         class="elevation-0"
@@ -438,12 +438,23 @@ export default {
         this.apiDatas = response.data.recipes;
       });
   },
-  watch() {
-    if ($cookies.get("token")) {
-      this.$router.go();
-    }
-  },
   methods: {
+    heartApiRecipe(apiboardId) {
+      console.log("누를꺼야");
+      axios
+        .post(
+          `${BACK_URL}/boards/foodsafe/recipes/interest`,
+          { boardId: apiboardId },
+          {
+            headers: {
+              "jwt-auth-token": this.$cookies.get("token"),
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+        });
+    },
     goUp() {
       window.scrollTo(0, 0);
     },

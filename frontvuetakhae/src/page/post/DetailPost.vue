@@ -10,16 +10,10 @@
       <div class="mt-5 mb-2">
         <h1>
           {{ detailData.title }}
-          <b-badge class="mr-2" variant="success"
-            >난이도 {{ detailData.grade }}</b-badge
-          >
-          <b-badge variant="secondary"
-            >소요시간 {{ detailData.cookingTime }}시간</b-badge
-          >
+          <b-badge class="mr-2" variant="success">난이도 {{ detailData.grade }}</b-badge>
+          <b-badge variant="secondary">소요시간 {{ detailData.cookingTime }}시간</b-badge>
         </h1>
-        <span class="d-flex justify-content-end">
-          조회 수 {{ detailData.views }}
-        </span>
+        <span class="d-flex justify-content-end">조회 수 {{ detailData.views }}</span>
       </div>
 
       <b-row>
@@ -27,9 +21,7 @@
           <b-avatar class="mt-2 pl-0"></b-avatar>
         </b-col>
         <b-col cols="9" class="writerArea">
-          <p @click="goOtherpage(detailData.nickname)">
-            {{ detailData.nickname }}
-          </p>
+          <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
           <p>{{ detailData.createAt }}</p>
         </b-col>
         <b-col cols="2">
@@ -44,7 +36,8 @@
             <div class="easyhardCss" @click="plusEasy">
               <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
               <p class="caption mb-0 mt-1">
-                {{ detailData.easyCount }}명 <br />쉬워요
+                {{ detailData.easyCount }}명
+                <br />쉬워요
               </p>
             </div>
 
@@ -52,7 +45,8 @@
             <div class="easyhardCss" @click="plusHard">
               <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
               <p class="caption mb-0 mt-1">
-                {{ detailData.difficultyCount }}명 <br />어려워요
+                {{ detailData.difficultyCount }}명
+                <br />어려워요
               </p>
             </div>
           </v-row>
@@ -80,16 +74,10 @@
 
       <div class="comments">
         <h4>댓글</h4>
-        <p class="d-flex justify-content-end">
-          댓글 수 {{ detailData.comments.length }}
-        </p>
+        <p class="d-flex justify-content-end">댓글 수 {{ detailData.comments.length }}</p>
         <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
-            <b-avatar
-              variant="primary"
-              class="m-2 auto"
-              text="프로필"
-            ></b-avatar>
+            <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
             <p>{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
@@ -107,16 +95,8 @@
             </div>
           </b-col>
           <b-col v-if="userData.nickname == comment.nickname">
-            <v-btn
-              @click="updateComment(comment.commentId, comment.commentContent)"
-              >수정</v-btn
-            >
-            <v-btn
-              color="secondary"
-              class="mt-2"
-              @click="deleteComment(comment.commentId)"
-              >삭제</v-btn
-            >
+            <v-btn @click="updateComment(comment.commentId, comment.commentContent)">수정</v-btn>
+            <v-btn color="secondary" class="mt-2" @click="deleteComment(comment.commentId)">삭제</v-btn>
           </b-col>
           <b-col v-else></b-col>
         </b-row>
@@ -294,13 +274,6 @@ export default {
         .catch((error) => {
           alert(error);
         });
-    },
-    changeEasy() {
-      if (this.easy) {
-        this.easy = false;
-      } else {
-        this.easy = true;
-      }
     },
     deleteComment(commentId) {
       axios

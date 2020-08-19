@@ -1,6 +1,10 @@
 import Vue from "vue";
 import Router from "vue-router";
 
+// 회원가입
+import VeeValidate, { Validator } from 'vee-validate'
+import ko from "vee-validate/dist/locale/ko.js";
+
 import constants from "../lib/constants";
 
 // 유저
@@ -21,7 +25,26 @@ import ApiDetailPost from "../page/post/ApiDetailPost.vue";
 
 // Vue.use(VMdEditor);
 
+
 Vue.use(Router);
+
+const config = {
+  locale: "ko",
+  dictionary: {
+    ko,
+  },
+};
+
+Vue.use(VeeValidate, config);
+
+VeeValidate.Validator.extend("verify_password", {
+  getMessage: (field) =>
+    `비밀번호는 최소 하나의 대문자와 소문자, 숫자를 포함하고 있어야 합니다`,
+  validate: (value) => {
+    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])");
+    return strongRegex.test(value);
+  },
+});
 
 export default new Router({
   routes: [

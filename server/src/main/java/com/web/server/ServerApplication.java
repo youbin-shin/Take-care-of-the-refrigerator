@@ -30,9 +30,9 @@ public class ServerApplication implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**") // 기본 적용 경로
                 .excludePathPatterns(Arrays.asList("/api/users/**",
-                                                    "/api/boards",
-                                                    "/api/boards/**", // test 용
-                                                    "/api/boards/[0-9]+"
+                        "/api/boards",
+                        "/api/boards/**", // test 용
+                        "/api/boards/[0-9]+"
                 )); // 적용 제외 경로
     }
 

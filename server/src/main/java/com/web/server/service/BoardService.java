@@ -25,6 +25,8 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
+    List<Board> scrollList(ScrollDto scrollDto) throws  SQLException;
+
     void updateViewCnt(Integer boardId) throws SQLException;
 
     int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException;
@@ -44,4 +46,5 @@ public interface BoardService {
 	public int deleteInterestedRecipe(String email, int boardId) throws SQLException;
 
 	public boolean checkInterestingRecipe(String email, int boardId) throws SQLException;
+
 }

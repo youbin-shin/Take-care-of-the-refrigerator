@@ -1,17 +1,20 @@
 <template>
   <!-- <div> -->
   <div class="container">
-    <div class="writerButton" v-if="userData.nickname==detailData.nickname">
+    <div class="writerButton" v-if="userData.nickname == detailData.nickname">
       <v-btn small class="mr-2">수정</v-btn>
       <v-btn small color="error" @click="deletePost">삭제</v-btn>
       <hr />
     </div>
     <div class="detailHeader">
-      <h1 class="mt-5 mb-2">
-        {{ detailData.title }}
-        <b-badge class="mr-2" variant="success">난이도 {{ detailData.grade }}</b-badge>
-        <b-badge variant="secondary">소요시간 {{ detailData.cookingTime }}시간</b-badge>
-      </h1>
+      <div class="mt-5 mb-2">
+        <h1>
+          {{ detailData.title }}
+          <b-badge class="mr-2" variant="success">난이도 {{ detailData.grade }}</b-badge>
+          <b-badge variant="secondary">소요시간 {{ detailData.cookingTime }}시간</b-badge>
+        </h1>
+        <span class="d-flex justify-content-end">조회 수 {{ detailData.views }}</span>
+      </div>
 
       <b-row>
         <b-col col="1">
@@ -50,16 +53,6 @@
         </b-col>
       </b-row>
     </div>
-    <!-- <div @click="changeEasy" class="icon">
-        <div v-if="easy">
-          <b-icon icon="emoji-smile" class="mr-1" scale="2" variant="warning"></b-icon>
-          <p class="caption mb-0 mt-1">easy</p>
-        </div>
-        <div v-else>
-          <b-icon icon="emoji-frown" class="mr-1" scale="2" variant="secondary"></b-icon>
-          <p class="caption mb-0 mt-1">hard</p>
-        </div>
-    </div>-->
     <hr />
     <div class="detailContent">
       <h4 class="detailContentItem">필요한 재료</h4>
@@ -81,7 +74,7 @@
 
       <div class="comments">
         <h4>댓글</h4>
-        <p class="d-flex justify-content-end">댓글 수{{ detailData.comments.length }}</p>
+        <p class="d-flex justify-content-end">댓글 수 {{ detailData.comments.length }}</p>
         <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
             <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
@@ -139,6 +132,7 @@ export default {
       this.detailData.thumbailImage = response.data.board.crethumbailImageateAt;
       this.detailData.steps = response.data.board.steps;
       this.detailData.tags = response.data.board.tags;
+      this.detailData.views = response.data.board.views;
       this.detailData.comments = response.data.board.comments;
       console.log(this.detailData);
     });
@@ -157,6 +151,7 @@ export default {
     return {
       easy: true,
       detailData: {
+        views: 0,
         boardId: "",
         title: "",
         nickname: "",
@@ -178,13 +173,6 @@ export default {
       },
     };
   },
-  watch: {
-    comments: function () {
-      axios.get(`${BACK_URL}/users/mypage`, {
-        headers: { "jwt-auth-token": this.$cookies.get("token") },
-      });
-    },
-  },
   methods: {
     deletePost() {
       axios
@@ -203,9 +191,15 @@ export default {
     },
     plusHard() {
       axios
-        .post(`${BACK_URL}/boards/${this.detailData.boardId}/1`, null, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/boards/${this.detailData.boardId}`,
+          {
+            pressedBtn: 1,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             alert("어려워요를 클릭하였습니다.");
@@ -218,9 +212,15 @@ export default {
     },
     plusEasy() {
       axios
-        .post(`${BACK_URL}/boards/${this.detailData.boardId}/2`, null, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
+        .post(
+          `${BACK_URL}/boards/${this.detailData.boardId}`,
+          {
+            pressedBtn: 2,
+          },
+          {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          }
+        )
         .then((response) => {
           if (response.status === 200) {
             alert("쉬워요를 클릭하였습니다.");
@@ -264,19 +264,16 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 작성되었습니다!");
-            this.$router.go();
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
           alert(error);
         });
-    },
-    changeEasy() {
-      if (this.easy) {
-        this.easy = false;
-      } else {
-        this.easy = true;
-      }
     },
     deleteComment(commentId) {
       axios
@@ -285,7 +282,11 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 삭제되었습니다.");
-            this.$router.go();
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {

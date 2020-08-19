@@ -14,6 +14,7 @@ public class HardEasy{
     private String email;             // 사용자 번호
     private int boardId;
     private int grade;
+    private int pressedBtn;
     private int boardHardCnt;
     private int boardEasyCnt;
 

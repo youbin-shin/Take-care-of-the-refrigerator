@@ -129,4 +129,9 @@ public class BoardDaoImpl implements BoardDao {
         map.put("boardId", favoriteRequestBody.getBoardId());
         return template.insert(ns + "insertFavorite", map);
     }
+
+    @Override
+    public List<Board> scrollList(ScrollDto scrollDto) throws SQLException{
+        return template.selectList(ns+"infiniteScroll",scrollDto);
+    }
 }

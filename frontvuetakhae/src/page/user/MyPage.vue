@@ -12,11 +12,7 @@
             <v-btn class="m-2" @click="submitFile">업로드하기</v-btn>
             <p>
               업로드 : {{ uploadValue.toFixed() + "%" }}
-              <progress
-                id="progress"
-                :value="uploadValue"
-                max="100"
-              ></progress>
+              <progress id="progress" :value="uploadValue" max="100"></progress>
             </p>
           </div>
           <!-- <img class="preview" :src="picture" /> -->
@@ -35,10 +31,14 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="checkfollowee"
-                >팔로워 {{ userData.followingCount }} 명</v-btn>
+                  >팔로워 {{ userData.followingCount }} 명</v-btn
+                >
               </template>
               <v-list>
-                <v-list-item v-for="followee in followeelist" :key="followee.nickname">
+                <v-list-item
+                  v-for="followee in followeelist"
+                  :key="followee.nickname"
+                >
                   <v-list-item-title>{{ followee.nickname }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -53,10 +53,14 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="checkfollower"
-                >팔로잉 {{ userData.followerCount }} 명</v-btn>
+                  >팔로잉 {{ userData.followerCount }} 명</v-btn
+                >
               </template>
               <v-list>
-                <v-list-item v-for="follower in followerlist" :key="follower.nickname">
+                <v-list-item
+                  v-for="follower in followerlist"
+                  :key="follower.nickname"
+                >
                   <v-list-item-title>{{ follower.nickname }}</v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -95,25 +99,38 @@
         close
         @click:close="closeChip(tag)"
         :key="tag"
-      >{{ tag }}</v-chip>
+        >{{ tag }}</v-chip
+      >
       <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
       <h1>즐겨찾기한 레시피</h1>
-      <li v-for="interest in userData.interestBoards" :key="interest" class="boardList">
+      <li
+        v-for="interest in userData.interestBoards"
+        :key="interest"
+        class="boardList"
+      >
         <span @click="goDetail(interest.boardId)">
           {{ interest.title }}
           <small>{{ interest.createAt }}</small>
         </span>
       </li>
-      <div v-if="!userData.interestBoards.length">아직 즐겨찾기한 레시피가 없습니다.</div>
+      <div v-if="!userData.interestBoards.length">
+        아직 즐겨찾기한 레시피가 없습니다.
+      </div>
     </div>
     <hr />
     <div class="interest">
       <h1>내가 작성한 레시피 목록</h1>
       <li v-for="board in userData.myBoards" :key="board" class="boardList">
         <v-btn small class="mr-2">수정</v-btn>
-        <v-btn small color="error" @click="deletePost(board.boardId)" class="mr-2">삭제</v-btn>
+        <v-btn
+          small
+          color="error"
+          @click="deletePost(board.boardId)"
+          class="mr-2"
+          >삭제</v-btn
+        >
         <span @click="goDetail(board.boardId)">{{ board.title }}</span>
         <small>{{ board.createAt }}</small>
       </li>
@@ -125,15 +142,23 @@
     <hr />
 
     <div class="white--text">
-      <b-button class="bottom-button mr-2" @click="moveCreatePost">레시피 작성하기</b-button>
+      <b-button class="bottom-button mr-2" @click="moveCreatePost"
+        >레시피 작성하기</b-button
+      >
       <b-button
         class="a_tag_modal bottom-button mr-2"
         @click="
           modalShow = !modalShow;
           loadData();
         "
-      >수정하기</b-button>
-      <b-button class="bottom-button mr-2" variant="danger" @click="deleteData()">탈퇴하기</b-button>
+        >수정하기</b-button
+      >
+      <b-button
+        class="bottom-button mr-2"
+        variant="danger"
+        @click="deleteData()"
+        >탈퇴하기</b-button
+      >
     </div>
 
     <!-- 개인 정보 수정하기 모달 코드 -->
@@ -150,9 +175,13 @@
               @input="userupdateData.nickname = $event.target.value"
               type="text"
             />
-            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info">중복확인하기</b-button>
+            <b-button class="ml-2" size="sm" @click="nameCheck" variant="info"
+              >중복확인하기</b-button
+            >
           </div>
-          <p class="small ml-4 pl-5" v-if="nicknameCheck">사용가능한 닉네임입니다.</p>
+          <p class="small ml-4 pl-5" v-if="nicknameCheck">
+            사용가능한 닉네임입니다.
+          </p>
         </div>
         <div class="div_item">
           <span class="item_100px">비밀번호</span>
@@ -166,7 +195,9 @@
         </div>
       </div>
       <div>
-        <b-button class="mt-3 d-flex justify-content-center" @click="updateData">저장하기</b-button>
+        <b-button class="mt-3 d-flex justify-content-center" @click="updateData"
+          >저장하기</b-button
+        >
       </div>
     </b-modal>
   </div>
@@ -287,10 +318,10 @@ export default {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }
         )
-        .then(function () {
+        .then(function() {
           console.log("SUCCESS!!");
         })
-        .catch(function () {
+        .catch(function() {
           console.log("FAILURE!!");
         });
     },
@@ -383,7 +414,14 @@ export default {
               if (response.status === 202) {
                 alert("회원정보가 수정되었습니다!");
                 this.modalShow = !this.modalShow;
-                this.$router.push("/user/mypage");
+                axios
+                  .get(`${BACK_URL}/api/users/mypage`, {
+                    headers: { "jwt-auth-token": this.$cookies.get("token") },
+                  })
+                  .then((response) => {
+                    console.log(response);
+                    this.userData.nickname = response.data.mypage.nickname;
+                  });
                 this.nicknameCheck = false;
               } else {
                 alert("회원정보 수정이 실패했습니다");

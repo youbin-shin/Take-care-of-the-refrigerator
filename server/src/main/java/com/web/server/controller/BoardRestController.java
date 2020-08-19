@@ -353,6 +353,28 @@ public class BoardRestController {
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
 
+
+    @RequestMapping(value = "/boards/scroll", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> scroll(Board board, @RequestBody ScrollDto scrollDto){
+        ResponseEntity<Map<String, Object>> entity = null;
+        HttpStatus status = null;
+        Map<String, Object> resultMap = new HashMap<>();
+        try{
+            status = HttpStatus.OK;
+            List<Board> boardList = null;
+//            board.setScrollNumber(scrollDto);
+            boardList = boardService.scrollList(scrollDto);
+            resultMap.put("board", boardList);
+            resultMap.put("message","리스트 불러오기 성공");
+        } catch (Exception e) {
+            status = HttpStatus.BAD_REQUEST;
+            resultMap.put("status", status.value());
+            resultMap.put("message", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, status);
+
+        }return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
     
     /**
      * 공공 API (조리식품의 레시피 DB) 레시피 목록 조회
@@ -533,7 +555,6 @@ public class BoardRestController {
     	}
     	return new ResponseEntity<Map<String,Object>> (resultMap, status);
     }
-    
     
     /**
      * 공공 API (조리식품의 레시피 DB) 즐겨찾기 취소

@@ -5,7 +5,6 @@ import com.web.server.repo.HardEasyDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.SQLException;
 
@@ -17,16 +16,18 @@ public class HardEasyServiceImpl implements HardEasyService{
 
     @Override
     public HardEasy checkChoice(HardEasy hardEasy) throws SQLException {
-        return hardEasyDao.checkChoice(hardEasy);
+            return hardEasyDao.checkChoice(hardEasy);
     }
 
     @Override
     @Transactional
     public void createChoice(HardEasy hardEasy) throws SQLException {
 //        System.out.println(hardEasy);
-        if (hardEasyDao.checkChoice(hardEasy) == null){
+        System.out.println(hardEasyDao.checkChoice(hardEasy));
+        if (hardEasyDao.checkChoice(hardEasy)==null){
             hardEasyDao.firstChoice(hardEasy);
         }else{
+            hardEasy.setGrade(hardEasyDao.checkChoice(hardEasy).getGrade());
             hardEasyDao.hardEasyChoice(hardEasy);
         }
 

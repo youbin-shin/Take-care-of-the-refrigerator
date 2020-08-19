@@ -9,7 +9,9 @@
 				rcp_nm as title, 
 				att_file_no_main as thumbnailImage,
 				"식품안전나라" as nickname
-		from ssafy_open.recipes limit #{page}, 12
+		from ssafy_open.recipes
+		order by (select views from board) DESC
+		limit #{page}, 12
 	</select>
 
 	<select id="selectAll" resultMap="foodSafeRecipe">

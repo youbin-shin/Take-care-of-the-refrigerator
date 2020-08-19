@@ -35,18 +35,17 @@ public class HardEasyRestController {
             String token = req.getHeader("jwt-auth-token");
             String email = jwtService.getEamil(token);
             HardEasy choiceselect = new HardEasy();
-//            if (map.containsKey("pressedBtn")){
             int pressedBtn = (int) map.get("pressedBtn");
             choiceselect.setEmail(email);
             choiceselect.setBoardId(boardId);
             choiceselect.setPressedBtn(pressedBtn);
-            choiceselect.setGrade(hardEasyService.checkChoice(choiceselect).getGrade());
-//            System.out.println(choiceselect);
+            System.out.println(choiceselect);
             hardEasyService.createChoice(choiceselect);
             status = HttpStatus.OK;
             resultMap.put("status", status.value());
             resultMap.put("Message","저장 완료");
         } catch (Exception e) {
+            System.out.println("catch에러");
             status = HttpStatus.BAD_REQUEST;
             resultMap.put("status", status.value());
             resultMap.put("message", e.getMessage());

@@ -23,7 +23,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     CommentDao commentDao;
-    
+
     @Autowired
     OpenApiDao openapiDao;
 
@@ -61,6 +61,7 @@ public class BoardServiceImpl implements BoardService {
         User user = userinfoDao.selectByIsEmail(email);
         board.setUserId(user.getUserId());
         boardDao.insertBoard(board);              // 1. 게시글 로우 생성
+        System.out.println("ssss  " + board.getBoardId());
         int resultBoardId = board.getBoardId();
 
         List<String> listTag = board.getTags();
@@ -140,53 +141,101 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.scrollList(scrollDto);
     }
 
-	@Override
-	public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
-		List<Board> boards = null;
-		boards = openapiDao.selectAllFormBoards(page);
-		return boards;
-	}
+    @Override
+    public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException {
+        List<Board> boards = null;
+        boards = openapiDao.selectAllFormBoards(page);
+        return boards;
+    }
 
     @Override
     public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException {
-    	return openapiDao.selectByRecipeNameFormBoards(rcpNm);
+        return openapiDao.selectByRecipeNameFormBoards(rcpNm);
     }
 
-	@Override
-	public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException {
-		List<FoodSafeRecipeDto> recipes = null;
-		recipes = openapiDao.selectByRecipeSeq(rcpSeq);
-		return recipes;
-	}
-	
-	@Override
-	public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException {
-		List<Board> boards = null;
-		boards = openapiDao.selectByRecipePartsDtlsFormBoards(rcpPartsDtls);
-		return boards;
-	}
-	
     @Override
-    public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException{
+    public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException {
+        List<FoodSafeRecipeDto> recipes = null;
+        recipes = openapiDao.selectByRecipeSeq(rcpSeq);
+        return recipes;
+    }
+
+    @Override
+    public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException {
+        List<Board> boards = null;
+        boards = openapiDao.selectByRecipePartsDtlsFormBoards(rcpPartsDtls);
+        return boards;
+    }
+
+    @Override
+    @Transactional
+    public boolean update(String email, Board board) throws SQLException {
+        User user = userinfoDao.selectByIsEmail(email);
+        board.setUserId(user.getUserId());
+
+        boardDao.updateDeleteTags(board.getBoardId()); // 게시글 수정할 때 기존에 있던 태그 다 삭제
+        boardDao.updateDeleteSteps(board.getBoardId()); // 게시글 수정할 때  기존에 있던 단계 다 삭제
+
+        boardDao.updateBoard(board);              // 1. 게시글 수정
+        int resultBoardId = board.getBoardId();
+
+        List<String> listTag = board.getTags();
+        if (board.getSteps() != null && board.getSteps().size() > 0) { // 2. 게시글에 저장되는 단계 저장
+            for (int i = 0; i < board.getSteps().size(); i++) {
+                board.getSteps().get(i).setBoardId(resultBoardId);
+                boardDao.insertStep(board.getSteps().get(i));
+                System.out.println(board.getSteps().get(i).getStepId());
+                String[] arrTags = listTag.get(i).split(",");
+                for (String tag : arrTags) {
+                    System.out.println(tag);
+                    Tags temp = new Tags(-1, "");
+                    temp.setTagName(tag);
+                    Tags selectedTag = new Tags(-1, "");
+                    selectedTag = boardDao.selectTagExist(temp);
+                    if (selectedTag == null) {
+                        System.out.println("null!!");
+                        boardDao.insertTag(temp);
+                        System.out.println(temp.getTagId());
+                        StepTags stepTags = new StepTags(-1, -1);
+                        stepTags.setTagId(temp.getTagId());
+                        stepTags.setStepId(board.getSteps().get(i).getStepId());
+                        boardDao.insertStepTags(stepTags);
+                    } else {
+                        System.out.println("id : " + selectedTag.getTagId());
+                        System.out.println("name : " + selectedTag.getTagName());
+                        StepTags stepTags = new StepTags(-1, -1);
+                        stepTags.setTagId(selectedTag.getTagId());
+                        stepTags.setStepId(board.getSteps().get(i).getStepId());
+                        boardDao.insertStepTags(stepTags);
+                    }
+                }
+
+            }
+        }
+        return resultBoardId != 0 ? true : false;
+    }
+
+    @Override
+    public int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException {
         int cnt = boardDao.isExistFavorite(email, boardId);
         System.out.println("cnt : " + cnt);
         int result = 0;
         if (cnt == 1) {
-             result = boardDao.deleteFavorite(email, boardId);
-             if(result==1){
-                 result = -1;
-             }
+            result = boardDao.deleteFavorite(email, boardId);
+            if (result == 1) {
+                result = -1;
+            }
         } else {
-             result = boardDao.insertFavorite(email, boardId);
-             if(result==1){
-                 result = 1;
-             }
+            result = boardDao.insertFavorite(email, boardId);
+            if (result == 1) {
+                result = 1;
+            }
         }
         return result;
     }
 
     @Override
     public List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException {
-        return boardDao.searchByKeyword(email,searchByKeywordDto);
+        return boardDao.searchByKeyword(email, searchByKeywordDto);
     }
 }

@@ -18,7 +18,7 @@
 
       <b-row>
         <b-col col="1">
-          <b-avatar class="mt-2 pl-0"></b-avatar>
+          <img class="profile" :src="detailData.writerImage" />
         </b-col>
         <b-col cols="9" class="writerArea">
           <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
@@ -77,7 +77,8 @@
         <p class="d-flex justify-content-end">댓글 수 {{ detailData.comments.length }}</p>
         <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
-            <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
+            <img class="profile" :src="comment.userImage" />
+
             <p>{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
@@ -134,6 +135,8 @@ export default {
       this.detailData.tags = response.data.board.tags;
       this.detailData.views = response.data.board.views;
       this.detailData.comments = response.data.board.comments;
+      this.detailData.writerImage = response.data.board.writerImage;
+
       console.log(this.detailData);
     });
     axios
@@ -154,6 +157,7 @@ export default {
         views: 0,
         boardId: "",
         title: "",
+        writerImage: "",
         nickname: "",
         ingredients: "",
         content: "",
@@ -347,5 +351,10 @@ export default {
 }
 .writerButton {
   text-align: end;
+}
+.profile {
+  margin: 0px;
+  width: 50px;
+  height: 50px;
 }
 </style>

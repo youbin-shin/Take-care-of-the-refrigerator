@@ -37,6 +37,11 @@ public interface UserinfoDao {
     // d: 회원탈퇴
     public int deleteUser(String email);
 
-    // step 
-	public int insertBoardStep(Steps step);
+    // 사용자 step 관련
+    // Create
+	public int insertBoardStep(Steps step) throws SQLException;
+	
+	// Read
+	
+	// Delete
 }

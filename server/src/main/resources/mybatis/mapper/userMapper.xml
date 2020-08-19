@@ -109,6 +109,11 @@
     <insert id="insertFollow" parameterType="follow">
         INSERT INTO follow (follower, followee) VALUES (#{follower}, #{followee})
     </insert>
+    
+    <insert id="insertUserStep" parameterType="step">
+    	insert into steps (user_id, description, image, type)
+    	values (#{userId}, #{description}, #{image}, #{type})
+    </insert>
 
     <delete id="delete" parameterType="string">
 		delete from users where

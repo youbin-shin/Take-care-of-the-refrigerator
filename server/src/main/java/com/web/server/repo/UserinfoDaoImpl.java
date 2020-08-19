@@ -111,9 +111,8 @@ public class UserinfoDaoImpl implements UserinfoDao {
     }
 
 	@Override
-	public int insertBoardStep(Steps step) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertBoardStep(Steps step) throws SQLException {
+		return template.insert(ns + "insertUserStep", step);
 	}
 
 

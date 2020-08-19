@@ -177,13 +177,25 @@ public class UserinfoServiceImpl implements UserinfoService {
 	@Override
 	public int addBoardStep(String email, Steps step) throws SQLException {
 		int result = 0;
-//		try {
-//			int userId = uDao.selectByIsEmail(email).getUserId();
-//			result = uDao.insertBoardStep(step);
-//		} catch (SQLException e) {
-//			throw new SQLException("ERROR : UserinfoServiceImpl. !!\n" 
-//									+ e.getMessage());
-//		}
+		try {
+			int userId = uDao.selectByIsEmail(email).getUserId();
+			System.out.println("test1 : " + userId);
+			
+			step.setUserId(userId);
+//			if(step.getImage().isEmpty()
+//					|| step.getImage().length() == 0
+//					|| step.getImage() == null) {
+//				step.setImage("no image");
+//			}
+			if(step.getImage() == null) {
+				step.setImage("no image");
+			}
+			System.out.println("test2 : " + step.toString());
+			result = uDao.insertBoardStep(step);
+		} catch (SQLException e) {
+			throw new SQLException("ERROR : UserinfoServiceImpl. !!\n" 
+									+ e.getMessage());
+		}
 		return result;
 	}
 }

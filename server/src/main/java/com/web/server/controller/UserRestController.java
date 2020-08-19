@@ -390,7 +390,37 @@ public class UserRestController {
     }
     
     
+    /**
+     * 
+     * 
+     * @param req
+     * @return
+     */
+    public ResponseEntity<Map<String, Object>> getUserProfileStep(HttpServletRequest req) {
+    	Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+//        try {
+//        	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+//        	userService.searchAllBoardsStepsByEmail(email);
+//        	status = HttpStatus.OK;
+//        	resultMap.put("success", true);
+//		} catch (RuntimeException | SQLException e) {
+//			status = HttpStatus.BAD_REQUEST;
+//			resultMap.put("success", false);
+//		}
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
     
+
+    /**
+     * 스탭(과정) 추가 | +나의냉장고 버튼
+     * 
+     * @param req
+     * @param step
+     * @return
+     */
+    @ApiOperation(value = "스탭(과정) 추가 | +나의냉장고 버튼")
+    @PostMapping("/users/steps")
     public ResponseEntity<Map<String, Object>> addUserProfileStep(HttpServletRequest req, 
     															@RequestBody Steps step) {
     	

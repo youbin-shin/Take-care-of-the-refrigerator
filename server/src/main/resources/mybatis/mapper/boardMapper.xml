@@ -163,6 +163,6 @@
     <!-- 무한 스크롤 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <select id="infiniteScroll" resultType="board">
         <![CDATA[
-        select * from boards where board_id>0 order by board_id desc limit #{scrollNumber},3;]]>
+        select * from boards where board_id>0 order by views desc limit #{scrollNumber},3;]]>
     </select>
 </mapper>

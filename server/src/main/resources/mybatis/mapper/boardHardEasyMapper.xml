@@ -42,7 +42,7 @@
          </if>
     </insert>
 
-    <select id="checkChoice" resultType="hardEasy">
+    <select id="checkChoice" resultType="hardeasy">
         select * from hardeasy WHERE board_id=#{boardId} AND user_id=(select user_id from users WHERE email=#{email})
     </select>
 

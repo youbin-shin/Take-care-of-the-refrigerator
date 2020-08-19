@@ -365,7 +365,7 @@ export default {
       this.postData.content.process = "";
     },
     createPost() {
-      console.log("sdasdAS" + this.postData.content.steps);
+      console.log(JSON.stringify(this.postData.content.steps));
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
@@ -390,6 +390,10 @@ export default {
         tags.push(temptags);
         delete this.postData.content.steps[i].hashtag;
       }
+      if (this.postData.content.steps.length === 0) {
+        tags.push("");
+      }
+
       console.log(this.postData.content.steps);
       const requestHeader = {
         headers: {

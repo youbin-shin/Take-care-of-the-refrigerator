@@ -18,6 +18,8 @@
 
       <b-row>
         <b-col col="1">
+          <!-- <img class="profile" :src="detailData.userImage" /> -->
+
           <b-avatar class="mt-2 pl-0"></b-avatar>
         </b-col>
         <b-col cols="9" class="writerArea">
@@ -77,7 +79,8 @@
         <p class="d-flex justify-content-end">댓글 수 {{ detailData.comments.length }}</p>
         <b-row v-for="comment in detailData.comments" :key="comment.commentId">
           <b-col>
-            <b-avatar variant="primary" class="m-2 auto" text="프로필"></b-avatar>
+            <img class="profile" :src="comment.userImage" />
+
             <p>{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
@@ -347,5 +350,10 @@ export default {
 }
 .writerButton {
   text-align: end;
+}
+.profile {
+  margin: 0px;
+  width: 50px;
+  height: 50px;
 }
 </style>

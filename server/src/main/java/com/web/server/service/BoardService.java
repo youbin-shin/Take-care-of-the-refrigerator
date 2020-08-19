@@ -25,7 +25,7 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
-    List<Board> scrollList(ScrollDto scrollDto) throws  SQLException;
+    List<Board> scrollList(ScrollDto scrollDto) throws SQLException;
 
     void updateViewCnt(Integer boardId) throws SQLException;
 
@@ -36,7 +36,7 @@ public interface BoardService {
     public List<BoardSimpleDto> searchAllFoodSafeRecipes(String email, int page) throws SQLException;
     
     public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
-    
+
     public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
 
     public List<Board> searchFoodSafeRecipesByRcpPartsDtls(Map<String, Object> map) throws SQLException;
@@ -47,4 +47,5 @@ public interface BoardService {
 
 	public boolean checkInterestingRecipe(String email, int boardId) throws SQLException;
 
+    boolean update(String email, Board board) throws SQLException;
 }

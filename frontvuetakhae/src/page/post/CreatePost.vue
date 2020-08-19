@@ -12,20 +12,14 @@
       label-for="input-lg"
       autofocus
     >
-      <b-form-input
-        v-model="postData.title"
-        id="input-lg"
-        size="lg"
-      ></b-form-input>
+      <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
 
     <v-stepper v-model="e6" vertical>
       <!-- 1. 재료 입력 단계 -->
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
         재료
-        <small class="mt-2"
-          >드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small
-        >
+        <small class="mt-2">드래그앤드롭으로 쉽게 요리에 필요한 재료를 입력하세요.</small>
       </v-stepper-step>
       <v-stepper-content step="1">
         <v-card class="mb-12">
@@ -47,8 +41,7 @@
                       :key="tag"
                       close
                       @click:close="closeChip(tag)"
-                      >{{ tag }}</v-chip
-                    >
+                    >{{ tag }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
@@ -72,9 +65,11 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">
+                        {{
                         tag
-                      }}</v-chip>
+                        }}
+                      </v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -85,9 +80,7 @@
         <v-btn color="error" @click="e6 = 2">완료</v-btn>
       </v-stepper-content>
       <!-- 2. 요리 과정 단계 -->
-      <v-stepper-step color="red" :complete="e6 > 2" step="2"
-        >요리 과정</v-stepper-step
-      >
+      <v-stepper-step color="red" :complete="e6 > 2" step="2">요리 과정</v-stepper-step>
       <v-stepper-content step="2">
         <v-card class="mb-12">
           <div class="bg-my-step">
@@ -101,10 +94,7 @@
               @end="drag = false"
             >
               <transition-group type="transition" :name="'flip-list'">
-                <li
-                  v-for="tag in postData.content.steps"
-                  :key="tag.description"
-                >
+                <li v-for="(tag, index) in postData.content.steps" :key="tag.description">
                   <v-row>
                     <v-col cols="3">
                       <v-overflow-btn
@@ -123,13 +113,12 @@
                         :key="hash"
                         close
                         @click:close="closeHashtag(tag.hashtag, hash)"
-                        >#{{ hash }}</v-chip
-                      >
+                      >#{{ hash }}</v-chip>
 
                       <div class="input-tag">
                         <v-text-field
-                          v-model="tempHashtag"
-                          v-on:keyup.enter="plusTag(tag.hashtag)"
+                          v-model="tempHashtag[index]"
+                          v-on:keyup.enter="plusTag(tag.hashtag,index)"
                           placeholder="해시태그 입력"
                         ></v-text-field>
                       </div>
@@ -139,12 +128,8 @@
                       <div class="d-flex flex-column">
                         <i aria-hidden="true"></i>
                         <div class>
-                          <v-btn small @click="deleleStep(tag.description)"
-                            >삭제</v-btn
-                          >
-                          <v-btn small color="primary" class="ml-1"
-                            >내 저장소</v-btn
-                          >
+                          <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
+                          <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
                       </div>
                     </v-col>
@@ -174,9 +159,7 @@
         <v-btn color="secondary" @click="e6 = 1">뒤로 가기</v-btn>
       </v-stepper-content>
       <!-- 3. 난이도 & 소요시간 단계 -->
-      <v-stepper-step color="red" :complete="e6 > 3" step="3"
-        >난이도 & 소요시간</v-stepper-step
-      >
+      <v-stepper-step color="red" :complete="e6 > 3" step="3">난이도 & 소요시간</v-stepper-step>
       <v-stepper-content step="3">
         <v-card class="mb-12" height="200px">
           난이도
@@ -189,8 +172,7 @@
               medium
             ></v-rating>
           </div>
-          <hr />
-          소요 시간
+          <hr />소요 시간
           <v-row class="container">
             <!-- <div class="timeinput"> -->
             <b-form-input
@@ -257,7 +239,7 @@ export default {
   },
   data() {
     return {
-      tempHashtag: "",
+      tempHashtag: [],
       chips: [],
       items: [],
 
@@ -320,7 +302,7 @@ export default {
     },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
-      const idx = this.postData.content.steps.findIndex(function(item) {
+      const idx = this.postData.content.steps.findIndex(function (item) {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);
@@ -344,19 +326,19 @@ export default {
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
     },
-    plusTag(tagHashtag) {
-      if (this.tempHashtag === "") {
+    plusTag(tagHashtag, index) {
+      if (this.tempHashtag[index] === "") {
         return;
       }
       // 중복되는 데이터일 경우 추가 안되도록 한다.
       for (var i = 0; i < tagHashtag.length; i++) {
-        if (this.tempHashtag === tagHashtag[i]) {
-          this.tempHashtag = "";
+        if (this.tempHashtag[index] === tagHashtag[i]) {
+          this.tempHashtag[index] = "";
           return;
         }
       }
-      tagHashtag.push(this.tempHashtag);
-      this.tempHashtag = "";
+      tagHashtag.push(this.tempHashtag[index]);
+      this.tempHashtag[index] = "";
     },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
@@ -373,6 +355,7 @@ export default {
       if (this.postData.content.process === "") {
         return;
       }
+      this.tempHashtag.push("");
       this.postData.content.steps.push({
         description: this.postData.content.process,
         image: "no image",
@@ -382,7 +365,7 @@ export default {
       this.postData.content.process = "";
     },
     createPost() {
-      console.log(this.postData.content.steps);
+      console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {

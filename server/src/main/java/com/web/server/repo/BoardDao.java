@@ -41,7 +41,7 @@ public interface BoardDao {
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
     // 조회수 갱신
-    void updateViewCnt(Integer boardId) throws  SQLException;
+    void updateViewCnt(Integer boardId) throws SQLException;
 
     // 무한 스크롤
     List<Board> scrollList(ScrollDto scrollDto) throws SQLException;
@@ -53,5 +53,11 @@ public interface BoardDao {
     int insertFavorite(String email, FavoriteRequestBody favoriteRequestBody) throws SQLException;
 
     List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
+
+    void updateDeleteTags(int boardId) throws SQLException;
+
+    void updateDeleteSteps(int boardId) throws SQLException;
+
+    void updateBoard(Board board) throws SQLException;
 }
 

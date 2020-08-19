@@ -18,9 +18,7 @@
 
       <b-row>
         <b-col col="1">
-          <!-- <img class="profile" :src="detailData.userImage" /> -->
-
-          <b-avatar class="mt-2 pl-0"></b-avatar>
+          <img class="profile" :src="detailData.writerImage" />
         </b-col>
         <b-col cols="9" class="writerArea">
           <p @click="goOtherpage(detailData.nickname)">{{ detailData.nickname }}</p>
@@ -137,6 +135,8 @@ export default {
       this.detailData.tags = response.data.board.tags;
       this.detailData.views = response.data.board.views;
       this.detailData.comments = response.data.board.comments;
+      this.detailData.writerImage = response.data.board.writerImage;
+
       console.log(this.detailData);
     });
     axios
@@ -157,6 +157,7 @@ export default {
         views: 0,
         boardId: "",
         title: "",
+        writerImage: "",
         nickname: "",
         ingredients: "",
         content: "",

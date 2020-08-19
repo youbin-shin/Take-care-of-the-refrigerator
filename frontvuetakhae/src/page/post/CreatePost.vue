@@ -41,7 +41,11 @@
                       :key="tag"
                       close
                       @click:close="closeChip(tag)"
-                    >{{ tag }}</v-chip>
+                    >
+                      {{
+                      tag
+                      }}
+                    </v-chip>
                   </draggable>
                 </div>
               </b-col>
@@ -65,11 +69,7 @@
                       @start="drag = true"
                       @end="drag = false"
                     >
-                      <v-chip class="m-1" v-for="tag in list" :key="tag">
-                        {{
-                        tag
-                        }}
-                      </v-chip>
+                      <v-chip class="m-1" v-for="tag in list" :key="tag">{{ tag }}</v-chip>
                     </draggable>
                   </div>
                 </div>
@@ -118,7 +118,7 @@
                       <div class="input-tag">
                         <v-text-field
                           v-model="tempHashtag[index]"
-                          v-on:keyup.enter="plusTag(tag.hashtag,index)"
+                          v-on:keyup.enter="plusTag(tag.hashtag, index, tag.hashTagString)"
                           placeholder="해시태그 입력"
                         ></v-text-field>
                       </div>
@@ -326,7 +326,7 @@ export default {
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
     },
-    plusTag(tagHashtag, index) {
+    plusTag(tagHashtag, index, hashTagString) {
       if (this.tempHashtag[index] === "") {
         return;
       }
@@ -337,8 +337,14 @@ export default {
           return;
         }
       }
+      this.postData.content.steps[index].hashTagString =
+        this.postData.content.steps[index].hashTagString +
+        this.tempHashtag[index] +
+        ",";
+
       tagHashtag.push(this.tempHashtag[index]);
       this.tempHashtag[index] = "";
+      console.log("QQQQ" + this.postData.content.steps[index].hashTagString);
     },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
@@ -360,41 +366,35 @@ export default {
         description: this.postData.content.process,
         image: "no image",
         type: "",
+        hashTagString: "",
         hashtag: [],
       });
       this.postData.content.process = "";
     },
     createPost() {
-      console.log(JSON.stringify(this.postData.content.steps));
+      let tempSteps = [];
+      console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
-        let temptags = "";
-        for (
-          let j = 0;
-          j < this.postData.content.steps[i].hashtag.length;
-          j++
-        ) {
-          console.log(temptags);
-          if (j == this.postData.content.steps[i].hashtag.length - 1) {
-            temptags = temptags.concat(
-              this.postData.content.steps[i].hashtag[j]
-            );
-          } else {
-            temptags = temptags.concat(
-              this.postData.content.steps[i].hashtag[j],
-              ","
-            );
-          }
-        }
+        let temptags = this.postData.content.steps[i].hashTagString;
+        tempSteps.push({
+          description: this.postData.content.steps[i].description,
+          image: this.postData.content.steps[i].image,
+          type: this.postData.content.steps[i].type,
+        });
+        // for (let j = 0; j < this.postData.content.steps[i].hashTagString.length; j++) {
+        //   console.log(temptags);
+        //   if (j == this.postData.content.steps[i].hashTagString.length - 1) {
+        //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j]);
+        //   } else {
+        //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j], ",");
+        //   }
+        // }
         tags.push(temptags);
-        delete this.postData.content.steps[i].hashtag;
+        // delete this.postData.content.steps[i].hashtag;
       }
-      if (this.postData.content.steps.length === 0) {
-        tags.push("");
-      }
-
-      console.log(this.postData.content.steps);
+      console.log(JSON.stringify(this.postData.content.steps));
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),
@@ -412,7 +412,7 @@ export default {
             cookingTime: this.postData.time,
             thumbnailImage: "no image",
             ingredient: ingreString,
-            steps: this.postData.content.steps,
+            steps: tempSteps,
             tags: tags,
           },
           requestHeader

@@ -2,6 +2,7 @@ package com.web.server.service;
 
 import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
+import com.web.server.dto.Steps;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 import com.web.server.repo.BoardDao;
@@ -171,5 +172,18 @@ public class UserinfoServiceImpl implements UserinfoService {
 			throw new SQLException("ERROR : UserinfoServiceImpl.searchAllInterestedFoodSafeRecipesFormBoard !!\n" + e.getMessage());
 		}
 		return boards;
+	}
+
+	@Override
+	public int addBoardStep(String email, Steps step) throws SQLException {
+		int result = 0;
+//		try {
+//			int userId = uDao.selectByIsEmail(email).getUserId();
+//			result = uDao.insertBoardStep(step);
+//		} catch (SQLException e) {
+//			throw new SQLException("ERROR : UserinfoServiceImpl. !!\n" 
+//									+ e.getMessage());
+//		}
+		return result;
 	}
 }

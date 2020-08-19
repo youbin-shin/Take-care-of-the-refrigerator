@@ -2,6 +2,7 @@ package com.web.server.service;
 
 import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
+import com.web.server.dto.Steps;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 
@@ -46,4 +47,12 @@ public interface UserinfoService {
     public int deleteFollow(String email, String nickname) throws SQLException;
 
 	public List<Board> searchAllInterestedFoodSafeRecipesFormBoard(String email) throws SQLException;
+	
+	// 사용자가 저장한 steps
+	// Create
+	public int addBoardStep(String email, Steps step) throws SQLException;
+	
+	// Read
+	
+	// Delete
 }

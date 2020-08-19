@@ -1,5 +1,6 @@
 package com.web.server.repo;
 
+import com.web.server.dto.Steps;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 
@@ -35,4 +36,7 @@ public interface UserinfoDao {
 
     // d: 회원탈퇴
     public int deleteUser(String email);
+
+    // step 
+	public int insertBoardStep(Steps step);
 }

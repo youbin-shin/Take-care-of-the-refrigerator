@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.web.server.dto.Steps;
 import com.web.server.dto.User;
 import com.web.server.dto.UserProfileDto;
 
@@ -108,6 +109,12 @@ public class UserinfoDaoImpl implements UserinfoDao {
     public int deleteUser(String email) {
         return template.delete(ns + "delete", email);
     }
+
+	@Override
+	public int insertBoardStep(Steps step) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 
 }

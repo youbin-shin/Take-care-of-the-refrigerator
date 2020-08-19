@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.web.server.dto.Board;
 import com.web.server.dto.FollowDto;
+import com.web.server.dto.Steps;
 import com.web.server.dto.UserProfileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -389,6 +390,34 @@ public class UserRestController {
     }
     
     
+    
+    public ResponseEntity<Map<String, Object>> addUserProfileStep(HttpServletRequest req, 
+    															@RequestBody Steps step) {
+    	
+    	Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+        	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+        	if(step == null 
+        		|| step.getDescription() == null
+        		|| step.getDescription().length() == 0
+        		|| step.getDescription().isEmpty()) {
+        		throw new RuntimeException("step 입력값 확인 필요");
+        	}
+        	userService.addBoardStep(email, step);
+        	
+        	status = HttpStatus.OK;
+        	resultMap.put("success", true);
+		} catch (RuntimeException | SQLException e) {
+			status = HttpStatus.BAD_REQUEST;
+			resultMap.put("success", false);
+			
+		}
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+    
+    
+    
     /**
     * 다른 유저 마페이지 조회
     * 성공 : 200
@@ -654,4 +683,7 @@ public class UserRestController {
         }
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+    
+    
+    
 }

@@ -18,14 +18,14 @@
         from boards join users on boards.user_id = users.user_id
         where temporary = 0
         <if test="keyword != null">
-        <choose>
-            <when test="type == 1">
-                and title LIKE CONCAT('%', #{keyword}, '%')
-            </when>
-            <when test="type == 2">
-                and nickname LIKE CONCAT('%', #{keyword}, '%')
-            </when>
-        </choose>
+            <choose>
+                <when test="type == 1">
+                    and title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="type == 2">
+                    and nickname LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
         </if>
     </select>
 
@@ -64,7 +64,8 @@
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
         select *,(select nickname from users where user_id=boards.user_id) as nickname,
-        (select count(*) from hardeasy where grade = 2 AND board_id=#{boardId}) as easyCount,(select count(*) from hardeasy where grade = 1 AND board_id=#{boardId}) as difficultyCount
+        (select count(*) from hardeasy where grade = 2 AND board_id=#{boardId}) as easyCount,(select count(*) from
+        hardeasy where grade = 1 AND board_id=#{boardId}) as difficultyCount
         from boards
         where board_id=#{boardId} and temporary = 0
 
@@ -159,6 +160,27 @@
         set views= views + 1
         WHERE board_id=#{boardId}
     </update>
+
+    <!--    게시글 수정  -->
+    <update id="updateBoard">
+        update boards
+        set title = #{title}, ingredient = #{ingredient}, content = #{content}, grade = #{grade},
+        cooking_time = #{cookingTime}, thumbnail_image = #{thumbnailImage}, temporary = 0, update_at = now()
+        where board_id = #{boardId}
+    </update>
+
+    <!--    게시글 수정할 때 기존에 있던 태그 다 삭제   -->
+    <delete id="updateDeleteTags">
+        delete from tags
+        where tag_id in (select tag_id from step_tags
+        where step_id in (select step_id from steps where board_id = #{boardId}))
+    </delete>
+
+    <!--    게시글 수정할 때  기존에 있던 단계 다 삭제   -->
+    <delete id="updateDeleteSteps">
+        delete from steps
+        where board_id = #{boardId}
+    </delete>
 
     <!-- 무한 스크롤 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <select id="infiniteScroll" resultType="board">

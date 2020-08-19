@@ -56,6 +56,11 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public void updateBoard(Board board) throws SQLException {
+        template.update(ns+"updateBoard",board);
+    }
+
+    @Override
     public int insertStep(Steps step) throws SQLException {
         return template.insert(ns + "insertStep", step);
     }
@@ -133,5 +138,17 @@ public class BoardDaoImpl implements BoardDao {
     @Override
     public List<Board> scrollList(ScrollDto scrollDto) throws SQLException{
         return template.selectList(ns+"infiniteScroll",scrollDto);
+    }
+
+    @Override
+    public void updateDeleteTags(int boardId) throws SQLException {
+        template.delete(ns + "updateDeleteTags", boardId);
+
+    }
+
+    @Override
+    public void updateDeleteSteps(int boardId) throws SQLException {
+        template.delete(ns + "updateDeleteSteps", boardId);
+
     }
 }

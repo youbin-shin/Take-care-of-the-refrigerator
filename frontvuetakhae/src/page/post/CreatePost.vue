@@ -4,14 +4,7 @@
       <v-btn small color="warning">임시 저장하기</v-btn>
       <hr />
     </div>
-    <b-form-group
-      label-cols="4"
-      label-cols-lg="2"
-      label-size="lg"
-      label="제목"
-      label-for="input-lg"
-      autofocus
-    >
+    <b-form-group label-cols="4" label-cols-lg="2" label-size="lg" label="제목" label-for="input-lg" autofocus>
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
 
@@ -28,47 +21,24 @@
               <b-col class="bg-my-gredient">
                 <h5>요리에 필요한 재료</h5>
                 <div>
-                  <draggable
-                    tag="span"
-                    v-model="postData.content.ingredients"
-                    v-bind="dragOptions"
-                    @start="drag = true"
-                    @end="drag = false"
-                  >
-                    <v-chip
-                      class="mr-2 mb-2"
-                      v-for="tag in postData.content.ingredients"
-                      :key="tag"
-                      close
-                      @click:close="closeChip(tag)"
-                    >{{ tag }}</v-chip>
+                  <draggable tag="span" v-model="postData.content.ingredients" v-bind="dragOptions" @start="drag = true" @end="drag = false">
+                    <v-chip class="mr-2 mb-2" v-for="tag in postData.content.ingredients" :key="tag" close @click:close="closeChip(tag)">{{
+                      tag
+                    }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
               <b-col>
                 <v-row class="m-2">
-                  <v-text-field
-                    label="직접 추가하기"
-                    v-model="addText"
-                    hide-details="auto"
-                    v-on:keyup.enter="plusFood"
-                  ></v-text-field>
+                  <v-text-field label="직접 추가하기" v-model="addText" hide-details="auto" v-on:keyup.enter="plusFood"></v-text-field>
                   <v-icon large @click="plusFood">mdi-plus</v-icon>
                 </v-row>
                 <div class="bg-my-box">
                   나의 냉장고
                   <div>
-                    <draggable
-                      tag="ul"
-                      v-model="list"
-                      v-bind="dragOptions"
-                      @start="drag = true"
-                      @end="drag = false"
-                    >
+                    <draggable tag="ul" v-model="list" v-bind="dragOptions" @start="drag = true" @end="drag = false">
                       <v-chip class="m-1" v-for="tag in list" :key="tag">
-                        {{
-                        tag
-                        }}
+                        {{ tag }}
                       </v-chip>
                     </draggable>
                   </div>
@@ -85,40 +55,23 @@
         <v-card class="mb-12">
           <div class="bg-my-step">
             <h5>과정 순서</h5>
-            <draggable
-              class="list-group"
-              tag="ul"
-              v-model="postData.content.steps"
-              v-bind="dragOptions"
-              @start="drag = true"
-              @end="drag = false"
-            >
+            <draggable class="list-group" tag="ul" v-model="postData.content.steps" v-bind="dragOptions" @start="drag = true" @end="drag = false">
               <transition-group type="transition" :name="'flip-list'">
                 <li v-for="(tag, index) in postData.content.steps" :key="tag.description">
                   <v-row>
                     <v-col cols="3">
-                      <v-overflow-btn
-                        class="type-button mt-0"
-                        :items="typeList"
-                        v-model="tag.type"
-                        label="타입 선택"
-                        segmented
-                      ></v-overflow-btn>
+                      <v-overflow-btn class="type-button mt-0" :items="typeList" v-model="tag.type" label="타입 선택" segmented></v-overflow-btn>
                     </v-col>
                     <v-col cols="6">
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
-                      <v-chip
-                        class="mr-2 mb-2"
-                        v-for="hash in tag.hashtag"
-                        :key="hash"
-                        close
-                        @click:close="closeHashtag(tag.hashtag, hash)"
-                      >#{{ hash }}</v-chip>
+                      <v-chip class="mr-2 mb-2" v-for="hash in tag.hashtag" :key="hash" close @click:close="closeHashtag(tag.hashtag, hash)"
+                        >#{{ hash }}</v-chip
+                      >
 
                       <div class="input-tag">
                         <v-text-field
                           v-model="tempHashtag[index]"
-                          v-on:keyup.enter="plusTag(tag.hashtag,index)"
+                          v-on:keyup.enter="plusTag(tag.hashtag, index, tag.hashTagString)"
                           placeholder="해시태그 입력"
                         ></v-text-field>
                       </div>
@@ -143,12 +96,7 @@
             <v-row no-gutters justify="center">
               <v-col md="5">
                 <v-card>
-                  <b-form-input
-                    type="text"
-                    placeholder="요리 과정을 입력해주세요."
-                    v-model="postData.content.process"
-                    v-on:keyup.enter="plusStep"
-                  />
+                  <b-form-input type="text" placeholder="요리 과정을 입력해주세요." v-model="postData.content.process" v-on:keyup.enter="plusStep" />
                 </v-card>
               </v-col>
               <v-btn @click="plusStep" class="ml-2">과정추가</v-btn>
@@ -165,21 +113,13 @@
           난이도
           <div>
             <small>별이 많을수록 어렵습니다.</small>
-            <v-rating
-              v-model="postData.difficulty"
-              background-color="orange lighten-3"
-              color="orange"
-              medium
-            ></v-rating>
+            <v-rating v-model="postData.difficulty" background-color="orange lighten-3" color="orange" medium></v-rating>
           </div>
-          <hr />소요 시간
+          <hr />
+          소요 시간
           <v-row class="container">
             <!-- <div class="timeinput"> -->
-            <b-form-input
-              type="text"
-              v-model="postData.time"
-              style="width:100px;height:40px;font-size:12px"
-            />
+            <b-form-input type="text" v-model="postData.time" style="width:100px;height:40px;font-size:12px" />
             <span>시간</span>
             <!-- </div> -->
           </v-row>
@@ -191,23 +131,11 @@
       <v-stepper-step color="red" step="4">후기 작성</v-stepper-step>
       <v-stepper-content step="4">
         <v-card class="mb-12 p-2" height="200px">
-          <v-text-field
-            label="요리하면서 꿀팁이나 소감을 작성해주세요."
-            v-model="postData.review"
-            :rules="rules"
-            hide-details="auto"
-          ></v-text-field>
+          <v-text-field label="요리하면서 꿀팁이나 소감을 작성해주세요." v-model="postData.review" :rules="rules" hide-details="auto"></v-text-field>
           <br />
           <div class="titles">썸네일 사진 넣기</div>
           <br />
-          <input
-            type="file"
-            name="file"
-            id="imageFileOpenInput"
-            accept="image/*"
-            style="float:left"
-            @change="onFileSelected($event)"
-          />
+          <input type="file" name="file" id="imageFileOpenInput" accept="image/*" style="float:left" @change="onFileSelected($event)" />
           <br />
         </v-card>
         <v-btn color="error" class="mr-2" @click="createPost">작성 완료</v-btn>
@@ -302,7 +230,7 @@ export default {
     },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
-      const idx = this.postData.content.steps.findIndex(function (item) {
+      const idx = this.postData.content.steps.findIndex(function(item) {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);
@@ -326,7 +254,7 @@ export default {
       this.postData.content.ingredients.push(this.addText);
       this.addText = "";
     },
-    plusTag(tagHashtag, index) {
+    plusTag(tagHashtag, index, hashTagString) {
       if (this.tempHashtag[index] === "") {
         return;
       }
@@ -337,15 +265,15 @@ export default {
           return;
         }
       }
+      this.postData.content.steps[index].hashTagString = this.postData.content.steps[index].hashTagString + this.tempHashtag[index] + ",";
+
       tagHashtag.push(this.tempHashtag[index]);
       this.tempHashtag[index] = "";
+      console.log("QQQQ" + this.postData.content.steps[index].hashTagString);
     },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
-      this.postData.content.ingredients.splice(
-        this.postData.content.ingredients.indexOf(tag),
-        1
-      );
+      this.postData.content.ingredients.splice(this.postData.content.ingredients.indexOf(tag), 1);
     },
     closeHashtag(tagHashtag, hashtag) {
       tagHashtag.splice(tagHashtag.indexOf(hashtag), 1);
@@ -360,37 +288,35 @@ export default {
         description: this.postData.content.process,
         image: "no image",
         type: "",
+        hashTagString: "",
         hashtag: [],
       });
       this.postData.content.process = "";
     },
     createPost() {
+      let tempSteps = [];
       console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
-        let temptags = "";
-        for (
-          let j = 0;
-          j < this.postData.content.steps[i].hashtag.length;
-          j++
-        ) {
-          console.log(temptags);
-          if (j == this.postData.content.steps[i].hashtag.length - 1) {
-            temptags = temptags.concat(
-              this.postData.content.steps[i].hashtag[j]
-            );
-          } else {
-            temptags = temptags.concat(
-              this.postData.content.steps[i].hashtag[j],
-              ","
-            );
-          }
-        }
+        let temptags = this.postData.content.steps[i].hashTagString;
+        tempSteps.push({
+          description: this.postData.content.steps[i].description,
+          image: this.postData.content.steps[i].image,
+          type: this.postData.content.steps[i].type,
+        });
+        // for (let j = 0; j < this.postData.content.steps[i].hashTagString.length; j++) {
+        //   console.log(temptags);
+        //   if (j == this.postData.content.steps[i].hashTagString.length - 1) {
+        //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j]);
+        //   } else {
+        //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j], ",");
+        //   }
+        // }
         tags.push(temptags);
-        delete this.postData.content.steps[i].hashtag;
+        // delete this.postData.content.steps[i].hashtag;
       }
-      console.log(this.postData.content.steps);
+      console.log(JSON.stringify(this.postData.content.steps));
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),
@@ -408,7 +334,7 @@ export default {
             cookingTime: this.postData.time,
             thumbnailImage: "no image",
             ingredient: ingreString,
-            steps: this.postData.content.steps,
+            steps: tempSteps,
             tags: tags,
           },
           requestHeader

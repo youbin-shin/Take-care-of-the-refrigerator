@@ -207,7 +207,7 @@
       <!-- 4. 후기 작성 단계 -->
       <v-stepper-step color="red" step="4">후기 작성</v-stepper-step>
       <v-stepper-content step="4">
-        <v-card class="mb-12 p-2" height="200px">
+        <v-card class="mb-12 p-2">
           <v-text-field
             label="요리하면서 꿀팁이나 소감을 작성해주세요."
             v-model="postData.review"
@@ -215,17 +215,13 @@
             hide-details="auto"
           ></v-text-field>
           <br />
-          <div class="titles">썸네일 사진 넣기</div>
-          <br />
-          <input
-            type="file"
-            name="file"
-            id="imageFileOpenInput"
-            accept="image/*"
-            style="float:left"
-            @change="onFileSelected($event)"
-          />
-          <br />
+          <h5 style="text-align: left;">썸네일 사진 넣기</h5>
+          <v-col>
+            <div>
+              <input type="file" @change="onFileSelected()" accept="image/*" style="float:left" />
+            </div>
+            <v-img :src="postData.thumbnailImage" height="100px" width="100px" class="mb-5"></v-img>
+          </v-col>
         </v-card>
         <v-btn color="error" class="mr-2" @click="updatePost">수정 완료</v-btn>
         <v-btn color="secondary" @click="e6 = 3">뒤로 가기</v-btn>
@@ -257,7 +253,7 @@ export default {
       });
     let boardurlId = this.$route.params.no;
     axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
-      // console.log(response.data);
+      console.log(response.data);
       this.postData.title = response.data.board.title;
       this.postData.content.ingredients = response.data.board.ingredient.split(
         " "
@@ -265,7 +261,7 @@ export default {
       this.postData.difficulty = response.data.board.grade;
       this.postData.time = response.data.board.cookingTime;
       this.postData.review = response.data.board.content;
-      this.postData.thumbnailImage = response.data.board.writerImage;
+      this.postData.thumbnailImage = response.data.board.thumbnailImage;
       for (var i = 0; i < response.data.board.steps.length; i++) {
         let hasTagStr = response.data.board.tags[i] + ",";
         let hasTagArr = response.data.board.tags[i].split(",");
@@ -322,7 +318,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 2, // 페이지 변수 (처음 시작은 1부터)
+      e6: 1, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -374,23 +370,18 @@ export default {
         }
       );
     },
-    onFileSelected(event) {
-      // console.log(event);
+    onFileSelected() {
+      this.postData.thumbnailImage = null;
       this.selectedFile = event.target.files[0];
-      // console.log(this.selectedFile);
-      axios
-        .post(
-          `${BACK_URL}/file/`,
-          {
-            file: this.selectedFile,
-          },
-          {
-            headers: { "jwt-auth-token": this.$cookies.get("token") },
-          }
-        )
-        .then((response) => {
-          // console.log(response);
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.selectedFile.name}`)
+        .put(this.selectedFile);
+      storageRef.on(`state_changed`, () => {
+        storageRef.snapshot.ref.getDownloadURL().then((url) => {
+          this.postData.thumbnailImage = url;
         });
+      });
     },
     deleleStep(title) {
       // 요리 과정 단계에서 순서 지울 때 필요한 메서드
@@ -401,7 +392,6 @@ export default {
       this.tp.splice(idx, 1);
       this.se.splice(idx, 1);
     },
-
     plusFood() {
       // 재료 단계에서 재료를 추가할 때 필요한 메서드
       // 빈값일 경우 추가 안되도록 한다.

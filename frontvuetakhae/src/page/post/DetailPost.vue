@@ -60,14 +60,15 @@
 
       <h4 class="detailContentItem">과정</h4>
 
-      <ul v-for="step in detailData.steps" :key="step">
-        <li>
+      <ol v-for="(step, index) in detailData.steps" :key="step" type="1">
+        <p>
+          {{index+1}}.
           <span v-if="step.image!='no image'">
             <v-img :src="step.image" height="100px" width="100px"></v-img>
           </span>
           {{step.description}}
-        </li>
-      </ul>
+        </p>
+      </ol>
       <hr />
       <b-row>
         <b-col>

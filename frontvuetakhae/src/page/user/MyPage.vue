@@ -13,11 +13,7 @@
           <div class="mt-2">
             <p>
               업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
-              <progress
-                id="progress"
-                :value="uploadValue"
-                max="100"
-              ></progress>
+              <progress id="progress" :value="uploadValue" max="100"></progress>
             </p>
             <v-btn class="mb-2" @click="submitFile">업로드하기</v-btn>
           </div>
@@ -29,15 +25,9 @@
           <h3 class="mb-5 ml-5" style="text-align: left;">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="ma-2"
-                  outlined
-                  color="indigo"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="checkfollowee"
-                >팔로워 {{ userData.followingCount }} 명</v-btn>
+                <v-btn class="ma-2" outlined color="indigo" dark v-bind="attrs" v-on="on" @click="checkfollowee"
+                  >팔로워 {{ userData.followingCount }} 명</v-btn
+                >
               </template>
               <v-list>
                 <v-list-item v-for="followee in followeelist" :key="followee.nickname">
@@ -47,15 +37,9 @@
             </v-menu>
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="ma-2"
-                  outlined
-                  color="indigo"
-                  dark
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="checkfollower"
-                >팔로잉 {{ userData.followerCount }} 명</v-btn>
+                <v-btn class="ma-2" outlined color="indigo" dark v-bind="attrs" v-on="on" @click="checkfollower"
+                  >팔로잉 {{ userData.followerCount }} 명</v-btn
+                >
               </template>
               <v-list>
                 <v-list-item v-for="follower in followerlist" :key="follower.nickname">
@@ -66,12 +50,7 @@
           </h3>
           <h3 class="ml-5" style="text-align: left;">자기소개</h3>
           <v-col cols="12">
-            <v-textarea
-              solo
-              name="input-7-4"
-              label="간단하게 자신에 대해 소개해주세요."
-              v-model="userData.introduce"
-            ></v-textarea>
+            <v-textarea solo name="input-7-4" label="간단하게 자신에 대해 소개해주세요." v-model="userData.introduce"></v-textarea>
             <v-btn depressed small @click="updateIntroduce">저장</v-btn>
           </v-col>
         </div>
@@ -83,21 +62,10 @@
       <h1>나의 냉장고</h1>
 
       <v-row class="m-2 inputBlank" variant="danger">
-        <v-text-field
-          label="냉장고 속 재료를 추가해주세요."
-          v-model="addText"
-          hide-details="auto"
-          v-on:keyup.enter="plusFood()"
-        ></v-text-field>
+        <v-text-field label="냉장고 속 재료를 추가해주세요." v-model="addText" hide-details="auto" v-on:keyup.enter="plusFood()"></v-text-field>
         <v-icon large @click="plusFood()">mdi-plus</v-icon>
       </v-row>
-      <v-chip
-        class="m-1"
-        v-for="tag in chips"
-        close
-        @click:close="closeChip(tag)"
-        :key="tag"
-      >{{ tag }}</v-chip>
+      <v-chip class="m-1" v-for="tag in chips" close @click:close="closeChip(tag)" :key="tag">{{ tag }}</v-chip>
       <div v-if="emptyChip">냉장고 속 요리 재료를 입력해주세요.</div>
     </div>
     <div class="interest">
@@ -112,9 +80,9 @@
     </div>
     <hr />
     <div class="interest">
-      <h1>내가 작성한 레시피 목록</h1>
+      <h1>한 레시피 목록</h1>
       <li v-for="board in userData.myBoards" :key="board" class="boardList">
-        <v-btn small class="mr-2">수정</v-btn>
+        <v-btn small class="mr-2" @click="goUpdatePost(board.boardId)">수정</v-btn>
         <v-btn small color="error" @click="deletePost(board.boardId)" class="mr-2">삭제</v-btn>
         <span @click="goDetail(board.boardId)">{{ board.title }}</span>
         <small>{{ board.createAt }}</small>
@@ -134,7 +102,8 @@
           modalShow = !modalShow;
           loadData();
         "
-      >수정하기</b-button>
+        >수정하기</b-button
+      >
       <b-button class="bottom-button mr-2" variant="danger" @click="deleteData()">탈퇴하기</b-button>
     </div>
 
@@ -232,6 +201,9 @@ export default {
       });
   },
   methods: {
+    goUpdatePost(boardId) {
+      this.$router.push(`/update/${boardId}`);
+    },
     deletePost(boardId) {
       axios
         .delete(`${BACK_URL}/boards/${boardId}`, {
@@ -265,8 +237,7 @@ export default {
       storageRef.on(
         `state_changed`,
         (snapshot) => {
-          this.uploadValue =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          this.uploadValue = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
           // console.log(error.message);
@@ -299,7 +270,7 @@ export default {
               this.userData.image = response.data.mypage.image;
             });
         })
-        .catch(function () {
+        .catch(function() {
           // console.log("FAILURE!!");
         });
     },

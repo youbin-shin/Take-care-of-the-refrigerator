@@ -62,7 +62,7 @@
                     </v-col>
                     <v-col cols="6">
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
-                      <v-chip class="mr-2 mb-2" v-for="hash in tag.hashtag" :key="hash" close @click:close="closeHashtag(tag.hashtag, hash)"
+                      <v-chip class="mr-2 mb-2" v-for="hash in tag.hashtag" :key="hash" close @click:close="closeHashtag(tag.hashtag, hash, index)"
                         >#{{ hash }}</v-chip
                       >
 
@@ -136,7 +136,7 @@
           <input type="file" name="file" id="imageFileOpenInput" accept="image/*" style="float:left" @change="onFileSelected($event)" />
           <br />
         </v-card>
-        <v-btn color="error" class="mr-2" @click="createPost">작성 완료</v-btn>
+        <v-btn color="error" class="mr-2" @click="updatePost">수정 완료</v-btn>
         <v-btn color="secondary" @click="e6 = 3">뒤로 가기</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -149,7 +149,7 @@ import axios from "axios";
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
-  name: "CreatePost",
+  name: "UpdatePost",
   components: {
     draggable,
   },
@@ -162,6 +162,29 @@ export default {
         console.log(response.data);
         this.list = response.data.box;
       });
+    let boardurlId = this.$route.params.no;
+    axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
+      console.log(response.data);
+      this.postData.title = response.data.board.title;
+      this.postData.content.ingredients = response.data.board.ingredient.split(" ");
+      this.postData.difficulty = response.data.board.grade;
+      this.postData.time = response.data.board.cookingTime;
+      this.postData.review = response.data.board.content;
+      this.postData.thumbnailImage = response.data.board.writerImage;
+      for (var i = 0; i < response.data.board.steps.length; i++) {
+        let hasTagStr = response.data.board.tags[i] + ",";
+        let hasTagArr = response.data.board.tags[i].split(",");
+        this.tempHashtag.push("");
+
+        this.postData.content.steps.push({
+          description: response.data.board.steps[i].description,
+          image: response.data.board.steps[i].image,
+          type: response.data.board.steps[i].type,
+          hashTagString: hasTagStr,
+          hashtag: hasTagArr,
+        });
+      }
+    });
   },
   data() {
     return {
@@ -260,6 +283,7 @@ export default {
       for (var i = 0; i < tagHashtag.length; i++) {
         if (this.tempHashtag[index] === tagHashtag[i]) {
           this.tempHashtag[index] = "";
+          alert("중복된 태그입니다!");
           return;
         }
       }
@@ -273,8 +297,11 @@ export default {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
       this.postData.content.ingredients.splice(this.postData.content.ingredients.indexOf(tag), 1);
     },
-    closeHashtag(tagHashtag, hashtag) {
+    closeHashtag(tagHashtag, hashtag, index) {
+      console.log("TTTT" + tagHashtag);
+      console.log("FFF" + hashtag);
       tagHashtag.splice(tagHashtag.indexOf(hashtag), 1);
+      this.postData.content.steps[index].hashTagString = tagHashtag.join(",");
     },
     plusStep() {
       // 요리 과정 단계에서 과정을 추가할 때 작동하는 메서드
@@ -291,9 +318,8 @@ export default {
       });
       this.postData.content.process = "";
     },
-    createPost() {
+    updatePost() {
       let tempSteps = [];
-      console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
@@ -322,9 +348,10 @@ export default {
       };
       let ingreString = this.postData.content.ingredients.join(" ");
       console.log(ingreString);
+      let boardurlId = this.$route.params.no;
       axios
-        .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/",
+        .put(
+          `http://i3a305.p.ssafy.io:8399/api/boards/${boardurlId}`,
           {
             title: this.postData.title,
             content: this.postData.review,
@@ -339,7 +366,7 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          alert("게시글이 성공적으로 작성됐습니다!");
+          alert("게시글이 성공적으로 수정됐습니다!");
           this.$router.push("/");
         })
         .catch((error) => {

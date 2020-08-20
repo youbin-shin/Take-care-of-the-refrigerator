@@ -291,6 +291,14 @@ export default {
         )
         .then(function () {
           console.log("SUCCESS!!");
+          axios
+            .get(`${BACK_URL}/api/users/mypage`, {
+              headers: { "jwt-auth-token": this.$cookies.get("token") },
+            })
+            .then((response) => {
+              console.log(response);
+              this.userData.image = response.data.mypage.image;
+            });
         })
         .catch(function () {
           console.log("FAILURE!!");

@@ -55,10 +55,10 @@
             <h5>과정 순서</h5>
             <draggable class="list-group" tag="ul" v-model="postData.content.steps" v-bind="dragOptions" @start="drag = true" @end="drag = false">
               <transition-group type="transition" :name="'flip-list'">
-                <li v-for="(tag, index) in postData.content.steps" :key="tag.description">
-                  <v-row>
+                <li id="itemSteps" v-for="(tag, index) in postData.content.steps" :key="tag.description">
+                  <v-row style="background-color:'black'">
                     <v-col>
-                      <v-overflow-btn class="type-button mt-0" :items="typeList" v-model="tag.type" label="타입 선택" segmented></v-overflow-btn>
+                      <v-overflow-btn class="type-button mt-0" :items="typeList" v-model="tp[index]" label="타입 선택" segmented></v-overflow-btn>
                     </v-col>
                     <v-col>
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
@@ -180,6 +180,7 @@ export default {
   data() {
     return {
       // uploadValue: 0,
+      tp: [],
       imageData: null,
       picture: null,
       tempHashtag: [],
@@ -192,13 +193,13 @@ export default {
           text: "재료 손질",
           value: 1,
           callback: () => {
-            // console.log("재료 손질");
+            console.log("재료 손질");
           },
         },
         {
           text: "요리 준비",
           value: 2,
-          // callback: () => console.log("요리 준비"),
+          callback: () => console.log("요리 준비"),
         },
         // { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
@@ -278,6 +279,7 @@ export default {
         return item.description === title;
       });
       this.postData.content.steps.splice(idx, 1);
+      this.tp.splice(idx, 1);
       this.se.splice(idx, 1);
     },
 
@@ -327,6 +329,7 @@ export default {
       if (this.postData.content.process === "") {
         return;
       }
+      this.tp.push(0);
       this.tempHashtag.push("");
       this.postData.content.steps.push({
         description: this.postData.content.process,
@@ -342,6 +345,10 @@ export default {
       // console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
+      for (let i = 0; i < this.tp.length; i++) {
+        this.postData.content.steps[i].type = this.tp[i];
+      }
+
       for (let i = 0; i < this.postData.content.steps.length; i++) {
         let temptags = this.postData.content.steps[i].hashTagString;
         tempSteps.push({
@@ -370,7 +377,7 @@ export default {
       // console.log(ingreString);
       axios
         .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/",
+          "http://localhost:8399/api/boards/",
           {
             title: this.postData.title,
             content: this.postData.review,
@@ -410,6 +417,19 @@ export default {
       this.$nextTick(() => {
         this.delayedDragging = false;
       });
+    },
+    tp: function(newValue) {
+      console.log("ASd" + newValue);
+      for (var i = 0; i < newValue.length; i++) {
+        var x = document.querySelectorAll("#itemSteps")[i];
+        if (newValue[i] === 1) {
+          x.style.backgroundColor = "lightgray";
+        } else if (newValue[i] === 2) {
+          x.style.backgroundColor = "lightblue";
+        } else {
+          x.style.backgroundColor = "khaki";
+        }
+      }
     },
   },
 };
@@ -456,6 +476,9 @@ export default {
 .type-button {
   width: 150px;
   height: 25px;
+}
+.bg-bb {
+  background-color: lightblue;
 }
 /* .timeinput {
   margin-left: 10%;

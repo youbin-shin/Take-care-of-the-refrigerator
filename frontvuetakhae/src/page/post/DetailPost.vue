@@ -70,12 +70,8 @@
         </p>
       </ol>
       <hr />
-      <b-row>
-        <b-col>
-          <h4 class="detailContentItem">후기</h4>
-        </b-col>
-        <b-col cols="10">{{ detailData.content }}</b-col>
-      </b-row>
+      <h4 class="detailContentItem">후기</h4>
+      {{ detailData.content }}
       <hr />
 
       <div class="comments">

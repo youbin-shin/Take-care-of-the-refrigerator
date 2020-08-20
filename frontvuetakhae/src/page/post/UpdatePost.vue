@@ -22,9 +22,9 @@
                 <h5>요리에 필요한 재료</h5>
                 <div>
                   <draggable tag="span" v-model="postData.content.ingredients" v-bind="dragOptions" @start="drag = true" @end="drag = false">
-                    <v-chip class="mr-2 mb-2" v-for="tag in postData.content.ingredients" :key="tag" close @click:close="closeChip(tag)">{{
-                      tag
-                    }}</v-chip>
+                    <v-chip class="mr-2 mb-2" v-for="tag in postData.content.ingredients" :key="tag" close @click:close="closeChip(tag)">
+                      {{ tag }}
+                    </v-chip>
                   </draggable>
                 </div>
               </b-col>
@@ -57,10 +57,10 @@
               <transition-group type="transition" :name="'flip-list'">
                 <li id="itemSteps" v-for="(tag, index) in postData.content.steps" :key="tag.description">
                   <v-row>
-                    <v-col cols="3">
+                    <v-col>
                       <v-overflow-btn class="type-button mt-0" :items="typeList" v-model="tp[index]" label="타입 선택" segmented></v-overflow-btn>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col>
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
                       <v-chip class="mr-2 mb-2" v-for="hash in tag.hashtag" :key="hash" close @click:close="closeHashtag(tag.hashtag, hash, index)"
                         >#{{ hash }}</v-chip
@@ -74,7 +74,7 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <v-col cols="3">
+                    <v-col>
                       {{ tag.description }}
                       <div class="d-flex flex-column">
                         <i aria-hidden="true"></i>
@@ -83,6 +83,19 @@
                           <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
                       </div>
+                    </v-col>
+                    <v-col>
+                      <input type="file" @change="previewImage(tag)" accept="image/*" />
+                      <v-img :src="tag.image" height="100px" width="100px"></v-img>
+
+                      <!-- <p>
+                        업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
+                        <progress
+                          id="progress"
+                          :value="uploadValue"
+                          max="100"
+                        ></progress>
+                      </p>-->
                     </v-col>
                   </v-row>
                 </li>
@@ -146,6 +159,8 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
+import firebase from "firebase";
+
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
@@ -159,7 +174,7 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
         this.list = response.data.box;
       });
     let boardurlId = this.$route.params.no;
@@ -204,6 +219,8 @@ export default {
   },
   data() {
     return {
+      imageData: null,
+      picture: null,
       tp: [],
       tempHashtag: [],
       chips: [],
@@ -248,6 +265,35 @@ export default {
     };
   },
   methods: {
+    previewImage(tag) {
+      // this.uploadValue = 0;
+      this.tagImage = null;
+      this.imageData = event.target.files[0];
+      this.onUpload(tag);
+    },
+    onUpload(tag) {
+      this.picture = null;
+      const storageRef = firebase
+        .storage()
+        .ref(`${this.imageData.name}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        (snapshot) => {
+          // this.uploadValue =
+          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          // console.log(error.message);
+        },
+        () => {
+          // this.uploadValue = 100;
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
+            tag["image"] = url;
+          });
+        }
+      );
+    },
     onFileSelected(event) {
       // console.log(event);
       this.selectedFile = event.target.files[0];

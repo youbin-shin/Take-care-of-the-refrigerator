@@ -352,7 +352,7 @@ export default {
           type: this.postData.content.steps[i].type,
         });
         // for (let j = 0; j < this.postData.content.steps[i].hashTagString.length; j++) {
-        console.log(temptags);
+        // console.log(temptags);
         //   if (j == this.postData.content.steps[i].hashTagString.length - 1) {
         //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j]);
         //   } else {
@@ -415,7 +415,6 @@ export default {
       });
     },
     tp: function(newValue) {
-      console.log("ASd" + newValue);
       for (var i = 0; i < newValue.length; i++) {
         var x = document.querySelectorAll("#itemSteps")[i];
         if (newValue[i] === 1) {

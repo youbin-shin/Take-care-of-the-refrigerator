@@ -8,6 +8,8 @@ import java.util.List;
 public interface BoardService {
     List<BoardSimpleDto> searchAll(String email) throws SQLException;
 
+    List<BoardSimpleDto> searchAllCreateAt(String email) throws SQLException;
+
     Board searchByBoardId(int boardId) throws SQLException;
 
     boolean write(String email, Board board) throws SQLException;

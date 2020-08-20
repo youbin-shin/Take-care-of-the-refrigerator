@@ -31,6 +31,15 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public List<BoardSimpleDto> searchAllCreateAt(String email) throws SQLException {
+        HashMap map = new HashMap();
+        map.put("email", email);
+        map.put("keyword",null);
+        map.put("type",null);
+        return template.selectList(ns + "selectAllByCreateAt", map);
+    }
+
+    @Override
     public Board searchByBoardId(int boardId) throws SQLException {
         return template.selectOne(ns + "selectOneBoardByBoardId", boardId);
     }

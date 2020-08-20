@@ -60,7 +60,8 @@
           <span v-if="step.image != 'no image'">
             <v-img :src="step.image" height="100px" width="100px"></v-img>
           </span>
-          {{ step.description }}
+          {{ step.description }}<br />
+          관련 태그 : {{ detailData.tags[index] }}
         </p>
       </ol>
       <hr />

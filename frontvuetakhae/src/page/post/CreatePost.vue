@@ -371,7 +371,7 @@ export default {
             content: this.postData.review,
             grade: this.postData.difficulty,
             cookingTime: this.postData.time,
-            thumbnailImage: "no image",
+            thumbnailImage: this.postData.thumbnailImage,
             ingredient: ingreString,
             steps: tempSteps,
             tags: tags,

@@ -14,7 +14,7 @@
     >
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
-    <!-- {{postData.content.steps}} -->
+
     <v-stepper v-model="e6" vertical>
       <!-- 1. 재료 입력 단계 -->
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
@@ -41,11 +41,7 @@
                       :key="tag"
                       close
                       @click:close="closeChip(tag)"
-                    >
-                      {{
-                      tag
-                      }}
-                    </v-chip>
+                    >{{ tag }}</v-chip>
                   </draggable>
                 </div>
               </b-col>
@@ -96,7 +92,7 @@
               <transition-group type="transition" :name="'flip-list'">
                 <li v-for="(tag, index) in postData.content.steps" :key="tag.description">
                   <v-row>
-                    <v-col>
+                    <v-col cols="3">
                       <v-overflow-btn
                         class="type-button mt-0"
                         :items="typeList"
@@ -105,14 +101,14 @@
                         segmented
                       ></v-overflow-btn>
                     </v-col>
-                    <v-col>
+                    <v-col cols="6">
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
                       <v-chip
                         class="mr-2 mb-2"
                         v-for="hash in tag.hashtag"
                         :key="hash"
                         close
-                        @click:close="closeHashtag(tag.hashtag, hash)"
+                        @click:close="closeHashtag(tag.hashtag, hash, index)"
                       >#{{ hash }}</v-chip>
 
                       <div class="input-tag">
@@ -123,33 +119,17 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <v-col>
+                    <v-col cols="3">
                       {{ tag.description }}
                       <div class="d-flex flex-column">
+                        <i aria-hidden="true"></i>
                         <div class>
                           <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
                           <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
                       </div>
                     </v-col>
-                    <v-col>
-                      <img :src="tag.image" />
-
-                      <div>
-                        <input type="file" @change="previewImage(tag.image)" accept="image/*" />
-                      </div>
-                      <!-- <p>
-                        업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
-                        <progress
-                          id="progress"
-                          :value="uploadValue"
-                          max="100"
-                        ></progress>
-                      </p>
-                      <v-btn class="mb-2" @click="submitFile(tag.image)">업로드하기</v-btn>-->
-                    </v-col>
                   </v-row>
-                  <hr />
                 </li>
               </transition-group>
             </draggable>
@@ -226,7 +206,7 @@
           />
           <br />
         </v-card>
-        <v-btn color="error" class="mr-2" @click="createPost">작성 완료</v-btn>
+        <v-btn color="error" class="mr-2" @click="updatePost">수정 완료</v-btn>
         <v-btn color="secondary" @click="e6 = 3">뒤로 가기</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -236,12 +216,10 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
-import firebase from "firebase";
-
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
-  name: "CreatePost",
+  name: "UpdatePost",
   components: {
     draggable,
   },
@@ -254,12 +232,34 @@ export default {
         // console.log(response.data);
         this.list = response.data.box;
       });
+    let boardurlId = this.$route.params.no;
+    axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
+      // console.log(response.data);
+      this.postData.title = response.data.board.title;
+      this.postData.content.ingredients = response.data.board.ingredient.split(
+        " "
+      );
+      this.postData.difficulty = response.data.board.grade;
+      this.postData.time = response.data.board.cookingTime;
+      this.postData.review = response.data.board.content;
+      this.postData.thumbnailImage = response.data.board.writerImage;
+      for (var i = 0; i < response.data.board.steps.length; i++) {
+        let hasTagStr = response.data.board.tags[i] + ",";
+        let hasTagArr = response.data.board.tags[i].split(",");
+        this.tempHashtag.push("");
+
+        this.postData.content.steps.push({
+          description: response.data.board.steps[i].description,
+          image: response.data.board.steps[i].image,
+          type: response.data.board.steps[i].type,
+          hashTagString: hasTagStr,
+          hashtag: hasTagArr,
+        });
+      }
+    });
   },
   data() {
     return {
-      // uploadValue: 0,
-      imageData: null,
-      picture: null,
       tempHashtag: [],
       chips: [],
       items: [],
@@ -280,7 +280,7 @@ export default {
         },
         // { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 2, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -303,42 +303,6 @@ export default {
     };
   },
   methods: {
-    previewImage(tagImage) {
-      // this.uploadValue = 0;
-      this.tagImage = null;
-      this.imageData = event.target.files[0];
-      this.onUpload(tagImage);
-    },
-    onUpload(tagImage) {
-      this.picture = null;
-      const storageRef = firebase
-        .storage()
-        .ref(`${this.imageData.name}`)
-        .put(this.imageData);
-      storageRef.on(
-        `state_changed`,
-        (snapshot) => {
-          // this.uploadValue =
-          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-        (error) => {
-          // console.log(error.message);
-        },
-        () => {
-          this.uploadValue = 100;
-          storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            tagImage = url;
-            // console.log(tagImage);
-          });
-        }
-      );
-    },
-    // submitFile(tagImage) {
-    //   tagImage = this.picture;
-    //   this.picture = null;
-    //   this.uploadValue = 0;
-    // console.log("이동완료", tagImage);
-    // },
     onFileSelected(event) {
       // console.log(event);
       this.selectedFile = event.target.files[0];
@@ -391,6 +355,7 @@ export default {
       for (var i = 0; i < tagHashtag.length; i++) {
         if (this.tempHashtag[index] === tagHashtag[i]) {
           this.tempHashtag[index] = "";
+          alert("중복된 태그입니다!");
           return;
         }
       }
@@ -410,8 +375,11 @@ export default {
         1
       );
     },
-    closeHashtag(tagHashtag, hashtag) {
+    closeHashtag(tagHashtag, hashtag, index) {
+      // console.log("TTTT" + tagHashtag);
+      // console.log("FFF" + hashtag);
       tagHashtag.splice(tagHashtag.indexOf(hashtag), 1);
+      this.postData.content.steps[index].hashTagString = tagHashtag.join(",");
     },
     plusStep() {
       // 요리 과정 단계에서 과정을 추가할 때 작동하는 메서드
@@ -428,9 +396,8 @@ export default {
       });
       this.postData.content.process = "";
     },
-    createPost() {
+    updatePost() {
       let tempSteps = [];
-      // console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
@@ -441,7 +408,7 @@ export default {
           type: this.postData.content.steps[i].type,
         });
         // for (let j = 0; j < this.postData.content.steps[i].hashTagString.length; j++) {
-        // console.log(temptags);
+        console.log(temptags);
         //   if (j == this.postData.content.steps[i].hashTagString.length - 1) {
         //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j]);
         //   } else {
@@ -459,9 +426,10 @@ export default {
       };
       let ingreString = this.postData.content.ingredients.join(" ");
       // console.log(ingreString);
+      let boardurlId = this.$route.params.no;
       axios
-        .post(
-          "http://i3a305.p.ssafy.io:8399/api/boards/",
+        .put(
+          `http://i3a305.p.ssafy.io:8399/api/boards/${boardurlId}`,
           {
             title: this.postData.title,
             content: this.postData.review,
@@ -476,7 +444,7 @@ export default {
         )
         .then((response) => {
           // console.log(response);
-          alert("게시글이 성공적으로 작성됐습니다!");
+          alert("게시글이 성공적으로 수정됐습니다!");
           this.$router.push("/");
         })
         .catch((error) => {

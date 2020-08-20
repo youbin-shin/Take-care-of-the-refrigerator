@@ -2,7 +2,7 @@
   <!-- <div> -->
   <div class="container">
     <div class="writerButton" v-if="userData.nickname == detailData.nickname">
-      <v-btn small class="mr-2">수정</v-btn>
+      <v-btn @click="goUpdate" small class="mr-2">수정</v-btn>
       <v-btn small color="error" @click="deletePost">삭제</v-btn>
       <hr />
     </div>
@@ -35,13 +35,19 @@
           <v-row>
             <div class="easyhardCss" @click="plusEasy">
               <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-              <p class="caption mb-0 mt-1">{{ detailData.easyCount }}명 <br />쉬워요</p>
+              <p class="caption mb-0 mt-1">
+                {{ detailData.easyCount }}명
+                <br />쉬워요
+              </p>
             </div>
 
             <v-spacer></v-spacer>
             <div class="easyhardCss" @click="plusHard">
               <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-              <p class="caption mb-0 mt-1">{{ detailData.difficultyCount }}명 <br />어려워요</p>
+              <p class="caption mb-0 mt-1">
+                {{ detailData.difficultyCount }}명
+                <br />어려워요
+              </p>
             </div>
           </v-row>
         </b-col>
@@ -77,7 +83,11 @@
           </b-col>
           <b-col cols="10">
             <div v-if="userData.nickname == comment.nickname">
-              <input :value="comment.commentContent" @input="comment.commentContent = $event.target.value" class="inputLength" />
+              <input
+                :value="comment.commentContent"
+                @input="comment.commentContent = $event.target.value"
+                class="inputLength"
+              />
               <p>{{ comment.createAt }}</p>
             </div>
             <div v-else>
@@ -109,7 +119,7 @@ export default {
   created() {
     let boardurlId = this.$route.params.no;
     axios.get(`${BACK_URL}/boards/${boardurlId}`).then((response) => {
-      console.log(response);
+      // console.log(response);
       this.detailData.boardId = response.data.board.boardId;
       this.detailData.title = response.data.board.title;
       this.detailData.nickname = response.data.board.nickname;
@@ -128,7 +138,7 @@ export default {
       this.detailData.comments = response.data.board.comments;
       this.detailData.writerImage = response.data.board.writerImage;
 
-      console.log(this.detailData);
+      // console.log(this.detailData);
     });
     axios
       .get(`${BACK_URL}/users/mypage`, {
@@ -169,6 +179,9 @@ export default {
     };
   },
   methods: {
+    goUpdate() {
+      this.$router.push(`/update/${this.detailData.boardId}`);
+    },
     deletePost() {
       axios
         .delete(`${BACK_URL}/boards/${this.detailData.boardId}`, {
@@ -227,7 +240,7 @@ export default {
         });
     },
     goOtherpage(userNickName) {
-      console.log(this.userData.nickname);
+      // console.log(this.userData.nickname);
 
       if (this.userData.nickname == "") {
         alert("상대방 타임라인 구경은 로그인 후 이용해주세요!!");
@@ -263,12 +276,14 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             alert("댓글이 작성되었습니다!");
-            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
-              this.detailData.comments = response.data.board.comments;
-            });
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
@@ -279,12 +294,14 @@ export default {
       axios
         .delete(`${BACK_URL}/boards/comments/${commentId}`)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             alert("댓글이 삭제되었습니다.");
-            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
-              this.detailData.comments = response.data.board.comments;
-            });
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
@@ -303,7 +320,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             alert("댓글이 수정되었습니다.");
             this.$router.go();

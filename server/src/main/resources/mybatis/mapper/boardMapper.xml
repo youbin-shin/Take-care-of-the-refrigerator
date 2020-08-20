@@ -27,6 +27,7 @@
                 </when>
             </choose>
         </if>
+        ORDER BY views DESC
     </select>
 
 	<!-- 관심 게시글 -->
@@ -188,6 +189,31 @@
     <select id="infiniteScroll" resultType="board">
         <![CDATA[
         select * from boards where board_id>0 order by views desc limit #{scrollNumber},3;]]>
+    </select>
+
+    <select id="selectAllByCreateAt" resultType="boardsimple">
+        select board_id,
+        title,
+        nickname,
+        create_at,
+        thumbnail_image,
+        cooking_time,
+        grade,
+        (select count(*) from interest_boards where board_id=boards.board_id and user_id=(select user_id from users
+        where email=#{email})) as favorite
+        from boards join users on boards.user_id = users.user_id
+        where temporary = 0
+        <if test="keyword != null">
+            <choose>
+                <when test="type == 1">
+                    and title LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+                <when test="type == 2">
+                    and nickname LIKE CONCAT('%', #{keyword}, '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY create_at DESC
     </select>
     
 </mapper>

@@ -33,6 +33,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardSimpleDto> searchAllCreateAt(String email) throws SQLException {
+        return boardDao.searchAllCreateAt(email);
+    }
+
+    @Override
     public Board searchByBoardId(int boardId) throws SQLException {
         Board board = null;
         board = boardDao.searchByBoardId(boardId);              // 1. 게시글 조회
@@ -43,11 +48,16 @@ public class BoardServiceImpl implements BoardService {
             int selectedStepId = board.getSteps().get(i).getStepId();
             List<Tags> tagList = boardDao.getTagList(selectedStepId);
             StringBuilder sb = new StringBuilder();
+            if(tagList.size()==0){
+                tempList.add("");
+            }else{
+
             for (Tags tag : tagList) {
                 System.out.println(tag.toString());
                 sb.append(tag.getTagName() + ",");
             }
             tempList.add(sb.substring(0, sb.length() - 1));
+            }
         }
         board.setTags(tempList);
 
@@ -71,30 +81,35 @@ public class BoardServiceImpl implements BoardService {
                 boardDao.insertStep(board.getSteps().get(i));
                 System.out.println(board.getSteps().get(i).getStepId());
                 String[] arrTags = listTag.get(i).split(",");
-                for (String tag : arrTags) {
-                    if(tag==""){
-                        continue;
-                    }
-                    System.out.println(tag);
+                if (arrTags.length == 0) {
                     Tags temp = new Tags(-1, "");
-                    temp.setTagName(tag);
-                    Tags selectedTag = new Tags(-1, "");
-                    selectedTag = boardDao.selectTagExist(temp);
-                    if (selectedTag == null) {
-                        System.out.println("null!!");
-                        boardDao.insertTag(temp);
-                        System.out.println(temp.getTagId());
-                        StepTags stepTags = new StepTags(-1, -1);
-                        stepTags.setTagId(temp.getTagId());
-                        stepTags.setStepId(board.getSteps().get(i).getStepId());
-                        boardDao.insertStepTags(stepTags);
-                    } else {
-                        System.out.println("id : " + selectedTag.getTagId());
-                        System.out.println("name : " + selectedTag.getTagName());
-                        StepTags stepTags = new StepTags(-1, -1);
-                        stepTags.setTagId(selectedTag.getTagId());
-                        stepTags.setStepId(board.getSteps().get(i).getStepId());
-                        boardDao.insertStepTags(stepTags);
+                    temp.setTagName("");
+                    boardDao.insertTag(temp);
+                } else {
+
+                    for (String tag : arrTags) {
+
+                        System.out.println(tag);
+                        Tags temp = new Tags(-1, "");
+                        temp.setTagName(tag);
+                        Tags selectedTag = new Tags(-1, "");
+                        selectedTag = boardDao.selectTagExist(temp);
+                        if (selectedTag == null) {
+                            System.out.println("null!!");
+                            boardDao.insertTag(temp);
+                            System.out.println(temp.getTagId());
+                            StepTags stepTags = new StepTags(-1, -1);
+                            stepTags.setTagId(temp.getTagId());
+                            stepTags.setStepId(board.getSteps().get(i).getStepId());
+                            boardDao.insertStepTags(stepTags);
+                        } else {
+                            System.out.println("id : " + selectedTag.getTagId());
+                            System.out.println("name : " + selectedTag.getTagName());
+                            StepTags stepTags = new StepTags(-1, -1);
+                            stepTags.setTagId(selectedTag.getTagId());
+                            stepTags.setStepId(board.getSteps().get(i).getStepId());
+                            boardDao.insertStepTags(stepTags);
+                        }
                     }
                 }
 
@@ -195,6 +210,9 @@ public class BoardServiceImpl implements BoardService {
                 System.out.println(board.getSteps().get(i).getStepId());
                 String[] arrTags = listTag.get(i).split(",");
                 for (String tag : arrTags) {
+                    if (tag == "") {
+                        continue;
+                    }
                     System.out.println(tag);
                     Tags temp = new Tags(-1, "");
                     temp.setTagName(tag);

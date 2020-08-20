@@ -35,7 +35,8 @@ public class JwtService {
 
         // Payload 설정 - claim 정보 포함
         builder.setSubject("로그인토큰") // 토큰 제목 설정
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin)) // 유효기간
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * expireMin)) // 유효기간 10 분
+                .setExpiration(new Date(System.currentTimeMillis() + 6000 * 60 * expireMin)) // 유효기간 60 분
                 .claim("User", user)
 //                .claim("second", "더 담고 싶은거 있어?")
                 ; // 담고 싶은 정보 설정

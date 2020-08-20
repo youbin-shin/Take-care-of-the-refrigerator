@@ -219,7 +219,7 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.userData.nickname = response.data.mypage.nickname;
         this.userData.introduce = response.data.mypage.introduce;
         this.userData.box = response.data.mypage.box;
@@ -269,7 +269,7 @@ export default {
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.log(error.message);
+          // console.log(error.message);
         },
         () => {
           this.uploadValue = 100;
@@ -280,7 +280,7 @@ export default {
       );
     },
     submitFile() {
-      console.log(this.picture);
+      // console.log(this.picture);
       axios
         .put(
           `${BACK_URL}/api/users/mypage/image`,
@@ -295,12 +295,12 @@ export default {
               headers: { "jwt-auth-token": this.$cookies.get("token") },
             })
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               this.userData.image = response.data.mypage.image;
             });
         })
         .catch(function () {
-          console.log("FAILURE!!");
+          // console.log("FAILURE!!");
         });
     },
     handleFileUpload() {
@@ -312,7 +312,7 @@ export default {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             this.followerlist = response.data.users;
           }
@@ -348,7 +348,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 202) {
             alert("자기소개가 수정되었습니다!");
           }
@@ -364,7 +364,7 @@ export default {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           this.userupdateData.nickname = response.data.nickname;
         })
         .catch((error) => {
@@ -376,7 +376,7 @@ export default {
       if (this.nicknameCheck === true) {
         if (this.userupdateData.password === "") {
           // 닉네임만 변경할 경우
-          console.log(this.userupdateData.nickname);
+          // console.log(this.userupdateData.nickname);
           axios
             .put(
               `${BACK_URL}/api/users/info`,
@@ -388,7 +388,7 @@ export default {
               }
             )
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               if (response.status === 202) {
                 alert("회원정보가 수정되었습니다!");
                 this.modalShow = !this.modalShow;
@@ -397,7 +397,7 @@ export default {
                     headers: { "jwt-auth-token": this.$cookies.get("token") },
                   })
                   .then((response) => {
-                    console.log(response);
+                    // console.log(response);
                     this.userData.nickname = response.data.mypage.nickname;
                   });
                 this.nicknameCheck = false;
@@ -422,7 +422,7 @@ export default {
               }
             )
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               if (response.status === 202) {
                 alert("회원정보가 수정되었습니다!");
                 this.modalShow = !this.modalShow;
@@ -470,7 +470,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             this.nicknameCheck = true;
             alert("사용 가능한 닉네임입니다.");
@@ -514,7 +514,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 202) {
             alert("냉장고 재료가 추가되었습니다.");
           }
@@ -537,7 +537,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 202) {
             alert("냉장고 재료가 삭제되었습니다.");
           }

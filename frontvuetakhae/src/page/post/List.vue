@@ -386,20 +386,20 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         this.backDatas = response.data.boards;
       });
     Kakao.init("bed1ac3b578a5c6daea9bcc807fdc6d8");
     axios
       .get(`${BACK_URL}/boards/foodsafe/recipes/pages/0`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.apiDatas = response.data.recipes;
       });
   },
   methods: {
     heartApiRecipe(apiboardId) {
-      console.log("누를꺼야");
+      // console.log("누를꺼야");
       axios
         .post(
           `${BACK_URL}/boards/foodsafe/recipes/interest`,
@@ -411,7 +411,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         });
     },
     goUp() {
@@ -421,13 +421,13 @@ export default {
       axios
         .get(`${BACK_URL}/boards/foodsafe/recipes/pages/` + this.limit)
         .then((response) => {
-          console.log(response.data.recipes);
+          // console.log(response.data.recipes);
           setTimeout(() => {
             if (response.data.recipes.length) {
               this.apiDatas = this.apiDatas.concat(response.data.recipes);
               $state.loaded();
               this.limit += 1;
-              console.log("after", this.apiDatas.length, this.limit);
+              // console.log("after", this.apiDatas.length, this.limit);
               const EACH_LEN = 12;
               if (resp.length / EACH_LEN < 1) {
                 $state.complete();
@@ -448,7 +448,7 @@ export default {
           headers: { "jwt-auth-token": this.$cookies.get("token") },
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             this.searchApiDatas = response.data.recipes;
           }
@@ -468,7 +468,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             this.searchDatas = response.data.boards;
           }
@@ -478,7 +478,7 @@ export default {
         });
     },
     heartRecipe(boardId) {
-      console.log(boardId);
+      // console.log(boardId);
       // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
       axios
         .post(
@@ -491,7 +491,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             // this.$router.go();
             axios
@@ -499,7 +499,7 @@ export default {
                 headers: { "jwt-auth-token": this.$cookies.get("token") },
               })
               .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.backDatas = response.data.boards;
               });
           }

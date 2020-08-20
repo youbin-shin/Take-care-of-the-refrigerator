@@ -174,9 +174,13 @@ export default {
       for (var i = 0; i < response.data.board.steps.length; i++) {
         let hasTagStr = response.data.board.tags[i] + ",";
         let hasTagArr = response.data.board.tags[i].split(",");
+        if (hasTagArr[0] === "") {
+          hasTagArr = [];
+        }
         this.tempHashtag.push("");
 
         this.postData.content.steps.push({
+          stepId: response.data.board.steps[i].stepId,
           description: response.data.board.steps[i].description,
           image: response.data.board.steps[i].image,
           type: response.data.board.steps[i].type,
@@ -351,7 +355,7 @@ export default {
       let boardurlId = this.$route.params.no;
       axios
         .put(
-          `http://i3a305.p.ssafy.io:8399/api/boards/${boardurlId}`,
+          `http://localhost:8399/api/boards/${boardurlId}`,
           {
             title: this.postData.title,
             content: this.postData.review,

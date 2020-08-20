@@ -52,7 +52,7 @@
       <h4 class="detailContentItem">필요한 재료</h4>
       <p>{{ detailData.ingredient }}</p>
 
-      <h4 class="detailContentItem">과정</h4>
+      <h4 class="detailContentItem">요리 과정</h4>
 
       <ol v-for="(step, index) in detailData.steps" :key="step" type="1">
         <p>
@@ -65,12 +65,8 @@
         </p>
       </ol>
       <hr />
-      <b-row>
-        <b-col>
-          <h4 class="detailContentItem">후기</h4>
-        </b-col>
-        <b-col cols="10">{{ detailData.content }}</b-col>
-      </b-row>
+      <h4 class="detailContentItem">후기</h4>
+      {{ detailData.content }}
       <hr />
 
       <div class="comments">

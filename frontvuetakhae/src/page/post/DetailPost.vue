@@ -35,19 +35,13 @@
           <v-row>
             <div class="easyhardCss" @click="plusEasy">
               <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-              <p class="caption mb-0 mt-1">
-                {{ detailData.easyCount }}명
-                <br />쉬워요
-              </p>
+              <p class="caption mb-0 mt-1">{{ detailData.easyCount }}명 <br />쉬워요</p>
             </div>
 
             <v-spacer></v-spacer>
             <div class="easyhardCss" @click="plusHard">
               <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-              <p class="caption mb-0 mt-1">
-                {{ detailData.difficultyCount }}명
-                <br />어려워요
-              </p>
+              <p class="caption mb-0 mt-1">{{ detailData.difficultyCount }}명 <br />어려워요</p>
             </div>
           </v-row>
         </b-col>
@@ -83,11 +77,7 @@
           </b-col>
           <b-col cols="10">
             <div v-if="userData.nickname == comment.nickname">
-              <input
-                :value="comment.commentContent"
-                @input="comment.commentContent = $event.target.value"
-                class="inputLength"
-              />
+              <input :value="comment.commentContent" @input="comment.commentContent = $event.target.value" class="inputLength" />
               <p>{{ comment.createAt }}</p>
             </div>
             <div v-else>
@@ -101,7 +91,8 @@
           </b-col>
           <b-col v-else></b-col>
         </b-row>
-        <Comment @create-comment="createComment" />
+        <Comment @create-comment="createComment" v-if="userData.nickname != ''" />
+        <p v-if="userData.nickname == ''">댓글 작성은 로그인 후 이용해주세요!!</p>
       </div>
     </div>
   </div>
@@ -147,7 +138,7 @@ export default {
         this.userData.nickname = response.data.mypage.nickname;
       })
       .catch((error) => {
-        alert(error);
+        this.userData.nickname = "";
       });
   },
   data() {
@@ -235,22 +226,29 @@ export default {
           alert(error);
         });
     },
-    goOtherpage() {
-      axios
-        .get(`${BACK_URL}/users/mypage`, {
-          headers: { "jwt-auth-token": this.$cookies.get("token") },
-        })
-        .then((response) => {
-          this.userData.nickname = response.data.mypage.nickname;
-          if (this.userData.nickname === this.detailData.nickname) {
-            this.$router.push("/user/mypage");
-          } else {
-            this.$router.push("/users/otherpage/" + this.detailData.nickname);
-          }
-        })
-        .catch((error) => {
-          alert(error);
-        });
+    goOtherpage(userNickName) {
+      console.log(this.userData.nickname);
+
+      if (this.userData.nickname == "") {
+        alert("상대방 타임라인 구경은 로그인 후 이용해주세요!!");
+        return;
+      } else {
+        axios
+          .get(`${BACK_URL}/users/mypage`, {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          })
+          .then((response) => {
+            this.userData.nickname = response.data.mypage.nickname;
+            if (this.userData.nickname === userNickName) {
+              this.$router.push("/user/mypage");
+            } else {
+              this.$router.push("/users/otherpage/" + userNickName);
+            }
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      }
     },
     createComment(comment) {
       axios
@@ -268,11 +266,9 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 작성되었습니다!");
-            axios
-              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
-              .then((response) => {
-                this.detailData.comments = response.data.board.comments;
-              });
+            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
+              this.detailData.comments = response.data.board.comments;
+            });
           }
         })
         .catch((error) => {
@@ -286,11 +282,9 @@ export default {
           console.log(response);
           if (response.status === 200) {
             alert("댓글이 삭제되었습니다.");
-            axios
-              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
-              .then((response) => {
-                this.detailData.comments = response.data.board.comments;
-              });
+            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
+              this.detailData.comments = response.data.board.comments;
+            });
           }
         })
         .catch((error) => {

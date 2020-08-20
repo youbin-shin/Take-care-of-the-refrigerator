@@ -391,23 +391,27 @@ public class UserRestController {
     
     
     /**
-     * 
+     * 나의냉장고의 스탭(과정) 목록 조회
      * 
      * @param req
      * @return
      */
-    public ResponseEntity<Map<String, Object>> getUserProfileStep(HttpServletRequest req) {
+    @ApiOperation(value = "나의냉장고의 스탭(과정) 목록 조회")
+    @GetMapping("/users/steps")
+    public ResponseEntity<Map<String, Object>> getUserBoardsSteps(HttpServletRequest req) {
     	Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = null;
-//        try {
-//        	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
-//        	userService.searchAllBoardsStepsByEmail(email);
-//        	status = HttpStatus.OK;
-//        	resultMap.put("success", true);
-//		} catch (RuntimeException | SQLException e) {
-//			status = HttpStatus.BAD_REQUEST;
-//			resultMap.put("success", false);
-//		}
+        try {
+        	List<Steps> steps = null;
+        	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+        	steps = userService.searchAllBoardsStepsByEmail(email);
+        	status = HttpStatus.OK;
+        	resultMap.put("success", true);
+        	resultMap.put("steps", steps);
+		} catch (RuntimeException | SQLException e) {
+			status = HttpStatus.BAD_REQUEST;
+			resultMap.put("success", false);
+		}
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
     
@@ -421,7 +425,7 @@ public class UserRestController {
      */
     @ApiOperation(value = "스탭(과정) 추가 | +나의냉장고 버튼")
     @PostMapping("/users/steps")
-    public ResponseEntity<Map<String, Object>> addUserProfileStep(HttpServletRequest req, 
+    public ResponseEntity<Map<String, Object>> addUserBoardStep(HttpServletRequest req, 
     															@RequestBody Steps step) {
     	
     	Map<String, Object> resultMap = new HashMap<>();
@@ -429,22 +433,51 @@ public class UserRestController {
         try {
         	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
         	if(step == null 
-        		|| step.getDescription() == null
-        		|| step.getDescription().length() == 0
-        		|| step.getDescription().isEmpty()) {
+        		|| step.getDescription() == null) {
         		throw new RuntimeException("step 입력값 확인 필요");
         	}
         	userService.addBoardStep(email, step);
         	
         	status = HttpStatus.OK;
         	resultMap.put("success", true);
+        	
 		} catch (RuntimeException | SQLException e) {
+			logger.info("UserRestController.addUserBoardStep : " + e.getMessage());
 			status = HttpStatus.BAD_REQUEST;
 			resultMap.put("success", false);
 			
 		}
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+    
+    
+    /**
+     * 나의냉장고의 스탭(과정) 삭제
+     * 
+     * @param req
+     * @param stepId
+     * @return
+     */
+    @ApiOperation(value = "나의냉장고의 스탭(과정) 삭제")
+    @DeleteMapping("/users/steps/{stepId}")
+    public ResponseEntity<Map<String, Object>> removeUserBoardStep(HttpServletRequest req,
+    																@PathVariable("stepId") int stepId) {
+    	Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = null;
+        try {
+        	String email = jwtService.getEamil(req.getHeader("jwt-auth-token"));
+        	userService.deleteBoardStep(email, stepId);
+        	
+        	status = HttpStatus.OK;
+        	resultMap.put("success", true);
+		} catch (RuntimeException | SQLException e) {
+			logger.info("UserRestController.removeUserBoardStep : " + e.getMessage());
+			status = HttpStatus.BAD_REQUEST;
+			resultMap.put("success", false);
+		}
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+    
     
     
     

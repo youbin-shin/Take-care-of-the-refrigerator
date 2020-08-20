@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -179,23 +180,27 @@ public class UserinfoServiceImpl implements UserinfoService {
 		int result = 0;
 		try {
 			int userId = uDao.selectByIsEmail(email).getUserId();
-			System.out.println("test1 : " + userId);
 			
 			step.setUserId(userId);
-//			if(step.getImage().isEmpty()
-//					|| step.getImage().length() == 0
-//					|| step.getImage() == null) {
-//				step.setImage("no image");
-//			}
 			if(step.getImage() == null) {
 				step.setImage("no image");
 			}
-			System.out.println("test2 : " + step.toString());
 			result = uDao.insertBoardStep(step);
 		} catch (SQLException e) {
 			throw new SQLException("ERROR : UserinfoServiceImpl. !!\n" 
 									+ e.getMessage());
 		}
 		return result;
+	}
+
+	@Override
+	public List<Steps> searchAllBoardsStepsByEmail(String email) throws SQLException {
+	
+		return uDao.selectAllBoardsStepsByEmail(email);
+	}
+
+	@Override
+	public int deleteBoardStep(String email, int stepId) throws SQLException {
+		return uDao.deleteBoardStepByEmailStepId(email, stepId);
 	}
 }

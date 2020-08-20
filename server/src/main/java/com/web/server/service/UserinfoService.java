@@ -51,8 +51,10 @@ public interface UserinfoService {
 	// 사용자가 저장한 steps
 	// Create
 	public int addBoardStep(String email, Steps step) throws SQLException;
-	
+
 	// Read
-	
+	public List<Steps> searchAllBoardsStepsByEmail(String email) throws SQLException;
+
 	// Delete
+	public int deleteBoardStep(String email, int stepId) throws SQLException;
 }

@@ -115,5 +115,18 @@ public class UserinfoDaoImpl implements UserinfoDao {
 		return template.insert(ns + "insertUserStep", step);
 	}
 
+	@Override
+	public List<Steps> selectAllBoardsStepsByEmail(String email) throws SQLException {
+		return template.selectList(ns + "selectBoardsStepsByEmail", email);
+	}
+
+	@Override
+	public int deleteBoardStepByEmailStepId(String email, int stepId) throws SQLException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("email", email);
+		map.put("stepId", stepId);
+		return template.delete(ns + "deleteBoardStepByEmailStepId", map);
+	}
+
 
 }

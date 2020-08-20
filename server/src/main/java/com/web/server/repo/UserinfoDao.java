@@ -40,8 +40,10 @@ public interface UserinfoDao {
     // 사용자 step 관련
     // Create
 	public int insertBoardStep(Steps step) throws SQLException;
-	
+
 	// Read
+	public List<Steps> selectAllBoardsStepsByEmail(String email) throws SQLException;
 	
 	// Delete
+	public int deleteBoardStepByEmailStepId(String email, int stepId) throws SQLException;
 }

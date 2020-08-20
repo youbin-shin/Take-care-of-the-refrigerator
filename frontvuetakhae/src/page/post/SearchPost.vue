@@ -1,7 +1,7 @@
 <template>
   <div class="searchPost">
     <div class="container">
-      <v-card class="p-3" color="grey lighten-1">
+      <v-card class="p-3">
         <h2 class="m-3 0 4">나의 냉장고</h2>
         <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
 

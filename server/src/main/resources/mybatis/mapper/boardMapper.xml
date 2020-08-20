@@ -27,6 +27,7 @@
                 </when>
             </choose>
         </if>
+        ORDER BY views DESC
     </select>
 
     <select id="isExistFavorite" resultType="int">

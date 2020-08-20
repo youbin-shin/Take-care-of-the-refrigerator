@@ -133,11 +133,9 @@
                       </div>
                     </v-col>
                     <v-col>
-                      <img :src="tag.image" />
+                      <input type="file" @change="previewImage(tag)" accept="image/*" />
+                      <v-img :src="tag.image" height="100px" width="100px"></v-img>
 
-                      <div>
-                        <input type="file" @change="previewImage(tag.image)" accept="image/*" />
-                      </div>
                       <!-- <p>
                         업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
                         <progress
@@ -145,11 +143,9 @@
                           :value="uploadValue"
                           max="100"
                         ></progress>
-                      </p>
-                      <v-btn class="mb-2" @click="submitFile(tag.image)">업로드하기</v-btn>-->
+                      </p>-->
                     </v-col>
                   </v-row>
-                  <hr />
                 </li>
               </transition-group>
             </draggable>
@@ -303,13 +299,13 @@ export default {
     };
   },
   methods: {
-    previewImage(tagImage) {
+    previewImage(tag) {
       // this.uploadValue = 0;
       this.tagImage = null;
       this.imageData = event.target.files[0];
-      this.onUpload(tagImage);
+      this.onUpload(tag);
     },
-    onUpload(tagImage) {
+    onUpload(tag) {
       this.picture = null;
       const storageRef = firebase
         .storage()
@@ -325,20 +321,13 @@ export default {
           // console.log(error.message);
         },
         () => {
-          this.uploadValue = 100;
+          // this.uploadValue = 100;
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            tagImage = url;
-            // console.log(tagImage);
+            tag["image"] = url;
           });
         }
       );
     },
-    // submitFile(tagImage) {
-    //   tagImage = this.picture;
-    //   this.picture = null;
-    //   this.uploadValue = 0;
-    // console.log("이동완료", tagImage);
-    // },
     onFileSelected(event) {
       // console.log(event);
       this.selectedFile = event.target.files[0];

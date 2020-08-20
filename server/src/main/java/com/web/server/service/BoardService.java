@@ -24,20 +24,21 @@ public interface BoardService {
 
     List<BoardSimpleDto> searchAllByFood(BoardSearchByFoodList foodList) throws SQLException;
 
-    List<Board> scrollList(ScrollDto scrollDto) throws  SQLException;
+    List<Board> scrollList(ScrollDto scrollDto) throws SQLException;
 
     void updateViewCnt(Integer boardId) throws SQLException;
 
     int postFavorite(String email, FavoriteRequestBody boardId) throws SQLException;
 
     List<BoardSimpleDto> searchByKeyword(String email, SearchByKeywordDto searchByKeywordDto) throws SQLException;
-    
+
     public List<Board> searchAllFoodSafeRecipes(int page) throws SQLException;
-    
+
     public List<FoodSafeRecipeDto> searchFoodSafeRecipesByRecipeSeq(int rcpSeq) throws SQLException;
-    
+
     public List<Board> searchFoodSafeRecipesByRecipeName(String rcpNm) throws SQLException;
 
     public List<Board> searchFoodSafeRecipesByRcpPartsDtls(List<String> rcpPartsDtls) throws SQLException;
 
+    boolean update(String email, Board board) throws SQLException;
 }

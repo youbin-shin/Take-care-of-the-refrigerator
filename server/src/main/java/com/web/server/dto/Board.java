@@ -17,6 +17,7 @@ public class Board {
     private int easyCount;
     private int difficultyCount;
     private String title;
+    private String writerImage;
     private String nickname;
     private String email;
     private String ingredient;

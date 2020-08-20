@@ -13,8 +13,7 @@
                   <v-list-item-title
                     class="headline text-center col-9"
                     @click="goDetail(searchData.boardId)"
-                    >{{ searchData.title }}</v-list-item-title
-                  >
+                  >{{ searchData.title }}</v-list-item-title>
                   <div class="col-3" @click="heartRecipe(searchData.boardId)">
                     <span v-if="searchData.favorite">
                       <v-bottom-navigation
@@ -52,22 +51,15 @@
                 @click="goDetail(searchData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(searchData.boardId)"
-                style="text-align: left;"
-              >
-                <v-list-item-subtitle
-                  class="mb-2"
-                  @click="goOtherpage(searchData.nickname)"
-                >
+              <v-card-text @click="goDetail(searchData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(searchData.nickname)">
                   작성자 : {{ searchData.nickname }}
-                  <small style="float:right">
-                    {{ searchData.createAt }}
-                  </small>
+                  <small
+                    style="float:right"
+                  >{{ searchData.createAt }}</small>
                 </v-list-item-subtitle>
 
-                <p class="m-0">소요시간 {{ searchData.cookingTime }} 시간</p>
-                난이도
+                <p class="m-0">소요시간 {{ searchData.cookingTime }} 시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -101,12 +93,8 @@
                   <v-list-item-title
                     class="headline text-center col-9"
                     @click="goApiDetail(searchApiData.boardId)"
-                    >{{ searchApiData.title }}</v-list-item-title
-                  >
-                  <div
-                    class="col-3"
-                    @click="heartRecipe(searchApiData.boardId)"
-                  >
+                  >{{ searchApiData.title }}</v-list-item-title>
+                  <div class="col-3" @click="heartRecipe(searchApiData.boardId)">
                     <span v-if="searchApiData.favorite">
                       <v-bottom-navigation
                         class="elevation-0"
@@ -143,22 +131,15 @@
                 @click="goApiDetail(searchApiData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goApiDetail(searchApiData.boardId)"
-                style="text-align: left;"
-              >
-                <v-list-item-subtitle
-                  class="mb-2"
-                  @click="goOtherpage(searchApiData.nickname)"
-                >
+              <v-card-text @click="goApiDetail(searchApiData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(searchApiData.nickname)">
                   작성자 : {{ searchApiData.nickname }}
-                  <small style="float:right">
-                    {{ searchApiData.createAt }}
-                  </small>
+                  <small
+                    style="float:right"
+                  >{{ searchApiData.createAt }}</small>
                 </v-list-item-subtitle>
 
-                <p class="m-0">소요시간 {{ searchApiData.cookingTime }} 시간</p>
-                난이도
+                <p class="m-0">소요시간 {{ searchApiData.cookingTime }} 시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -190,7 +171,7 @@
       @click="goUp"
       class="upper"
       src="https://user-images.githubusercontent.com/60081201/90482034-a1c5c880-e16d-11ea-986a-0469e187f948.png"
-      alt=""
+      alt
     />
     <br />
     <div class="container">
@@ -204,8 +185,7 @@
                   <v-list-item-title
                     class="headline text-center col-9"
                     @click="goDetail(backData.boardId)"
-                    >{{ backData.title }}</v-list-item-title
-                  >
+                  >{{ backData.title }}</v-list-item-title>
                   <div class="col-3" @click="heartRecipe(backData.boardId)">
                     <span v-if="backData.favorite">
                       <v-bottom-navigation
@@ -243,22 +223,13 @@
                 @click="goDetail(backData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goDetail(backData.boardId)"
-                style="text-align: left;"
-              >
-                <v-list-item-subtitle
-                  class="mb-2"
-                  @click="goOtherpage(backData.nickname)"
-                >
+              <v-card-text @click="goDetail(backData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(backData.nickname)">
                   작성자 : {{ backData.nickname }}
-                  <small style="float:right">
-                    {{ backData.createAt }}
-                  </small>
+                  <small style="float:right">{{ backData.createAt }}</small>
                 </v-list-item-subtitle>
 
-                <p class="m-0">소요시간 {{ backData.cookingTime }} 시간</p>
-                난이도
+                <p class="m-0">소요시간 {{ backData.cookingTime }} 시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -295,8 +266,7 @@
                   <v-list-item-title
                     class="headline text-center col-9"
                     @click="goApiDetail(apiData.boardId)"
-                    >{{ apiData.title }}</v-list-item-title
-                  >
+                  >{{ apiData.title }}</v-list-item-title>
                   <div class="col-3" @click="heartApiRecipe(apiData.boardId)">
                     <span v-if="apiData.favorite">
                       <v-bottom-navigation
@@ -334,22 +304,13 @@
                 @click="goApiDetail(apiData.boardId)"
               ></v-img>
 
-              <v-card-text
-                @click="goApiDetail(apiData.boardId)"
-                style="text-align: left;"
-              >
-                <v-list-item-subtitle
-                  class="mb-2"
-                  @click="goOtherpage(apiData.nickname)"
-                >
+              <v-card-text @click="goApiDetail(apiData.boardId)" style="text-align: left;">
+                <v-list-item-subtitle class="mb-2" @click="goOtherpage(apiData.nickname)">
                   작성자 : {{ apiData.nickname }}
-                  <small style="float:right">
-                    {{ apiData.createAt }}
-                  </small>
+                  <small style="float:right">{{ apiData.createAt }}</small>
                 </v-list-item-subtitle>
 
-                <p class="m-0">소요시간 1.5시간</p>
-                난이도
+                <p class="m-0">소요시간 1.5시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small
@@ -381,9 +342,7 @@
         <div
           slot="no-more"
           style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px;"
-        >
-          목록의 끝입니다 :)
-        </div>
+        >목록의 끝입니다 :)</div>
       </infinite-loading>
     </div>
   </div>
@@ -657,5 +616,11 @@ export default {
 }
 .v-application .headline {
   font-family: "TmoneyRoundWindExtraBold" !important;
+}
+.upper {
+  position: fixed;
+  left: 90%;
+  top: 90%;
+  cursor: pointer;
 }
 </style>

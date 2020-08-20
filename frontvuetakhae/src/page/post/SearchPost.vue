@@ -3,9 +3,7 @@
     <div class="container">
       <v-card class="p-3" color="grey lighten-1">
         <h2 class="m-3 0 4">나의 냉장고</h2>
-        <h3 v-if="emptyChip" class="white--text">
-          요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.
-        </h3>
+        <h3 v-if="emptyChip" class="white--text">요리할 재료를 입력해주세요. 냉뷰가 기다리고 있습니다.</h3>
 
         <div>
           <div class="left d-sm-inline-flex pa-2">
@@ -25,8 +23,7 @@
                   plusFood();
                   check();
                 "
-                >mdi-plus</v-icon
-              >
+              >mdi-plus</v-icon>
             </v-row>
           </div>
           <div>
@@ -36,13 +33,16 @@
               close
               @click:close="closeChip(tag)"
               :key="tag"
-              >{{ tag }}</v-chip
-            >
+            >{{ tag }}</v-chip>
             <div v-if="emptyChip">요리할 재료를 입력해주세요.</div>
           </div>
         </div>
       </v-card>
+
+      <!-- API안에 있는 요리 레시피 -->
+
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
+
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="apiboard in searchData.apiboards" :key="apiboard.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -131,9 +131,7 @@
             <v-card max-width="344" class="mx-auto" :elevation="hover ? 16 : 2">
               <v-list-item @click="goDetail(board.boardId)">
                 <v-list-item-content class="row">
-                  <v-list-item-title class="headline text-center col-9">
-                    {{ board.title }}
-                  </v-list-item-title>
+                  <v-list-item-title class="headline text-center col-9">{{ board.title }}</v-list-item-title>
                   <div class="col-3" @click="heartRecipe(board.boardId)">
                     <span v-if="searchData.favorite">
                       <v-bottom-navigation
@@ -165,23 +163,13 @@
                 </v-list-item-content>
               </v-list-item>
 
-              <v-img
-                :src="board.thumbnailImage"
-                height="194"
-                @click="goDetail(board.boardId)"
-              ></v-img>
-              <v-card-text
-                @click="goDetail(board.boardId)"
-                style="text-align: left;"
-              >
+              <v-img :src="board.thumbnailImage" height="194" @click="goDetail(board.boardId)"></v-img>
+              <v-card-text @click="goDetail(board.boardId)" style="text-align: left;">
                 <v-list-item-subtitle class="mb-2">
                   작성자 : {{ board.nickname }}
-                  <small style="float:right">
-                    {{ board.createAt }}
-                  </small>
+                  <small style="float:right">{{ board.createAt }}</small>
                 </v-list-item-subtitle>
-                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>
-                난이도
+                <p class="caption">소요시간 : {{ board.cookingTime }}시간</p>난이도
                 <v-rating
                   class="d-inline-flex pa-2"
                   small

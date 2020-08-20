@@ -72,6 +72,9 @@ public class BoardServiceImpl implements BoardService {
                 System.out.println(board.getSteps().get(i).getStepId());
                 String[] arrTags = listTag.get(i).split(",");
                 for (String tag : arrTags) {
+                    if(tag==""){
+                        continue;
+                    }
                     System.out.println(tag);
                     Tags temp = new Tags(-1, "");
                     temp.setTagName(tag);

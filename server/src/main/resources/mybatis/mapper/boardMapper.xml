@@ -64,7 +64,7 @@
 
     <!--  게시글 번호로 조회  -->
     <select id="selectOneBoardByBoardId" parameterType="int" resultType="board">
-        select *,(select nickname from users where user_id=boards.user_id) as nickname,
+        select *,(select nickname from users where user_id=boards.user_id) as nickname,(select image from users where user_id=boards.user_id) as writerImage,
         (select count(*) from hardeasy where grade = 2 AND board_id=#{boardId}) as easyCount,(select count(*) from
         hardeasy where grade = 1 AND board_id=#{boardId}) as difficultyCount
         from boards

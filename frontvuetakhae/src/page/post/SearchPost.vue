@@ -483,11 +483,12 @@ export default {
 <style>
 .searchPost {
   background-image: url("https://user-images.githubusercontent.com/60081201/89270362-33b1d980-d676-11ea-8b50-bee693e1ee36.jpg");
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  -o-background-size: 100%;
+  background-size: 100%;
   min-height: 100%;
+  background-attachment: fixed;
 }
 .searchPostContent {
   min-height: 400px;

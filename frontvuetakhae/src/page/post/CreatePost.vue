@@ -7,7 +7,7 @@
     <b-form-group label-cols="4" label-cols-lg="2" label-size="lg" label="제목" label-for="input-lg" autofocus>
       <b-form-input v-model="postData.title" id="input-lg" size="lg"></b-form-input>
     </b-form-group>
-    <!-- {{postData.content.steps}} -->
+
     <v-stepper v-model="e6" vertical>
       <!-- 1. 재료 입력 단계 -->
       <v-stepper-step color="red" :complete="e6 > 1" step="1">
@@ -57,21 +57,10 @@
               <transition-group type="transition" :name="'flip-list'">
                 <li v-for="(tag, index) in postData.content.steps" :key="tag.description">
                   <v-row>
-<<<<<<< HEAD
                     <v-col cols="3">
                       <v-overflow-btn class="type-button mt-0" :items="typeList" v-model="tag.type" label="타입 선택" segmented></v-overflow-btn>
-=======
-                    <v-col>
-                      <v-overflow-btn
-                        class="type-button mt-0"
-                        :items="typeList"
-                        v-model="tag.type"
-                        label="타입 선택"
-                        segmented
-                      ></v-overflow-btn>
->>>>>>> 73e1ac0cb40c321ea803f9215c890ab63f0fb253
                     </v-col>
-                    <v-col>
+                    <v-col cols="6">
                       <!-- color="rgba(191, 32, 59, 1.0)" -->
                       <v-chip class="mr-2 mb-2" v-for="hash in tag.hashtag" :key="hash" close @click:close="closeHashtag(tag.hashtag, hash)"
                         >#{{ hash }}</v-chip
@@ -85,33 +74,17 @@
                         ></v-text-field>
                       </div>
                     </v-col>
-                    <v-col>
+                    <v-col cols="3">
                       {{ tag.description }}
                       <div class="d-flex flex-column">
+                        <i aria-hidden="true"></i>
                         <div class>
                           <v-btn small @click="deleleStep(tag.description)">삭제</v-btn>
                           <v-btn small color="primary" class="ml-1">내 저장소</v-btn>
                         </div>
                       </div>
                     </v-col>
-                    <v-col>
-                      <img :src="tag.image" />
-
-                      <div>
-                        <input type="file" @change="previewImage(tag.image)" accept="image/*" />
-                      </div>
-                      <!-- <p>
-                        업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
-                        <progress
-                          id="progress"
-                          :value="uploadValue"
-                          max="100"
-                        ></progress>
-                      </p>
-                      <v-btn class="mb-2" @click="submitFile(tag.image)">업로드하기</v-btn>-->
-                    </v-col>
                   </v-row>
-                  <hr />
                 </li>
               </transition-group>
             </draggable>
@@ -173,8 +146,6 @@
 <script>
 import draggable from "vuedraggable";
 import axios from "axios";
-import firebase from "firebase";
-
 const BACK_URL = "http://i3a305.p.ssafy.io:8399/api";
 
 export default {
@@ -194,9 +165,6 @@ export default {
   },
   data() {
     return {
-      // uploadValue: 0,
-      imageData: null,
-      picture: null,
       tempHashtag: [],
       chips: [],
       items: [],
@@ -217,7 +185,7 @@ export default {
         },
         { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
-      e6: 1, // 페이지 변수 (처음 시작은 1부터)
+      e6: 2, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
       postData: {
         // post 보내야할 변수들 모음
@@ -240,42 +208,6 @@ export default {
     };
   },
   methods: {
-    previewImage(tagImage) {
-      // this.uploadValue = 0;
-      this.tagImage = null;
-      this.imageData = event.target.files[0];
-      this.onUpload(tagImage);
-    },
-    onUpload(tagImage) {
-      this.picture = null;
-      const storageRef = firebase
-        .storage()
-        .ref(`${this.imageData.name}`)
-        .put(this.imageData);
-      storageRef.on(
-        `state_changed`,
-        (snapshot) => {
-          // this.uploadValue =
-          //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        },
-        (error) => {
-          console.log(error.message);
-        },
-        () => {
-          this.uploadValue = 100;
-          storageRef.snapshot.ref.getDownloadURL().then((url) => {
-            tagImage = url;
-            console.log(tagImage);
-          });
-        }
-      );
-    },
-    // submitFile(tagImage) {
-    //   tagImage = this.picture;
-    //   this.picture = null;
-    //   this.uploadValue = 0;
-    //   console.log("이동완료", tagImage);
-    // },
     onFileSelected(event) {
       // console.log(event);
       this.selectedFile = event.target.files[0];

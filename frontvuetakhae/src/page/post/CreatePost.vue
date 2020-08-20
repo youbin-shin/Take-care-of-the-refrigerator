@@ -438,7 +438,7 @@ export default {
       // console.log(ingreString);
       axios
         .post(
-          "http://localhost:8399/api/boards/",
+          "http://i3a305.p.ssafy.io:8399/api/boards/",
           {
             title: this.postData.title,
             content: this.postData.review,

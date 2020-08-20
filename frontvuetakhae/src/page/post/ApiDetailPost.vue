@@ -46,7 +46,7 @@ export default {
     axios
       .get(`${BACK_URL}/boards/foodsafe/recipes/${boardurlId}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.detailApiData.boardId = response.data.recipes[0].rcpSeq;
         this.detailApiData.title = response.data.recipes[0].rcpNm;
         this.detailApiData.nickname = "식품안전나라";
@@ -61,7 +61,7 @@ export default {
         this.detailApiData.steps = response.data.recipes[0].manuals;
         this.detailApiData.tags = response.data.recipes[0].tags;
         this.detailApiData.comments = response.data.recipes[0].comments;
-        console.log(this.detailApiData);
+        // console.log(this.detailApiData);
       });
   },
   data() {

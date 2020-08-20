@@ -236,7 +236,7 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         this.chips = response.data.box;
         axios
           .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
@@ -247,14 +247,14 @@ export default {
           this.emptyChip = true;
         }
         if (this.chips) {
-          console.log(response.data.recipes);
+          // console.log(response.data.recipes);
           axios
             .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
               ingredient: this.chips,
               page: 0,
             })
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               this.searchData.apiboards = response.data.recipes;
             });
         } else {
@@ -263,7 +263,7 @@ export default {
               page: 0,
             })
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               this.searchData.apiboards = response.data.recipes;
             });
         }
@@ -273,7 +273,7 @@ export default {
   },
   methods: {
     infiniteHandler($state) {
-      console.log("마지막");
+      // console.log("마지막");
       if (this.chips) {
         axios
           .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
@@ -281,9 +281,9 @@ export default {
             page: this.limit,
           })
           .then((response) => {
-            console.log(this.limit);
+            // console.log(this.limit);
 
-            console.log(response.data.recipes);
+            // console.log(response.data.recipes);
 
             setTimeout(() => {
               if (response.data.recipes.length) {
@@ -292,11 +292,8 @@ export default {
                 );
                 $state.loaded();
                 this.limit += 1;
-                console.log(
-                  "after",
-                  this.searchData.apiboards.length,
-                  this.limit
-                );
+                // console.log
+                "after", this.searchData.apiboards.length, this.limit;
                 const EACH_LEN = 12;
                 if (response.data.recipes.length / EACH_LEN < 1) {
                   $state.complete();
@@ -316,7 +313,7 @@ export default {
             page: this.limit,
           })
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             this.searchData.apiboards = response.data.recipes;
           });
       }
@@ -370,7 +367,7 @@ export default {
             page: 0,
           })
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             this.limit = 1;
             this.searchData.apiboards = response.data.recipes;
           });
@@ -380,7 +377,7 @@ export default {
             page: 0,
           })
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             this.limit = 1;
             this.searchData.apiboards = response.data.recipes;
           });
@@ -395,10 +392,10 @@ export default {
         .post(`${BACK_URL}/boards/foodList`, { foodList: this.chips })
         .then((response) => {
           this.searchData.boards = response.data.boards;
-          console.log(this.searchData.boards);
+          // console.log(this.searchData.boards);
         });
       if (this.chips) {
-        console.log(response.data.recipes);
+        // console.log(response.data.recipes);
         axios
           .post(`${BACK_URL}/boards/foodsafe/recipes/ingredient`, {
             ingredient: this.chips,
@@ -406,7 +403,7 @@ export default {
           })
           .then((response) => {
             this.limit = 1;
-            console.log(response);
+            // console.log(response);
             this.searchData.apiboards = response.data.recipes;
           });
       } else {
@@ -415,7 +412,7 @@ export default {
             page: 0,
           })
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             this.limit = 1;
             this.searchData.apiboards = response.data.recipes;
           });
@@ -425,7 +422,7 @@ export default {
       }
     },
     heartRecipe(boardId) {
-      console.log(boardId);
+      // console.log(boardId);
       // 즐겨찾기 눌렀을 경우 사용자 데이터에 추가하기
       axios
         .post(
@@ -438,7 +435,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
             alert("관심레시피에 등록되었습니다.");
             // this.$router.go();

@@ -127,7 +127,7 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         this.mypage.nickname = response.data.mypage.nickname;
         this.mypage.introduce = response.data.mypage.introduce;
         this.mypage.box = response.data.mypage.box;
@@ -143,7 +143,7 @@ export default {
       })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
+          // console.log(response);
           if (response.data.follow == "yes") {
             this.isFollow = true;
           } else {

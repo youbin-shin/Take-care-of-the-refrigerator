@@ -251,7 +251,7 @@ export default {
         headers: { "jwt-auth-token": this.$cookies.get("token") },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         this.list = response.data.box;
       });
   },
@@ -270,15 +270,15 @@ export default {
           text: "재료 손질",
           value: 1,
           callback: () => {
-            console.log("재료 손질");
+            // console.log("재료 손질");
           },
         },
         {
           text: "요리 준비",
           value: 2,
-          callback: () => console.log("요리 준비"),
+          // callback: () => console.log("요리 준비"),
         },
-        { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
+        // { text: "플레이팅", value: 3, callback: () => console.log("플레이팅") },
       ],
       e6: 1, // 페이지 변수 (처음 시작은 1부터)
       rules: [(value) => !!value || "Required."],
@@ -322,13 +322,13 @@ export default {
           //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         },
         (error) => {
-          console.log(error.message);
+          // console.log(error.message);
         },
         () => {
           this.uploadValue = 100;
           storageRef.snapshot.ref.getDownloadURL().then((url) => {
             tagImage = url;
-            console.log(tagImage);
+            // console.log(tagImage);
           });
         }
       );
@@ -337,12 +337,12 @@ export default {
     //   tagImage = this.picture;
     //   this.picture = null;
     //   this.uploadValue = 0;
-    //   console.log("이동완료", tagImage);
+    // console.log("이동완료", tagImage);
     // },
     onFileSelected(event) {
       // console.log(event);
       this.selectedFile = event.target.files[0];
-      console.log(this.selectedFile);
+      // console.log(this.selectedFile);
       axios
         .post(
           `${BACK_URL}/file/`,
@@ -354,7 +354,7 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         });
     },
     deleleStep(title) {
@@ -401,7 +401,7 @@ export default {
 
       tagHashtag.push(this.tempHashtag[index]);
       this.tempHashtag[index] = "";
-      console.log("QQQQ" + this.postData.content.steps[index].hashTagString);
+      // console.log("QQQQ" + this.postData.content.steps[index].hashTagString);
     },
     closeChip(tag) {
       // 재료 단계에서 재료를 삭제할 때 필요한 메서드
@@ -430,7 +430,7 @@ export default {
     },
     createPost() {
       let tempSteps = [];
-      console.log("sdasdAS" + this.postData.content.steps);
+      // console.log("sdasdAS" + this.postData.content.steps);
       // 작성이 완료되어 최종적으로 post 요청을 보내는 메서드
       let tags = [];
       for (let i = 0; i < this.postData.content.steps.length; i++) {
@@ -441,7 +441,7 @@ export default {
           type: this.postData.content.steps[i].type,
         });
         // for (let j = 0; j < this.postData.content.steps[i].hashTagString.length; j++) {
-        //   console.log(temptags);
+        // console.log(temptags);
         //   if (j == this.postData.content.steps[i].hashTagString.length - 1) {
         //     temptags = temptags.concat(this.postData.content.steps[i].hashtag[j]);
         //   } else {
@@ -451,14 +451,14 @@ export default {
         tags.push(temptags);
         // delete this.postData.content.steps[i].hashtag;
       }
-      console.log(JSON.stringify(this.postData.content.steps));
+      // console.log(JSON.stringify(this.postData.content.steps));
       const requestHeader = {
         headers: {
           "jwt-auth-token": this.$cookies.get("token"),
         },
       };
       let ingreString = this.postData.content.ingredients.join(" ");
-      console.log(ingreString);
+      // console.log(ingreString);
       axios
         .post(
           "http://i3a305.p.ssafy.io:8399/api/boards/",
@@ -475,12 +475,12 @@ export default {
           requestHeader
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           alert("게시글이 성공적으로 작성됐습니다!");
           this.$router.push("/");
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     },
   },

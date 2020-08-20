@@ -87,7 +87,7 @@
           <b-col>
             <img class="profile" :src="comment.userImage" />
 
-            <p>{{ comment.nickname }}</p>
+            <p style="text-align:center;">{{ comment.nickname }}</p>
           </b-col>
           <b-col cols="10">
             <div v-if="userData.nickname == comment.nickname">

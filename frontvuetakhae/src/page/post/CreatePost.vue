@@ -190,14 +190,16 @@
           </div>
           <hr />소요 시간
           <v-row class="container">
-            <!-- <div class="timeinput"> -->
+            <div class="col-5"></div>
             <b-form-input
+              class="col-2 d-flex"
               type="text"
               v-model="postData.time"
-              style="width:100px;height:40px;font-size:12px"
+              style="width:70px;height:25px;font-size:12px"
             />
-            <span>시간</span>
-            <!-- </div> -->
+            <div style="align-self: flex-end">
+              <span>시간</span>
+            </div>
           </v-row>
         </v-card>
         <v-btn color="error" class="mr-2" @click="e6 = 4">완료</v-btn>

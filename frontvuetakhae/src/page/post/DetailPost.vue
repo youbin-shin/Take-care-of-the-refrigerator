@@ -35,13 +35,19 @@
           <v-row>
             <div class="easyhardCss" @click="plusEasy">
               <b-icon icon="emoji-smile" scale="2" variant="warning"></b-icon>
-              <p class="caption mb-0 mt-1">{{ detailData.easyCount }}명 <br />쉬워요</p>
+              <p class="caption mb-0 mt-1">
+                {{ detailData.easyCount }}명
+                <br />쉬워요
+              </p>
             </div>
 
             <v-spacer></v-spacer>
             <div class="easyhardCss" @click="plusHard">
               <b-icon icon="emoji-frown" scale="2" variant="secondary"></b-icon>
-              <p class="caption mb-0 mt-1">{{ detailData.difficultyCount }}명 <br />어려워요</p>
+              <p class="caption mb-0 mt-1">
+                {{ detailData.difficultyCount }}명
+                <br />어려워요
+              </p>
             </div>
           </v-row>
         </b-col>
@@ -50,21 +56,26 @@
     <hr />
     <div class="detailContent">
       <h4 class="detailContentItem">필요한 재료</h4>
-      <p>{{ detailData.ingredient }}</p>
+      <div class="font">
+        <p>{{ detailData.ingredient }}</p>
+      </div>
 
       <h4 class="detailContentItem">요리 과정</h4>
-
-      <ol v-for="(step, index) in detailData.steps" :key="step" type="1">
-        <p>
-          {{ index + 1 }}.
-          <span v-if="step.image != 'no image'">
-            <v-img :src="step.image" height="100px" width="100px"></v-img>
-          </span>
-          {{ step.description }}<br />
-          관련 태그 : {{ detailData.tags[index] }}
-        </p>
-      </ol>
+      <div class="font">
+        <ol v-for="(step, index) in detailData.steps" :key="step" type="1">
+          <p>
+            {{ index + 1 }}.
+            <span v-if="step.image != 'no image'">
+              <v-img :src="step.image" height="100px" width="100px"></v-img>
+            </span>
+            {{ step.description }}
+            <br />관련 태그 :
+            <b>{{ detailData.tags[index] }}</b>
+          </p>
+        </ol>
+      </div>
       <hr />
+
       <h4 class="detailContentItem">후기</h4>
       {{ detailData.content }}
       <hr />
@@ -80,7 +91,11 @@
           </b-col>
           <b-col cols="10">
             <div v-if="userData.nickname == comment.nickname">
-              <input :value="comment.commentContent" @input="comment.commentContent = $event.target.value" class="inputLength" />
+              <input
+                :value="comment.commentContent"
+                @input="comment.commentContent = $event.target.value"
+                class="inputLength"
+              />
               <p>{{ comment.createAt }}</p>
             </div>
             <div v-else>
@@ -272,9 +287,11 @@ export default {
           // console.log(response);
           if (response.status === 200) {
             alert("댓글이 작성되었습니다!");
-            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
-              this.detailData.comments = response.data.board.comments;
-            });
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
@@ -288,9 +305,11 @@ export default {
           // console.log(response);
           if (response.status === 200) {
             alert("댓글이 삭제되었습니다.");
-            axios.get(`${BACK_URL}/boards/${this.detailData.boardId}`).then((response) => {
-              this.detailData.comments = response.data.board.comments;
-            });
+            axios
+              .get(`${BACK_URL}/boards/${this.detailData.boardId}`)
+              .then((response) => {
+                this.detailData.comments = response.data.board.comments;
+              });
           }
         })
         .catch((error) => {
@@ -356,5 +375,9 @@ export default {
   margin: 0px;
   width: 50px;
   height: 50px;
+}
+
+.font {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 </style>

@@ -43,6 +43,7 @@
 
       <h2 class="m-5 white--text">지금 당장 가능한 요리 레시피</h2>
 
+      <h1>{{ searchData.boards }}</h1>
       <div class="row row-cols-3 searchPostContent">
         <ul v-for="apiboard in searchData.apiboards" :key="apiboard.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">

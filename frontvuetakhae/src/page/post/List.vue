@@ -175,7 +175,18 @@
     />
     <br />
     <div class="container">
-      <h2 class="m-5 0 4">인기순 레시피</h2>
+      <h2 class="m-5 0 4">{{ searchType }} 레시피</h2>
+      <v-col cols="12" sm="3">
+        <select
+          v-model="searchType"
+          class="form-control search-slt"
+          label="인기순"
+          @change="watchBoard"
+        >
+          <option selected value="인기순">인기순</option>
+          <option value="최신순">최신순</option>
+        </select>
+      </v-col>
       <div class="row row-cols-3">
         <ul v-for="backData in backDatas" :key="backData.title">
           <v-hover v-slot:default="{ hover }" open-delay="200">
@@ -363,6 +374,7 @@ export default {
 
   data: () => {
     return {
+      searchType: "인기순",
       limit: 0,
       numList: [1, 2, 3, 4, 5],
       timeList: [1.5, 1, 0.5, 2],
@@ -398,6 +410,25 @@ export default {
       });
   },
   methods: {
+    watchBoard() {
+      if (this.searchType === "인기순") {
+        axios
+          .get(`${BACK_URL}/boards`, {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          })
+          .then((response) => {
+            this.backDatas = response.data.boards;
+          });
+      } else {
+        axios
+          .get(`${BACK_URL}/boards/create`, {
+            headers: { "jwt-auth-token": this.$cookies.get("token") },
+          })
+          .then((response) => {
+            this.backDatas = response.data.boards;
+          });
+      }
+    },
     heartApiRecipe(apiboardId) {
       // console.log("누를꺼야");
       axios

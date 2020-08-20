@@ -61,7 +61,12 @@
       <h4 class="detailContentItem">과정</h4>
 
       <ul v-for="step in detailData.steps" :key="step">
-        <li>{{ step.image }} : {{ step.description }}</li>
+        <li>
+          <span v-if="step.image!='no image'">
+            <v-img :src="step.image" height="100px" width="100px"></v-img>
+          </span>
+          {{step.description}}
+        </li>
       </ul>
       <hr />
       <b-row>

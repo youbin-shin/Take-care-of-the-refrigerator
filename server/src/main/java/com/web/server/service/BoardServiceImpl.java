@@ -93,23 +93,23 @@ public class BoardServiceImpl implements BoardService {
                         Tags temp = new Tags(-1, "");
                         temp.setTagName(tag);
                         Tags selectedTag = new Tags(-1, "");
-                        selectedTag = boardDao.selectTagExist(temp);
-                        if (selectedTag == null) {
-                            System.out.println("null!!");
-                            boardDao.insertTag(temp);
-                            System.out.println(temp.getTagId());
-                            StepTags stepTags = new StepTags(-1, -1);
-                            stepTags.setTagId(temp.getTagId());
-                            stepTags.setStepId(board.getSteps().get(i).getStepId());
-                            boardDao.insertStepTags(stepTags);
-                        } else {
-                            System.out.println("id : " + selectedTag.getTagId());
-                            System.out.println("name : " + selectedTag.getTagName());
-                            StepTags stepTags = new StepTags(-1, -1);
-                            stepTags.setTagId(selectedTag.getTagId());
-                            stepTags.setStepId(board.getSteps().get(i).getStepId());
-                            boardDao.insertStepTags(stepTags);
-                        }
+//                    selectedTag = boardDao.selectTagExist(temp);
+//                    if (selectedTag == null) {
+                        System.out.println("null!!");
+                        boardDao.insertTag(temp);
+                        System.out.println(temp.getTagId());
+                        StepTags stepTags = new StepTags(-1, -1);
+                        stepTags.setTagId(temp.getTagId());
+                        stepTags.setStepId(board.getSteps().get(i).getStepId());
+                        boardDao.insertStepTags(stepTags);
+//                    } else {
+//                        System.out.println("id : " + selectedTag.getTagId());
+//                        System.out.println("name : " + selectedTag.getTagName());
+//                        StepTags stepTags = new StepTags(-1, -1);
+//                        stepTags.setTagId(selectedTag.getTagId());
+//                        stepTags.setStepId(board.getSteps().get(i).getStepId());
+//                        boardDao.insertStepTags(stepTags);
+//                    }
                     }
                 }
 
@@ -206,8 +206,8 @@ public class BoardServiceImpl implements BoardService {
         if (board.getSteps() != null && board.getSteps().size() > 0) { // 2. 게시글에 저장되는 단계 저장
             for (int i = 0; i < board.getSteps().size(); i++) {
                 board.getSteps().get(i).setBoardId(resultBoardId);
+                System.out.println("ㅁㄴㅇ"+board.getSteps().get(i));
                 boardDao.insertStep(board.getSteps().get(i));
-                System.out.println(board.getSteps().get(i).getStepId());
                 String[] arrTags = listTag.get(i).split(",");
                 for (String tag : arrTags) {
                     if (tag == "") {
@@ -217,8 +217,8 @@ public class BoardServiceImpl implements BoardService {
                     Tags temp = new Tags(-1, "");
                     temp.setTagName(tag);
                     Tags selectedTag = new Tags(-1, "");
-                    selectedTag = boardDao.selectTagExist(temp);
-                    if (selectedTag == null) {
+//                    selectedTag = boardDao.selectTagExist(temp);
+//                    if (selectedTag == null) {
                         System.out.println("null!!");
                         boardDao.insertTag(temp);
                         System.out.println(temp.getTagId());
@@ -226,14 +226,14 @@ public class BoardServiceImpl implements BoardService {
                         stepTags.setTagId(temp.getTagId());
                         stepTags.setStepId(board.getSteps().get(i).getStepId());
                         boardDao.insertStepTags(stepTags);
-                    } else {
-                        System.out.println("id : " + selectedTag.getTagId());
-                        System.out.println("name : " + selectedTag.getTagName());
-                        StepTags stepTags = new StepTags(-1, -1);
-                        stepTags.setTagId(selectedTag.getTagId());
-                        stepTags.setStepId(board.getSteps().get(i).getStepId());
-                        boardDao.insertStepTags(stepTags);
-                    }
+//                    } else {
+//                        System.out.println("id : " + selectedTag.getTagId());
+//                        System.out.println("name : " + selectedTag.getTagName());
+//                        StepTags stepTags = new StepTags(-1, -1);
+//                        stepTags.setTagId(selectedTag.getTagId());
+//                        stepTags.setStepId(board.getSteps().get(i).getStepId());
+//                        boardDao.insertStepTags(stepTags);
+//                    }
                 }
 
             }

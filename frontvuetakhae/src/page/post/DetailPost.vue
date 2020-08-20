@@ -58,7 +58,7 @@
       <h4 class="detailContentItem">필요한 재료</h4>
       <p>{{ detailData.ingredient }}</p>
 
-      <h4 class="detailContentItem">정</h4>
+      <h4 class="detailContentItem">요리 과정</h4>
 
       <ol v-for="(step, index) in detailData.steps" :key="step" type="1">
         <p>

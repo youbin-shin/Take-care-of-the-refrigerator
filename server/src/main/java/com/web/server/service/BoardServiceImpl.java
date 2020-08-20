@@ -33,6 +33,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public List<BoardSimpleDto> searchAllCreateAt(String email) throws SQLException {
+        return boardDao.searchAllCreateAt(email);
+    }
+
+    @Override
     public Board searchByBoardId(int boardId) throws SQLException {
         Board board = null;
         board = boardDao.searchByBoardId(boardId);              // 1. 게시글 조회

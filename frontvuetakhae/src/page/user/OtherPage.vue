@@ -174,7 +174,14 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.isFollow = true;
-            this.mypage.followingCount = this.mypage.followingCount + 1;
+            axios
+              .get(`${BACK_URL}/users/otherpage/${this.mypage.nickname}`, {
+                headers: { "jwt-auth-token": this.$cookies.get("token") },
+              })
+              .then((response) => {
+                this.mypage.followingCount =
+                  response.data.mypage.followingCount;
+              });
           }
         })
         .catch((error) => {
@@ -189,7 +196,14 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.isFollow = false;
-            this.mypage.followingCount -= 1;
+            axios
+              .get(`${BACK_URL}/users/otherpage/${this.mypage.nickname}`, {
+                headers: { "jwt-auth-token": this.$cookies.get("token") },
+              })
+              .then((response) => {
+                this.mypage.followingCount =
+                  response.data.mypage.followingCount;
+              });
           }
         })
         .catch((error) => {

@@ -10,16 +10,16 @@
           <div>
             <input type="file" @change="previewImage" accept="image/*" />
           </div>
-          <div>
-            <v-btn class="m-2" @click="submitFile">업로드하기</v-btn>
+          <div class="mt-2">
             <p>
-              업로드 : {{ uploadValue.toFixed() + "%" }}
+              업로드 준비 중 : {{ uploadValue.toFixed() + "%" }}
               <progress
                 id="progress"
                 :value="uploadValue"
                 max="100"
               ></progress>
             </p>
+            <v-btn class="mb-2" @click="submitFile">업로드하기</v-btn>
           </div>
           <!-- <img class="preview" :src="picture" /> -->
         </v-card>
@@ -289,8 +289,7 @@ export default {
             headers: { "jwt-auth-token": this.$cookies.get("token") },
           }
         )
-        .then(function () {
-          console.log("SUCCESS!!");
+        .then((response) => {
           axios
             .get(`${BACK_URL}/api/users/mypage`, {
               headers: { "jwt-auth-token": this.$cookies.get("token") },

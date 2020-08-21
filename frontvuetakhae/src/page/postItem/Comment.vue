@@ -5,7 +5,7 @@
       <!-- <img class="profile" :src="userData.image" />
       <p>{{ userData.nickname}}</p>-->
     </b-col>
-    <b-col cols="11">
+    <b-col cols="10">
       <b-input-group>
         <b-form-input label="댓글을 입력해주세요." v-model="commentInput"></b-form-input>
         <v-btn @click="completeInput">등록</v-btn>

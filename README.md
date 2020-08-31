@@ -1,6 +1,6 @@
 # Sub-PJT2 `냉장고를 Vue 탁해`
 
-## 1. 프로젝트 소개 
+## :smiley: 프로젝트 소개 
 
 ### 프로젝트 이름
 
@@ -8,7 +8,7 @@
 
 ### 프로젝트 소개
 
-`냉장고를 Vue탁해 프로젝트`는 사용자가 등록한 재료를 활용하여 맞춤 레시피를 제공하는 웹 블로그입니다.
+`냉장고를 Vue탁해 프로젝트`는 **사용자가 등록한 재료를 활용하여 맞춤 레시피를 제공하는 웹 블로그**입니다.
 
 핵심 기능은 다음과 같습니다.
 
@@ -19,11 +19,13 @@
 
 ### 사용 언어, 기술 스택
 
-<img src="https://user-images.githubusercontent.com/60081201/88879827-396a8200-d266-11ea-80f0-438e343232af.PNG" alt="기술스택" style="zoom:80%;" />
+<img src="https://img.shields.io/badge/platform-Web-yellow" alt="기술스택" style="zoom:120%;" /><img src="https://img.shields.io/badge/framework-Vue.js-green" alt="기술스택" style="zoom:120%;" /><img src="https://img.shields.io/badge/database-MySQL-yellowgreen" alt="기술스택" style="zoom:120%;" /><img src="https://img.shields.io/badge/backend-Springboot-ff69b4" alt="기술스택" style="zoom:120%;" /><img src="https://img.shields.io/badge/server-AWS-9cf" alt="기술스택" style="zoom:120%;" /><img src="https://img.shields.io/badge/language-Java, JavaScript, Python-important" alt="기술스택" style="zoom:120%;" />
 
 
 
-## 2. 프로젝트 사용법
+
+
+## :key: 프로젝트 사용법
 
 ![image-20200728133309869](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200728133309869.png)
 
@@ -40,7 +42,7 @@
 #### Frontend
 
 ```bash
-cd frontend
+cd frontvuetakhae
 yarn install
 yarn serve
 ```
@@ -64,7 +66,7 @@ cd ~/app/backend/
 
 
 
-## 3. 서비스 설명
+## :clipboard: 서비스 설명
 
 ### 파일 목록
 
@@ -98,12 +100,14 @@ cd ~/app/backend/
 
 ### 브랜치전략
 
-저희 팀의 브랜치 전략은 기능별로 나누는 것입니다. 브랜치 앞 서두에는 front, back을 명시하고 각 수행해야 하는 기능을 이름으로 수행했습니다.
+- 저희 팀의 브랜치 전략은 기능별로 나누는 것입니다. 브랜치 이름은 앞부분에는 front, back을 명시하고 개발할 기능을 뒤에 작성하여 만들었습니다.
 
-- front/{Front 의 담당 기능}
-- back/{BackEnd의 담당 기능}
+  - 예시 형태
+    - front/{Front 의 담당 기능}
+      - ex) front/signin
+    - back/{BackEnd의 담당 기능}
 
-### 개발일정
+### :calendar: ​ 개발일정
 
 ### 팀원소개
 
@@ -115,11 +119,32 @@ cd ~/app/backend/
 
 
 
+
 ### 프로젝트 아키텍처 
 
 ### 알려진 버그
 
+---
 
+
+
+### 프로젝트를 통해 얻은 꿀팁:pushpin: 
+
+- 백엔드에서 `,` 꼭 있어야 했던거 이거 내용 추가
+
+- 글씨체때문에 비밀번호 안떴던거
+
+- vuetify 앱 뷰에서 v-app으로 고쳐야하는 거
+
+- 무료 이미지
+
+  - https://photo-ac.com/en
+
+- api 신청시
+
+  - 신청 API : 
+
+    ![image-20200810131554473](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20200810131554473.png)
 
 
 

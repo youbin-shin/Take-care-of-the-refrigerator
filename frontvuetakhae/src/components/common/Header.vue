@@ -7,7 +7,6 @@
       <div class="right" v-if="this.$cookies.get('token') == null">
         <a @click="modalShow = !modalShow" class="a_tag_modal">로그인</a>
         <a style="margin:0px 20px" @click="signUpShow = !signUpShow" class="a_tag_modal">회원가입</a>
-
         <b-modal v-model="modalShow" hide-footer hide-header>
           <h2 class="text-center">로그인</h2>
 
@@ -15,7 +14,7 @@
             <div class="div_item">
               <span class="item_100px">아이디</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 id="loginEmail"
                 ref="loginEmail"
@@ -27,7 +26,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="loginPassword"
                 id="passwloginPasswordord"
@@ -38,14 +37,14 @@
             </div>
           </div>
           <div>
-            <b-button class="mt-3" block variant="info" size="lg" @click="login">로그인 하기</b-button>
+            <b-button class="mt-3" block variant="danger" size="lg" @click="login">로그인 하기</b-button>
 
             <p class="go_signup" style="color:gray">
               아직 회원이 아니신가요?
               <b-button
                 class="ml-5"
                 size="sm"
-                variant="outline-info"
+                variant="outline-danger"
                 @click="switchModal"
               >회원가입 하러 가기</b-button>
             </p>
@@ -54,11 +53,11 @@
 
         <b-modal v-model="signUpShow" hide-footer hide-header>
           <h1 class="text-center">회원가입</h1>
-          <div>
+          <div class>
             <div class="div_item">
               <span class="item_100px">아이디</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 id="signUpEmail"
                 ref="signUpEmail"
@@ -70,7 +69,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="signUpPassword"
                 id="signUpPassword"
@@ -81,7 +80,7 @@
             <div class="div_item">
               <span class="item_100px">비밀번호 확인</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="password"
                 ref="signUpPasswordconfirm"
                 id="signUpPasswordconfirm"
@@ -92,7 +91,7 @@
             <div class="div_item">
               <span class="item_100px">닉네임</span>
               <input
-                class="item_200px"
+                class="item_200px pl-2"
                 type="text"
                 ref="signUpNickname"
                 id="signUpNickname"
@@ -102,7 +101,7 @@
             </div>
           </div>
 
-          <b-button class="mt-3" block variant="info" @click="signUp">회원가입 하기</b-button>
+          <b-button class="mt-3" block variant="danger" @click="signUp">회원가입 하기</b-button>
 
           <p class="go_signup ml-4" @click="switchModal">
             로그인으로 돌아가기
@@ -244,6 +243,7 @@ export default {
 .a_tag_modal {
   margin: 5px;
   vertical-align: middle;
+  color: black;
 }
 .logoImage {
   height: 60px;
@@ -280,7 +280,7 @@ export default {
   border: 1px solid gray;
 }
 .right {
-  margin-top: 15px;
+  margin-top: 20px;
 }
 .text-center {
   text-align: center;
